@@ -23,7 +23,7 @@ To
 call compile preprocessFileLineNumbers "zupa\AdvancedTradeMenu\player_traderMenuHive.sqf";
 ```
 
-######b) IF you have Hive traders:
+######b) IF you have Config traders:
 
 ```
 call compile preprocessFileLineNumbers "\z\addons\dayz_code\compile\player_traderMenuConfig.sqf";
