@@ -148,8 +148,8 @@ TraderDialogLoadItemList = {
 				if(_name == _bagclass) then {
 					_count = 1;
 				};
-				_maxguns = getNumber (configFile >> "CfgVehicles" >> _item >> "transportMaxWeapons");
-				_maxmags = getNumber (configFile >> "CfgVehicles" >> _item >> "transportMaxMagazines");	
+				_maxguns = getNumber (configFile >> "CfgVehicles" >> _name >> "transportMaxWeapons");
+				_maxmags = getNumber (configFile >> "CfgVehicles" >> _name >> "transportMaxMagazines");	
 				_capacity = format["%1/%2/0",_maxguns,_maxmags];
 			} else {
 				if (isClass(configFile >> "CfgVehicles" >> _name)) then {
@@ -162,10 +162,10 @@ TraderDialogLoadItemList = {
 					};
 					_count = {(typeOf _x) == _name} count (nearestObjects [player, [_name], _distance]);
 					_isVehicle = true;							
-					_crew = getNumber (configFile >> "CfgVehicles" >> _item >> "transportSoldier");
-					_maxguns = getNumber (configFile >> "CfgVehicles" >> _item >> "transportMaxWeapons");
-					_maxmags = getNumber (configFile >> "CfgVehicles" >> _item >> "transportMaxMagazines");
-					_maxpacks = getNumber (configFile >> "CfgVehicles" >> _item >> "transportMaxBackpacks");				
+					_crew = getNumber (configFile >> "CfgVehicles" >> _name >> "transportSoldier");
+					_maxguns = getNumber (configFile >> "CfgVehicles" >> _name >> "transportMaxWeapons");
+					_maxmags = getNumber (configFile >> "CfgVehicles" >> _name >> "transportMaxMagazines");
+					_maxpacks = getNumber (configFile >> "CfgVehicles" >> _name >> "transportMaxBackpacks");				
 					_capacity = format["%1/%2/%3",_maxguns,_maxmags,_maxpacks];
 				};
 			};
