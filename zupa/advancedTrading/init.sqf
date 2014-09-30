@@ -241,337 +241,152 @@ Z_removeAllToList = {
 
 Z_SellItems = {
 	_index = count (Z_SellArray) - 1;	
-	_money = 0;
 	_tempArray = Z_SellArray;
 	if(_index > -1)then{
-		{ // removing from backpack gear or vehicle gear or personal gear		
-			_result = false;
+		systemChat "Init Trading";	
+		_outcome = [];
+		_weaponsArray = [];
+		_itemsArray = [];	
+		_weaponsCheckArray = [];
+		_itemsCheckArray = [];
+		{ 		
 			_type = _x select 1;
-			_name = _x select 0;
-			_price = _x select 2;
-			//backpack
-			if(Z_SellingFrom == 0)then{
-			
-				if(_type == "trade_items")then{		
-				_outcome = [unitBackpack player,_name] call CBA_fnc_removeMagazineCargo;
-				}else{
-				_outcome = [unitBackpack player,_name] call CBA_fnc_removeWeaponCargo;
-				};
-				if(_outcome )then{
-					_result = true;
-				};
-			};
-			//vehicle
-			if(Z_SellingFrom == 1)then{				
-				
-				if(_type == "trade_items")then{		
-				_outcome = [Z_vehicle,_name] call CBA_fnc_removeMagazineCargo;		
-				}else{
-				_outcome = [Z_vehicle,_name] call CBA_fnc_removeWeaponCargo;		
-				};				
-				if(_outcome )then{
-					_result = true;
-				};
-			};
-			//gear
-			if(Z_SellingFrom == 2)then{
-				_outcome = [player,_name,1] call BIS_fnc_invRemove;
-				if(_outcome == 1)then{
-					_result = true;
-				};
-			};
-			if!(_result) exitWith {
-			
-			}; // failsafe, didnt remove the item !!
-			
-			_money = _money + _price;
-			Z_SellArray = Z_SellArray set [_index,objNull];		
-			lbDelete [7402, _index];
-			_index = _index - 1;
+			_name = _x select 0;						
+			if(_type == "trade_items")then{		
+				_itemsArray set [count(_itemsArray),_name];
+				_itemsCheckArray set [count(_itemsArray),_x];
+			}else{
+				_weaponsArray set [count(_weaponsArray),_name];
+				_weaponsCheckArray set [count(_weaponsArray),_x];
+			};			
 		}count _tempArray;
-		Z_SellArray = Z_SellArray - [objNull];
+		
+		
+		if(Z_SellingFrom == 0)then{
+			_outcome = [unitBackpack player,_itemsArray,_weaponsArray] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;
+		};
+		if(Z_SellingFrom == 1)then{	
+			_outcome = [Z_vehicle,_itemsArray,_weaponsArray] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;		
+		};
+							
+		//gear
+		if(Z_SellingFrom == 2)then{
+		_wA = [];
+		_mA = [];
+		{
+			_localResult = [player,(_x select 0),1] call BIS_fnc_invRemove;
+			if( _localResult != 1)then{
+				if(_x select 1 == "trade_items")then{
+					_mA set [count(_mA),0];
+				}else{
+					_wA set [count(_wA),0];
+				};
+			}else{
+				if(_x select 1 == "trade_items")then{
+					_mA set [count(_mA),1];
+				}else{
+					_wA set [count(_wA),1];
+				};
+			};
+			
+		}count _tempArray;
+			
+		_outcome set [0,_mA];	
+		_outcome set [1,_wA];	
+		};
+		
+		
+		_money = 0;	
+		{
+			_money = _money + ( (_itemsCheckArray select _forEachIndex select 2) * _x) ;	
+		}forEach (_outcome select 0);
+		{
+			_money = _money + ( (_weaponsCheckArray select _forEachIndex select 2) * _x) ;	
+		}forEach (_outcome select 1);
+		
+		[player,_money] call SC_fnc_addCoins;		
+		systemChat "Trading Done";							
+	}else{
+		systemChat "No Items to Sell";
 	};	
-	[player,_money] call SC_fnc_addCoins;		
-   	call Z_getGearItems;	
+	
+		
 };
 
 /* ----------------------------------------------------------------------------
-Function: CBA_fnc_removeMagazineCargo
-
-Description:
-    Function to remove specific items from local cargo space.
-    
-    * Use <CBA_fnc_removeMagazineCargoGlobal> if you want to remove the item in global mission space.
-
-Parameters:
-    _unit - the vehicle providing cargo space [Object]
-    _item - classname of item to remove [String]
-    _count - number of items to remove [Number] (Default: 1)
-
-Returns:
-    true on success, false otherwise (error or no such item in cargo)
-
 Examples:
-   (begin example)
-   _success = [myCoolWeaponBox, "SmokeShell"] call CBA_fnc_removeMagazineCargo; // remove 1 Smokegrenade locally from the box
-   _success = [myCoolWeaponBox, "HandGrenade_West", 2] call CBA_fnc_removeMagazineCargo; // remove 2 Handgrenades locally from the box
-   (end)
-
+   _result = [_backpack, ["SmokeShell","SmokeShell"]] call CBA_fnc_removeMagazineCargo; // remove 1 Smokegrenade locally from the box
+   
+   _result = [[1,0,0,1,1,1,0],[1,0,0,1]]; 1 = success, 0 = fail ( not in cargo)
+   
 Author:
-    silencer.helling3r 2012-12-22
+   Zupa 2014-09-30
 ---------------------------------------------------------------------------- */
-CBA_fnc_removeMagazineCargo = {
-	private ["_unit", "_item", "_count", "_i", "_unit_allItems", "_unit_allItems_types", "_unit_allItems_count", "_item_type", "_item_count", "_returnVar"];
-	
-	// Parameter handling
+ZUPA_fnc_removeWeaponsAndMagazinesCargo = {
+	private ["_unit", "_items","_weaps","_normalItems","_normalWeaps", "_count", "_i", "_unit_allItems", "_unit_allItems_types", "_unit_allItems_count", "_item_type", "_item_count", "__returnVar"];
 	_unit = _this select 0;
-	_item = _this select 1;
-	_count = 1;
-	if (count _this == 2) then {
-		_count = _this select 2;
-	};
-	if (_count <= 0) exitWith { false;}; // params check
-	_count = round _count; // ensure proper count
-	
-	_unit_allItems = getMagazineCargo _unit; // returns array containing two arrays: [[type1, typeN, ...],[count1, countN, ...]]
+	_items = _this select 1; 
+	_weaps = _this select 2; 
+	_normalItems = [];
+	_normalWeaps = [];
+	_unit_allItems = getMagazineCargo _unit; //  [[type1, typeN, ...],[count1, countN, ...]]
 	_unit_allItems_types = _unit_allItems select 0;
 	_unit_allItems_count = _unit_allItems select 1;
-	
-	// Clear cargo space and readd the items as long its not the type in question.
-	// If it is the requested class, we cannot just substract items because of the count parameter.
-	returnVar = false;
 	clearMagazineCargo _unit;
-	for [{_i=0}, {_i<(count _unit_allItems_types)}, {_i=_i+1}] do {
-		_item_type = _unit_allItems_types select _i;
-		_item_count = _unit_allItems_count select _i;
-		if (_item_type == _item) then {
-			// process removal
-			returnVar = true;
-			
-			_item_count = _item_count - _count;
-			if (_item_count > 0) then {
-				// add with new count
-				_unit addMagazineCargo [_item_type, _item_count];
-			} else {
-				// don't add item anymore as we removed all of them
-			};
-		} else {
-			// just readd item
-			_unit addMagazineCargo [_item_type, _item_count];
-		};
-	};
-	
-	returnVar;
-};
-
-
-/* ----------------------------------------------------------------------------
-Function: CBA_fnc_removeMagazineCargoGlobal
-
-Description:
-    Function to remove specific items from global cargo space.
-    
-    * Use <CBA_fnc_removeMagazineCargo> if you want to remove the item in local mission space only.
-
-Parameters:
-    _unit - the vehicle providing cargo space [Object]
-    _item - classname of item to remove [String]
-    _count - number of items to remove [Number] (Default: 1)
-
-Returns:
-    true on success, false otherwise (error or no such item in cargo)
-
-Examples:
-   (begin example)
-   _success = [myCoolWeaponBox, "SmokeShell"] call CBA_fnc_removeMagazineCargoGlobal; // remove 1 Smokegrenade globally from the box
-   _success = [myCoolWeaponBox, "HandGrenade_West", 2] call CBA_fnc_removeMagazineCargoGlobal; // remove 2 Handgrenades globally from the box
-   (end)
-
-Author:
-    silencer.helling3r 2012-12-22
----------------------------------------------------------------------------- */
-CBA_fnc_removeMagazineCargoGlobal = {
-	private ["_unit", "_item", "_count", "_i", "_unit_allItems", "_unit_allItems_types", "_unit_allItems_count", "_item_type", "_item_count", "_returnVar"];
-	
-	// Parameter handling
-	_unit = _this select 0;
-	_item = _this select 1;
-	_count = 1;
-	if (count _this == 2) then {
-		_count = _this select 2;
-	};
-	if (_count <= 0) exitWith { false;}; // params check
-	_count = round _count; // ensure proper count
-	
-	_unit_allItems = getMagazineCargo _unit; // returns array containing two arrays: [[type1, typeN, ...],[count1, countN, ...]]
-	_unit_allItems_types = _unit_allItems select 0;
-	_unit_allItems_count = _unit_allItems select 1;
-	
-	// Clear cargo space and readd the items as long its not the type in question.
-	// If it is the requested class, we cannot just substract items because of the count parameter.
-	returnVar = false;
-	clearMagazineCargoGlobal _unit;
-	for [{_i=0}, {_i<(count _unit_allItems_types)}, {_i=_i+1}] do {
-		_item_type = _unit_allItems_types select _i;
-		_item_count = _unit_allItems_count select _i;
-		if (_item_type == _item) then {
-			// process removal
-			returnVar = true;
-			
-			_item_count = _item_count - _count;
-			if (_item_count > 0) then {
-				// add with new count
-				_unit addMagazineCargoGlobal [_item_type, _item_count];
-			} else {
-				// don't add item anymore as we removed all of them
-			};
-		} else {
-			// just readd item
-			_unit addMagazineCargoGlobal [_item_type, _item_count];
-		};
-	};
-	
-	returnVar;
-};
-
-/* ----------------------------------------------------------------------------
-Function: CBA_fnc_removeWeaponCargo
-
-Description:
-    Function to remove specific items from local cargo space.
-    
-    * Use <CBA_fnc_removeWeaponCargoGlobal> if you want to remove the item in global mission space.
-
-Parameters:
-    _unit - the vehicle providing cargo space [Object]
-    _item - classname of item to remove [String]
-    _count - number of items to remove [Number] (Default: 1)
-
-Returns:
-    true on success, false otherwise (error or no such item in cargo)
-
-Examples:
-   (begin example)
-   _success = [myCoolWeaponBox, "Binocular"] call CBA_fnc_removeWeaponCargo; // remove 1 Binocular locally from the box
-   _success = [myCoolWeaponBox, "M14", 2] call CBA_fnc_removeWeaponCargo; // remove 2 M14 locally from the box
-   (end)
-
-Author:
-    silencer.helling3r 2012-12-22
----------------------------------------------------------------------------- */
-CBA_fnc_removeWeaponCargo = {
-	private ["_unit", "_item", "_count", "_i", "_unit_allItems", "_unit_allItems_types", "_unit_allItems_count", "_item_type", "_item_count", "_returnVar"];
-	
-	// Parameter handling
-	_unit = _this select 0;
-	_item = _this select 1;
-	_count = 1;
-	if (count _this == 2) then {
-		_count = _this select 2;
-	};
-	if (_count <= 0) exitWith { false;}; // params check
-	_count = round _count; // ensure proper count
-	
-	_unit_allItems = getWeaponCargo _unit; // returns array containing two arrays: [[type1, typeN, ...],[count1, countN, ...]]
-	_unit_allItems_types = _unit_allItems select 0;
-	_unit_allItems_count = _unit_allItems select 1;
-	
-	// Clear cargo space and readd the items as long its not the type in question.
-	// If it is the requested class, we cannot just substract items because of the count parameter.
-	returnVar = false;
+	_unit_allWeaps = getWeaponCargo _unit; 
+	_unit_allWeaps_types = _unit_allWeaps select 0;
+	_unit_allWeaps_count = _unit_allWeaps select 1;			
 	clearWeaponCargo _unit;
-	for [{_i=0}, {_i<(count _unit_allItems_types)}, {_i=_i+1}] do {
-		_item_type = _unit_allItems_types select _i;
-		_item_count = _unit_allItems_count select _i;
-		if (_item_type == _item) then {
-			// process removal
-			returnVar = true;
-			
-			_item_count = _item_count - _count;
-			if (_item_count > 0) then {
-				// add with new count
-				_unit addWeaponCargo [_item_type, _item_count];
-			} else {
-				// don't add item anymore as we removed all of them
-			};
-		} else {
-			// just readd item
-			_unit addWeaponCargo [_item_type, _item_count];
+	{
+		_counter = 0 ;
+		while{	_counter < ( _unit_allItems_count select _forEachIndex)}do{
+		_normalItems set [count(_normalItems),_x];
+				_counter = _counter + 1;
 		};
-	};
-	
-	returnVar;
-};
-
-/* ----------------------------------------------------------------------------
-Function: CBA_fnc_removeWeaponCargoGlobal
-
-Description:
-    Function to remove specific items from global cargo space.
-    
-    * Use <CBA_fnc_removeWeaponCargo> if you want to remove the item in local mission space only.
-
-Parameters:
-    _unit - the vehicle providing cargo space [Object]
-    _item - classname of item to remove [String]
-    _count - number of items to remove [Number] (Default: 1)
-
-Returns:
-    true on success, false otherwise (error or no such item in cargo)
-
-Examples:
-   (begin example)
-   _success = [myCoolWeaponBox, "Binocular"] call CBA_fnc_removeWeaponCargoGlobal; // remove 1 Binocular globally from the box
-   _success = [myCoolWeaponBox, "M14", 2] call CBA_fnc_removeWeaponCargoGlobal; // remove 2 M14 globally from the box
-   (end)
-
-Author:
-    silencer.helling3r 2012-12-22
----------------------------------------------------------------------------- */
-CBA_fnc_removeWeaponCargoGlobal = {
-	private ["_unit", "_item", "_count", "_i", "_unit_allItems", "_unit_allItems_types", "_unit_allItems_count", "_item_type", "_item_count", "_returnVar"];
-	
-	// Parameter handling
-	_unit = _this select 0;
-	_item = _this select 1;
-	_count = 1;
-	if (count _this == 2) then {
-		_count = _this select 2;
-	};
-	if (_count <= 0) exitWith { false;}; // params check
-	_count = round _count; // ensure proper count
-	
-	_unit_allItems = getWeaponCargo _unit; // returns array containing two arrays: [[type1, typeN, ...],[count1, countN, ...]]
-	_unit_allItems_types = _unit_allItems select 0;
-	_unit_allItems_count = _unit_allItems select 1;
-	
-	// Clear cargo space and readd the items as long its not the type in question.
-	// If it is the requested class, we cannot just substract items because of the count parameter.
-	returnVar = false;
-	clearWeaponCargoGlobal _unit;
-	for [{_i=0}, {_i<(count _unit_allItems_types)}, {_i=_i+1}] do {
-		_item_type = _unit_allItems_types select _i;
-		_item_count = _unit_allItems_count select _i;
-		if (_item_type == _item) then {
-			// process removal
-			returnVar = true;
-			
-			_item_count = _item_count - _count;
-			if (_item_count > 0) then {
-				// add with new count
-				_unit addWeaponCargoGlobal [_item_type, _item_count];
-			} else {
-				// don't add item anymore as we removed all of them
-			};
-		} else {
-			// just readd item
-			_unit addWeaponCargoGlobal [_item_type, _item_count];
+	}forEach _unit_allItems_types;				
+	{
+		_counter = 0 ;
+		while{	_counter < ( _unit_allWeaps_count select _forEachIndex)}do{
+		_normalWeaps set [count(_normalWeaps),_x];
+				_counter = _counter + 1;
 		};
-	};
+	}forEach _unit_allWeaps_types;			
+	_returnVar = [];	
+	_returnMag = [];	
+	_returnWeap = [];
 	
-	returnVar;
+	{		
+		_inCargo = _normalItems find _x;
+		if(_inCargo > -1)then{
+			_normalItems set [_inCargo, "soldItem"];
+			_returnMag = _returnMag set [count(_returnMag),1];
+		}else{
+			_returnMag = _returnMag set [count(_returnMag),0];	
+		};
+	}count _items;	
+	_normalItems = _normalItems - ["soldItem"];
+	{				
+		_unit addMagazineCargo [_x, 1];				
+	}count _normalItems;	
+	
+	{		
+		_inCargo = _normalWeaps find _x;
+		if(_inCargo > -1)then{
+			_normalWeaps set [_inCargo, "soldItem"];
+			_returnWeap = _returnWeap set [count(_returnWeap),1];
+		}else{
+			_returnWeap = _returnWeap set [count(_returnWeap),0];	
+		};
+	}count _weaps;	
+	_normalWeaps = _normalWeaps - ["soldItem"];
+	{				
+		_unit addWeaponCargo [_x, 1];				
+	}count _normalWeaps;
+			
+	_returnVar set [0,_returnMag];
+	_returnVar set [1,_returnWeap];
+	_returnVar;
 };
-
 
 Z_AdvancedTradingInit = true;
 
