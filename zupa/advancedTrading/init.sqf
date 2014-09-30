@@ -210,7 +210,7 @@ Z_pushItemToList = {
 Z_removeItemFromList = {
 	_index = _this select 0;
 	lbDelete [7402, _index];
-	systemChat str(_index);
+	systemChat format["Selected pos %1",_index];
 	_temp = Z_SellArray select _index;
 	_item = [_temp select 0,_temp select 1 ,_temp select 2,_temp select 3, _temp select 4  ];
 	Z_SellableArray = Z_SellableArray +  [_item];
@@ -218,6 +218,7 @@ Z_removeItemFromList = {
 	Z_SellArray = Z_SellArray - ["deleted"];
 	_index2 = lbAdd [7401,  _item select 3];
 	lbSetPicture [7401, _index2, _item select 4];
+	systemChat format["Added to pos %1",_index2];
 	call Z_calcPrice;	
 };
 
@@ -315,7 +316,7 @@ Z_SellItems = {
 
 /* ----------------------------------------------------------------------------
 Examples:
-   _result = [_backpack, ["SmokeShell","SmokeShell"]] call CBA_fnc_removeMagazineCargo; // remove 1 Smokegrenade locally from the box
+   _result = [_backpack, ["SmokeShell","SmokeShell"]] call CBA_fnc_removeMagazineCargo; 
    
    _result = [[1,0,0,1,1,1,0],[1,0,0,1]]; 1 = success, 0 = fail ( not in cargo)
    
