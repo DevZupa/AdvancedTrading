@@ -262,7 +262,8 @@ Z_SellItems = {
 			};			
 		}count _tempArray;
 		
-		
+		closeDialog 2;
+				
 		if(Z_SellingFrom == 0)then{
 			_outcome = [unitBackpack player,_itemsArray,_weaponsArray] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;
 		};
