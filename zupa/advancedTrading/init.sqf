@@ -137,8 +137,6 @@ Z_checkArrayInConfig = {
 			_y = _x;				
 			{	
 					_cat =  format["Category_%1",(_arrayOfTraderCat select _forEachIndex select 1)];
-					systemChat _cat;
-					systemChat _y;
 					_excists = false;
 					if(isClass(missionConfigFile >> "CfgTraderCategory"  >> _cat >> _y ))then{
 					_excists = isClass(missionConfigFile >> "CfgTraderCategory"  >> _cat >> _y );		

@@ -8,7 +8,7 @@ class AdvancedTrading
 			idc = -1;
 			x = 0.30 * safezoneW + safezoneX;
 			y = 0.15 * safezoneH + safezoneY;
-			w = 0.30 * safezoneW;
+			w = 0.50 * safezoneW;
 			h = 0.81 * safezoneH;
 			colorBackground[] = {0,0,0,0.8};
 		};	
@@ -19,7 +19,7 @@ class AdvancedTrading
 			text = "Advanced Trading";
 			x = 0.30 * safezoneW + safezoneX;
 			y = 0.15 * safezoneH + safezoneY;
-			w = 0.30 * safezoneW;
+			w = 0.50 * safezoneW;
 			h = 0.05 * safezoneH;		
 			colorBackground[] = {0,0,0,0.8};	
 			colorText[] = {1,1,1,1};			
@@ -39,7 +39,7 @@ class AdvancedTrading
 		{
 			idc = -1;
 			text = "Vehicle";
-			x = 0.41 * safezoneW + safezoneX;
+			x = 0.46 * safezoneW + safezoneX;
 			y = 0.22 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "call Z_getVehicleItems;";
@@ -49,7 +49,7 @@ class AdvancedTrading
 		{
 			idc = -1;
 			text = "Gear";
-			x = 0.51 * safezoneW + safezoneX;
+			x = 0.61 * safezoneW + safezoneX;
 			y = 0.22 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "call Z_getGearItems;";
@@ -60,7 +60,7 @@ class AdvancedTrading
 			text = "";
 			x = 0.31 * safezoneW + safezoneX;
 			y = 0.30 * safezoneH + safezoneY;
-			w = 0.30 * safezoneW;
+			w = 0.45 * safezoneW;
 			h = 0.03 * safezoneH;
 			colorText[] = {1,1,1,1};
 		};
@@ -71,7 +71,7 @@ class AdvancedTrading
 			text = "";
 			x = 0.31 * safezoneW + safezoneX;
 			y = 0.33 * safezoneH + safezoneY;
-			w = 0.30 * safezoneW;
+			w = 0.45 * safezoneW;
 			h = 0.03 * safezoneH;
 			colorText[] = {1,1,1,1};
 		};
@@ -91,7 +91,7 @@ class AdvancedTrading
 		{
 			idc = -1;
 			text = "Offering";
-			x = 0.45 * safezoneW + safezoneX;
+			x = 0.55 * safezoneW + safezoneX;
 			y = 0.38 * safezoneH + safezoneY;
 			w = 0.13 * safezoneW;
 			h = 0.03 * safezoneH;
@@ -108,7 +108,7 @@ class AdvancedTrading
             idcRight = -1;
 			x = 0.31* safezoneW + safezoneX;
 			y = 0.41 * safezoneH + safezoneY;
-			w = 0.13 * safezoneW;
+			w = 0.23 * safezoneW;
 			h = 0.30 * safezoneH;
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
@@ -116,9 +116,9 @@ class AdvancedTrading
 		class RscListbox_AT11: RscListbox
 		{
 			idc = 7402;
-			x = 0.45 * safezoneW + safezoneX;
+			x = 0.55 * safezoneW + safezoneX;
 			y = 0.41* safezoneH + safezoneY;
-			w = 0.13 * safezoneW;
+			w = 0.23 * safezoneW;
 			h = 0.30 * safezoneH;
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
@@ -136,7 +136,7 @@ class AdvancedTrading
 		{
 			idc = -1;
 			text = "Remove";
-			x = 0.47 * safezoneW + safezoneX;
+			x = 0.57 * safezoneW + safezoneX;
 			y = 0.70 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "[(lbCurSel 7402)] call Z_removeItemFromList;";
@@ -155,7 +155,7 @@ class AdvancedTrading
 		{
 			idc = -1;
 			text = "Remove All";
-			x = 0.47 * safezoneW + safezoneX;
+			x = 0.57 * safezoneW + safezoneX;
 			y = 0.75 * safezoneH + safezoneY;
 			w = 0.11* safezoneW;
 			onButtonClick = "call Z_removeAllToList;";
@@ -165,7 +165,7 @@ class AdvancedTrading
 			idc = 7403;
 			text = "0 Coins";
 			x = 0.33 * safezoneW + safezoneX;
-			y = 0.81 * safezoneH + safezoneY;
+			y = 0.82 * safezoneH + safezoneY;
 			w = 0.15 * safezoneW;
 			h = 0.03 * safezoneH;
 			colorText[] = {1,1,1,1};
@@ -174,7 +174,7 @@ class AdvancedTrading
 		{
 			idc = -1;
 			text = "Sell";
-			x = 0.47 * safezoneW + safezoneX;
+			x = 0.57 * safezoneW + safezoneX;
 			y = 0.81 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 
@@ -184,7 +184,7 @@ class AdvancedTrading
 		{
 			idc = -1;
 			text = "Close";
-			x = 0.40 * safezoneW + safezoneX;
+			x = 0.50 * safezoneW + safezoneX;
 			y = 0.87 * safezoneH + safezoneY;
 			w = 0.11 * safezoneW;
 
