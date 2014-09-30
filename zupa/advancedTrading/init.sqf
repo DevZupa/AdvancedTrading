@@ -196,25 +196,26 @@ Z_fillSellingList = {
 Z_pushItemToList = {
 	_index = _this select 0;
 	lbDelete [7401, _index];
-	systemChat str(_index);
+	systemChat format["Selected from pos %1",_index];
 	_temp = Z_SellableArray select _index;
 	_item = [_temp select 0,_temp select 1 ,_temp select 2,_temp select 3, _temp select 4  ];
-	Z_SellArray = Z_SellArray + [_item];
-	Z_SellableArray = Z_SellableArray set [_index,"deleted"];
+	Z_SellArray set [count(Z_SellArray),_item];
+	Z_SellableArray set [_index,"deleted"];
 	Z_SellableArray = Z_SellableArray - ["deleted"];
 	_index2 = lbAdd [7402, _item select 3];
 	lbSetPicture [7402, _index2, _item select 4];
+	systemChat format["Added to pos %1",_index2];
 	call Z_calcPrice;
 };
 
 Z_removeItemFromList = {
 	_index = _this select 0;
 	lbDelete [7402, _index];
-	systemChat format["Selected pos %1",_index];
+	systemChat format["Selected from pos %1",_index];
 	_temp = Z_SellArray select _index;
 	_item = [_temp select 0,_temp select 1 ,_temp select 2,_temp select 3, _temp select 4  ];
-	Z_SellableArray = Z_SellableArray +  [_item];
-	Z_SellArray = Z_SellArray set [_index,"deleted"];
+	Z_SellableArray set [count(Z_SellableArray),_item];
+	Z_SellArray set [_index,"deleted"];
 	Z_SellArray = Z_SellArray - ["deleted"];
 	_index2 = lbAdd [7401,  _item select 3];
 	lbSetPicture [7401, _index2, _item select 4];
