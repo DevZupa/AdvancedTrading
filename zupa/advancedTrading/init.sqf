@@ -18,6 +18,19 @@ Z_clearLists = {
     lbClear 7402;
 };
 
+Z_getContainer = {
+Z_clearLists;
+Z_SellableArray = [];
+Z_SellArray = [];
+_lbIndex=lbCurSel 7404;
+switch (_lbIndex) do {
+    case 0: { call Z_getBackpackItems; };
+    case 1: { call Z_getVehicleItems; };
+	case 2: { call Z_getGearItems; };
+};
+
+};
+
 Z_getBackpackItems = {
 	call Z_clearLists;
 	Z_SellingFrom = 0;
