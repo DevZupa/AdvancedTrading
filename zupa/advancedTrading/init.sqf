@@ -28,7 +28,6 @@ switch (_lbIndex) do {
     case 1: { call Z_getVehicleItems; };
 	case 2: { call Z_getGearItems; };
 };
-
 };
 
 Z_getBackpackItems = {
