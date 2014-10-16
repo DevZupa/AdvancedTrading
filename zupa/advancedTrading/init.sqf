@@ -2,6 +2,8 @@ disableSerialization;
 
 Z_traderData = (_this select 3); // gets the trader data ( menu_Functionary1 )
 
+Selling = true;
+
 if( isNil "Z_traderData" || count (Z_traderData) == 0)exitWith{
 cutText [format["There went something wrong."], "PLAIN DOWN"];
 };
@@ -10,24 +12,71 @@ if(isNil "Z_AdvancedTradingInit")then{
 
 Z_SellableArray = [];
 Z_SellArray = [];
+Z_BuyArray = [];
+Z_BuyingArray = [];
 Z_vehicle = objNull;
-	
+
+Z_filleTradeTitle = {
+	_text = _this select 0;
+	ctrlSetText [7408, _text];
+};
+
 // initiate the functions for advanced trading -- easier for the people :) otherwise it would be in compiles.
 Z_clearLists = {
 	lbClear 7401;
     lbClear 7402;
+	
+};
+
+Z_clearBuyList = {
+  lbClear 7421;
+};
+
+Z_clearBuyingList = {
+  lbClear 7422;
 };
 
 Z_getContainer = {
-Z_clearLists;
-Z_SellableArray = [];
-Z_SellArray = [];
-_lbIndex=lbCurSel 7404;
-switch (_lbIndex) do {
-    case 0: { call Z_getBackpackItems; };
-    case 1: { call Z_getVehicleItems; };
-	case 2: { call Z_getGearItems; };
-};
+	Z_clearBuyingList;
+	Z_clearLists;
+	Z_SellableArray = [];
+	Z_SellArray = [];
+	Z_BuyingArray = [];
+	
+	_lbIndex= _this select 0;
+
+	if(Selling)then{
+		switch (_lbIndex) do {
+			case 0: { 
+				["Selling from backpack."] call Z_filleTradeTitle;
+				call Z_getBackpackItems; 
+			};
+			case 1: { 
+				["Selling from vehicle."] call Z_filleTradeTitle;
+				call Z_getVehicleItems; 
+			};
+			case 2: { 
+				["Selling from gear."] call Z_filleTradeTitle;
+				call Z_getGearItems; 
+			};
+		};
+	}else{
+		switch (_lbIndex) do {
+			case 0: { 
+				["Buying in backpack."] call Z_filleTradeTitle;
+				
+			};
+			case 1: { 
+				["Buying in vehicle."] call Z_filleTradeTitle;
+				 
+			};
+			case 2: { 
+				["Buying in gear."] call Z_filleTradeTitle;
+				
+			};
+		};
+	
+	};
 
 };
 
@@ -37,7 +86,6 @@ Z_getBackpackItems = {
 	Z_SellableArray = [];
 	Z_SellArray = [];
 	_backpack = unitBackpack player;
-	systemChat str(typeOf _backpack);
 	if (!isNil "_backpack") then {    				
         _mags = getMagazineCargo _backpack;
 	    _weaps = getWeaponCargo _backpack;
@@ -65,8 +113,6 @@ Z_getBackpackItems = {
 			};
 		}forEach _kinds2;
 	
-		systemChat str(count _kinds2);	
-		systemChat str(count _normalWeaps);	
 		[_normalMags,_normalWeaps, typeOf _backpack] call	Z_checkArrayInConfig;	
 	}else{
 		_ctrltext = format["I'm not stupid.."];
@@ -93,7 +139,6 @@ Z_getVehicleItems = {
 			_vehicle = _x;
 		};
 	}count _list;
-	systemChat (typeOf _vehicle);
 	
 	if(!isNull _vehicle)then{
 		Z_vehicle = _vehicle;
@@ -179,7 +224,10 @@ Z_checkArrayInConfig = {
 			}forEach _arrayOfTraderCat;				
 		}count _all;	
 						
-		_ctrltext = format["I would pay %1 %2 you for all those items.", _totalPrice,CurrencyName];
+		if(Z_SellingFrom != 2)then{
+			_extraText = getText (configFile >> 'CfgVehicles' >> _extraText >> 'displayName');
+		};
+		_ctrltext = format["I would pay %1 %2 to you for all those items.", _totalPrice,CurrencyName];
 		ctrlSetText [7413, _ctrltext];		
 		_ctrltext = format["I accept %1 items from %2.", count(Z_SellableArray) , _extraText];
 		ctrlSetText [7412, _ctrltext];	
@@ -189,11 +237,17 @@ Z_checkArrayInConfig = {
 
 Z_calcPrice = {
 	_sellPrice = 0;
-	{  		
-		_sellPrice = _sellPrice +  (_x select 2);
-	}count Z_SellArray;
-		_ctrltext = format["%1 %2", _sellPrice , CurrencyName];
-		ctrlSetText [7403, _ctrltext];	
+	if(Selling)then{	
+		{  		
+			_sellPrice = _sellPrice +  (_x select 2);
+		}count Z_SellArray;
+	}else{
+		{
+			_sellPrice = _sellPrice +  ((_x select 2) * (_x select 5));
+		}count Z_BuyingArray;
+	};
+	_ctrltext = format["%1 %2", _sellPrice , CurrencyName];
+	ctrlSetText [7403, _ctrltext];	
 };
 
 Z_fillSellList = {
@@ -416,19 +470,122 @@ ZUPA_fnc_removeWeaponsAndMagazinesCargo = {
 	_returnVar;
 };
 
+Z_ChangeBuySell = {
+	
+	_dialog = findDisplay 711197;
+	
+	Selling = !Selling;
+	
+	if(Selling)then{	
+		(_dialog displayCtrl 7416) ctrlSetText "Buy";
+		{ctrlShow [_x,true];} forEach [7401,7402,7435,7430,7431,7432,7433]; // show
+		{ctrlShow [_x,false];} forEach [7421,7422,7436,7440,7441,7442,7443,7404]; // hide
+				
+	}else{
+		(_dialog displayCtrl 7416) ctrlSetText "Sell";
+		{ctrlShow [_x,true];} forEach [7421,7422,7436,7440,7441,7442,7443,7404]; // show
+		{ctrlShow [_x,false];} forEach [7401,7402,7435,7430,7431,7432,7433]; // hide	
+		call Z_fillBuyList;
+	};
+	
+	[2] call Z_getContainer; // default gear
+
+	
+	
+};
+
+Z_BuyItems = {
+
+};
+
+Z_removeAllFromBuyingList = {
+	Z_clearBuyingList;
+	Z_BuyingArray = [];
+};
+
+Z_removeItemFromBuyingList = {
+	_index = _this select 0;
+	if(!isNil"_index" && _index > -1)then {
+		lbDelete [7422, _index];
+		Z_BuyingArray set [_index,"deleted"];
+		Z_BuyingArray = Z_BuyingArray - ["deleted"];		
+		call Z_calcPrice;	
+	};
+};
+
+Z_toBuyingList = {
+	_index = _this select 0;
+	_amount = parseNumber(_this select 1);		
+	if(!isNil"_index" && _index > -1 && (typeName _amount == "SCALAR") && _amount > 0 )then {
+		systemChat format["Selected from pos %1",_index];
+		_temp = Z_BuyArray select _index;
+		_item = [_temp select 0,_temp select 1 ,_temp select 2,_temp select 3, _temp select 4, _amount ];
+		Z_BuyingArray set [count(Z_BuyingArray),_item];		
+		_index2 = lbAdd [7422, format["%1x: %2",_item select 5,_item select 3];
+		lbSetPicture [7422, _index2, _item select 4];
+		systemChat format["Added to pos %1",_index2];
+		call Z_calcPrice;
+	};	
+};
+
+Z_fillBuyList = {
+		call Z_clearBuyList;
+		call Z_clearBuyingList;
+		Z_BuyArray = [];
+		Z_BuyingArray = [];
+		_arrayOfTraderCat = Z_traderData;	
+		_counter = 0;
+		{	
+					_cat =  format["Category_%1",(_arrayOfTraderCat select _forEachIndex select 1)];
+					
+					_cfgtraders = missionConfigFile >> "CfgTraderCategory"  >> _cat;
+					for "_i" from 0 to (count _cfgtraders)-1 do
+					{					
+						_y  = _cfgtraders select _i;
+							
+						_type =  getText(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "type");
+						_buy = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "sell");
+						_pic = "";
+						_text = "";	
+						if(_type == "trade_items")then{
+							_pic = getText (configFile >> 'CfgMagazines' >> _y >> 'picture');
+							_text = getText (configFile >> 'CfgMagazines' >> _y >> 'displayName');
+						}else{
+							_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
+							_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
+						};							
+						Z_BuyArray set [count(Z_BuyArray) , [_y,_type,_buy select 0,_text,_pic]];
+						_totalPrice = _totalPrice + (_buy select 0);	
+											
+					};																	
+		}forEach _arrayOfTraderCat;	
+		call Z_fillBuylList;
+		call Z_calcPrice;
+};
+
+Z_fillBuylList = {	
+	{
+		_index = lbAdd [7421,  _x select 3];
+		lbSetPicture [7421, _index, _x select 4 ];
+	}count Z_BuyArray;
+};
+
+Z_fillBuyingList = {
+	{  		
+		_index = lbAdd [7422, _x select 3];
+		lbSetPicture [7422, _index,  _x select 4];
+	}count Z_BuyingArray;
+};
+
 Z_AdvancedTradingInit = true;
 
 };
 
 createDialog "AdvancedTrading";
-{lbAdd[7405,_x]} forEach ['Selling'];
-{lbAdd[7404,_x]} forEach ['Backpack','Vehicle','Gear'];
 
 _dialog = findDisplay 711197;
-(_dialog displayCtrl 7414) ctrlSetText " < ";
-(_dialog displayCtrl 7415) ctrlSetText " << ";
-
- 
-(_dialog displayCtrl 7405) lbSetSelected [0, true];
-(_dialog displayCtrl 7404) lbSetSelected [2, true];
+(_dialog displayCtrl 7432) ctrlSetText " < ";
+(_dialog displayCtrl 7433) ctrlSetText " << ";
+(_dialog displayCtrl 7442) ctrlSetText " < ";
+(_dialog displayCtrl 7443) ctrlSetText " << ";
 call Z_getGearItems; 

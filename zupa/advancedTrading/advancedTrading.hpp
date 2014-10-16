@@ -10,7 +10,7 @@ class AdvancedTrading
 			idc = -1;
 			x = 0.30 * safezoneW + safezoneX;
 			y = 0.15 * safezoneH + safezoneY;
-			w = 0.4125 * safezoneW;
+			w = 0.40 * safezoneW;
 			h = 0.70 * safezoneH;
 			colorBackground[] = {0,0,0,0.8};
 		};	
@@ -21,28 +21,62 @@ class AdvancedTrading
 			text = "Advanced Trading";
 			x = 0.30 * safezoneW + safezoneX;
 			y = 0.15 * safezoneH + safezoneY;
-			w = 0.4125 * safezoneW;
+			w = 0.40 * safezoneW;
 			h = 0.05 * safezoneH;		
 			colorBackground[] = {0,0,0,0.8};	
 			colorText[] = {1,1,1,1};			
 		};
 		
-		class Zupa_Container_Combo: RscCombo
+		class RscText_Zupa_1: RscTextT
 		{
-			idc = 7404;
-			text = "Gear"; 
-			x = 0.31;
-			y = 0.15;
-			onLBSelChanged = "call Z_getContainer;";	
+			idc = 7408;
+			text = "Selling from gear.";
+			x = 0.31 * safezoneW + safezoneX;
+			y = 0.22 * safezoneH + safezoneY;
+			w = 0.38 * safezoneW;
+			h = 0.05 * safezoneH;		
+			colorBackground[] = {0,0,0,0.8};	
+			colorText[] = {1,1,1,1};			
 		};
 		
-		class Zupa_Method_Combo: RscCombo
+		class Zupa_RscButtonMenu_Z1: Zupa_RscButtonMenu
 		{
-			idc = 7405;
-			text = "Selling"; 
-			x = 0.51;
-			y = 0.15;
-			onLBSelChanged = "";	
+			idc = -1;
+			text =  "Gear";
+			x = 0.31 * safezoneW + safezoneX;
+			y = 0.26 * safezoneH + safezoneY;
+			w = 0.08 * safezoneW;
+			onButtonClick = "[2] call Z_getContainer;";
+		};
+		
+		class Zupa_RscButtonMenu_Z2: Zupa_RscButtonMenu
+		{
+			idc = -1;
+			text =  "Backpack";
+			x = 0.41 * safezoneW + safezoneX;
+			y = 0.26 * safezoneH + safezoneY;
+			w = 0.08 * safezoneW;
+			onButtonClick = "[0] call Z_getContainer;";
+		};
+		
+		class Zupa_RscButtonMenu_Z3: Zupa_RscButtonMenu
+		{
+			idc = -1;
+			text =  "Vehicle";
+			x = 0.41 * safezoneW + safezoneX;
+			y = 0.26 * safezoneH + safezoneY;
+			w = 0.08 * safezoneW;
+			onButtonClick = "[1] call Z_getContainer;";
+		};
+		
+		class Zupa_RscButtonMenu_Z4: Zupa_RscButtonMenu
+		{
+			idc = 7416;
+			text =  "Buy";
+			x = 0.41 * safezoneW + safezoneX;
+			y = 0.26 * safezoneH + safezoneY;
+			w = 0.08 * safezoneW;
+			onButtonClick = "call Z_ChangeBuySell;";
 		};
 				
 		class RscText_AT6: RscTextT
@@ -113,9 +147,39 @@ class AdvancedTrading
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
 		};
+		
+		
+		class RscListbox_AT20: RscListbox
+		{
+			idc = 7421;
+			type = 5;		
+			idcLeft = -1; 
+            idcRight = -1;
+			x = 0.31* safezoneW + safezoneX;
+			y = 0.41 * safezoneH + safezoneY;
+			w = 0.13 * safezoneW;
+			h = 0.30 * safezoneH;
+			soundSelect[] = {"",0.1,1};
+			colorBackground[] = {0.1,0.1,0.1,0.8};
+			onload = "ctrlShow [_this,false]";
+		};
+		class RscListbox_AT21: RscListbox
+		{
+			idc = 7422;
+			x = 0.55 * safezoneW + safezoneX;
+			y = 0.41* safezoneH + safezoneY;
+			w = 0.13 * safezoneW;
+			h = 0.30 * safezoneH;
+			soundSelect[] = {"",0.1,1};
+			colorBackground[] = {0.1,0.1,0.1,0.8};
+			onload = "ctrlShow [_this,false]";
+		};
+		
+		
+		
 		class Zupa_RscButtonMenu_AT12: Zupa_RscButtonMenu
 		{
-			idc = -1;
+			idc = 7430;
 			text =  " > ";
 			x = 0.46 * safezoneW + safezoneX;
 			y = 0.41 * safezoneH + safezoneY;
@@ -125,17 +189,17 @@ class AdvancedTrading
 		
 		class Zupa_RscButtonMenu_AT14: Zupa_RscButtonMenu
 		{
-			idc = -1;
+			idc = 7431;
 			text = " >> ";
 			x = 0.46 * safezoneW + safezoneX;
 			y = 0.49 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "call Z_pushAllToList;";
 		};
-		
+				
 		class Zupa_RscButtonMenu_AT13: Zupa_RscButtonMenu
 		{
-			idc = 7414;
+			idc = 7432;
 			text = " < ";
 			x = 0.46 * safezoneW + safezoneX;
 			y = 0.57 * safezoneH + safezoneY;
@@ -146,13 +210,78 @@ class AdvancedTrading
 
 		class Zupa_RscButtonMenu_AT15: Zupa_RscButtonMenu
 		{
-			idc = 7415;
+			idc = 7433;
 			text = " << ";
 			x = 0.46 * safezoneW + safezoneX;
 			y = 0.65 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "call Z_removeAllToList;";
+		};
+
+// buying
+		class Zupa_RscButtonMenu_ATT1: Zupa_RscButtonMenu
+
+		{
+			idc = 7440;
+			text = " > ";
+			x = 0.46 * safezoneW + safezoneX;
+			y = 0.49 * safezoneH + safezoneY;
+			w = 0.08 * safezoneW;
+			onButtonClick = "[(lbCurSel 7421),(ctrlText 7441)] call Z_toBuyingList;";
+			onload = "ctrlShow [_this,false]";
+		};
+		
+	// textfield 7441
+	
+		class Zupa_Ammount_Edit : Zupa_RscEdit {	
+			idc = 7441;
+			colorText[] = {0.8784,0.8471,0.651,1};
+			text = "1";
+			sizeEx = 0.030;
+			x = 0.46 * safezoneW + safezoneX;
+			y = 0.49 * safezoneH + safezoneY;
+			w = 0.08 * safezoneW;
+			h = 0.03;
+			onload = "ctrlShow [_this,false]";
+		};
+		
+		class Zupa_RscButtonMenu_ATT3: Zupa_RscButtonMenu
+		{
+			idc = 7442;
+			text = " < ";
+			x = 0.46 * safezoneW + safezoneX;
+			y = 0.57 * safezoneH + safezoneY;
+			w = 0.08 * safezoneW;
+			onButtonClick = "[(lbCurSel 7422)] call Z_removeItemFromBuyingList;";
+			onload = "ctrlShow [_this,false]";
 		};	
+		
+
+		class Zupa_RscButtonMenu_ATT4: Zupa_RscButtonMenu
+		{
+			idc = 7443;
+			text = " << ";
+			x = 0.46 * safezoneW + safezoneX;
+			y = 0.65 * safezoneH + safezoneY;
+			w = 0.08 * safezoneW;
+			onButtonClick = "call Z_removeAllFromBuyingList;";
+			onload = "ctrlShow [_this,false]";
+		};
+		
+			
+		class RscText_ATT8: RscTextT
+		{
+			idc = 7404;
+			text = "Available Slots: 0/0";
+			x = 0.55 * safezoneW + safezoneX;
+			y = 0.72 * safezoneH + safezoneY;
+			w = 0.15 * safezoneW;
+			h = 0.03 * safezoneH;
+			colorText[] = {1,1,1,1};
+			onload = "ctrlShow [_this,false]";
+		};	
+
+		
 		class RscText_AT18: RscTextT
 		{
 			idc = 7403;
@@ -165,14 +294,26 @@ class AdvancedTrading
 		};		
 			class Zupa_RscButtonMenu_AT16: Zupa_RscButtonMenu
 		{
-			idc = -1;
+			idc = 7435;
 			text = "Sell";
 			x = 0.55 * safezoneW + safezoneX;
 			y = 0.77 * safezoneH + safezoneY;
 			w = 0.13 * safezoneW;
-
 			onButtonClick = "call Z_SellItems;";
-		};		
+		};	
+
+		class Zupa_RscButtonMenu_AT27: Zupa_RscButtonMenu
+		{
+			idc = 7436;
+			text = "Buy";
+			x = 0.55 * safezoneW + safezoneX;
+			y = 0.77 * safezoneH + safezoneY;
+			w = 0.13 * safezoneW;
+			onload = "ctrlShow [_this,false]";
+			onButtonClick = "call Z_BuyItems;";
+			onload = "ctrlShow [_this,false]";
+		};	
+		
 		class Zupa_RscButtonMenu_AT17: Zupa_RscButtonMenu
 		{
 			idc = -1;
