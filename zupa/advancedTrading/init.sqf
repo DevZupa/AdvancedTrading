@@ -28,6 +28,7 @@ switch (_lbIndex) do {
     case 1: { call Z_getVehicleItems; };
 	case 2: { call Z_getGearItems; };
 };
+
 };
 
 Z_getBackpackItems = {
@@ -59,14 +60,16 @@ Z_getBackpackItems = {
 		{
 			_counter = 0 ;
 			while{	_counter < ( 	_ammmounts2 select _forEachIndex)}do{
-			_normalWeaps set [count(_normalMags),_x];
+			_normalWeaps set [count(_normalWeaps),_x];
 			_counter = _counter + 1;
 			};
 		}forEach _kinds2;
-				
+	
+		systemChat str(count _kinds2);	
+		systemChat str(count _normalWeaps);	
 		[_normalMags,_normalWeaps, typeOf _backpack] call	Z_checkArrayInConfig;	
 	}else{
-		_ctrltext = format["Are you trying to fool me?"];
+		_ctrltext = format["I'm not stupid.."];
 		ctrlSetText [7413, _ctrltext];
 		
 		_ctrltext = format["I do not see any backpack on your back ?!"];
@@ -83,8 +86,13 @@ Z_getVehicleItems = {
 	_vehicle = objNull;
 	_ownsCar = false;
 	
-	_list = (position player) nearEntities [["Land", "Air", "Sea"], 50];
-	{if(local _x && !isPlayer _x)then{_vehicle = _x};}count _list;
+	_list = nearestObjects [(getPosATL player), ["AllVehicles"], 30];	
+	{
+		systemChat (str(typeOf _x) + str(local _x));
+		if(!isNull _x && local _x && !isPlayer _x && alive _x && !(_x isKindOf "zZombie_base"))then{
+			_vehicle = _x;
+		};
+	}count _list;
 	systemChat (typeOf _vehicle);
 	
 	if(!isNull _vehicle)then{
@@ -110,18 +118,18 @@ Z_getVehicleItems = {
 		{
 			_counter = 0 ;
 			while{	_counter < ( 	_ammmounts2 select _forEachIndex)}do{
-			_normalWeaps set [count(_normalMags),_x];
-					_counter = _counter + 1;
+				_normalWeaps set [count(_normalWeaps),_x];
+				_counter = _counter + 1;
 			};
 		}forEach _kinds2;
 		
 		
-		[_normalWeaps,_normalMags, typeOf _vehicle] call	Z_checkArrayInConfig;
+		[_normalWeaps,_normalMags, typeOf _vehicle] call Z_checkArrayInConfig;
 	}else{
-		_ctrltext = format["So you better start looting!"];
+		_ctrltext = format["Get in driver seat first!"];
 		ctrlSetText [7413, _ctrltext];
 		
-		_ctrltext = format["I do not see any vehicle where you were driver from ?!"];
+		_ctrltext = format["I do not see any vehicle owned by you."];
 		ctrlSetText [7412, _ctrltext];
 	};	
 };
@@ -311,8 +319,7 @@ Z_SellItems = {
 		_outcome set [0,_mA];	
 		_outcome set [1,_wA];	
 		};
-		
-		
+			
 		_money = 0;	
 		{
 			_money = _money + ( (_itemsCheckArray select _forEachIndex select 2) * _x) ;	
@@ -321,8 +328,13 @@ Z_SellItems = {
 			_money = _money + ( (_weaponsCheckArray select _forEachIndex select 2) * _x) ;	
 		}forEach (_outcome select 1);
 		
-		[player,_money] call SC_fnc_addCoins;		
-		systemChat "Trading Done";							
+		if(typeName _money == "SCALAR")then{
+			[player,_money] call SC_fnc_addCoins;	
+			systemChat "added" + str(_money);			
+		}else{
+		systemChat "Money is not a number";			
+		};		
+						
 	}else{
 		systemChat "No Items to Sell";
 	};	
@@ -332,9 +344,8 @@ Z_SellItems = {
 
 /* ----------------------------------------------------------------------------
 Examples:
-   _result = [_backpack, ["SmokeShell","SmokeShell"]] call CBA_fnc_removeMagazineCargo; 
-   
-   _result = [[1,0,0,1,1,1,0],[1,0,0,1]]; 1 = success, 0 = fail ( not in cargo)
+   _result = [_backpack, ["SmokeShell","M16_AMMO"],["M16","M16","M240"]] call ZUPA_fnc_removeWeaponsAndMagazinesCargo; 
+   _result == [[1,0,0,1,1,1,0],[1,0,0,1]]; // 1 = success, 0 = fail ( not in cargo)
    
 Author:
    Zupa 2014-09-30
@@ -348,11 +359,11 @@ ZUPA_fnc_removeWeaponsAndMagazinesCargo = {
 	_normalWeaps = [];
 	_unit_allItems = getMagazineCargo _unit; //  [[type1, typeN, ...],[count1, countN, ...]]
 	_unit_allItems_types = _unit_allItems select 0;
-	_unit_allItems_count = _unit_allItems select 1;
-	clearMagazineCargo _unit;
+	_unit_allItems_count = _unit_allItems select 1;	
 	_unit_allWeaps = getWeaponCargo _unit; 
 	_unit_allWeaps_types = _unit_allWeaps select 0;
-	_unit_allWeaps_count = _unit_allWeaps select 1;			
+	_unit_allWeaps_count = _unit_allWeaps select 1;	
+	clearMagazineCargo _unit;	
 	clearWeaponCargo _unit;
 	{
 		_counter = 0 ;
@@ -376,9 +387,9 @@ ZUPA_fnc_removeWeaponsAndMagazinesCargo = {
 		_inCargo = _normalItems find _x;
 		if(_inCargo > -1)then{
 			_normalItems set [_inCargo, "soldItem"];
-			_returnMag = _returnMag set [count(_returnMag),1];
+			_returnMag set [count(_returnMag),1];
 		}else{
-			_returnMag = _returnMag set [count(_returnMag),0];	
+			_returnMag set [count(_returnMag),0];	
 		};
 	}count _items;	
 	_normalItems = _normalItems - ["soldItem"];
@@ -390,9 +401,9 @@ ZUPA_fnc_removeWeaponsAndMagazinesCargo = {
 		_inCargo = _normalWeaps find _x;
 		if(_inCargo > -1)then{
 			_normalWeaps set [_inCargo, "soldItem"];
-			_returnWeap = _returnWeap set [count(_returnWeap),1];
+			_returnWeap set [count(_returnWeap),1];
 		}else{
-			_returnWeap = _returnWeap set [count(_returnWeap),0];	
+			_returnWeap set [count(_returnWeap),0];	
 		};
 	}count _weaps;	
 	_normalWeaps = _normalWeaps - ["soldItem"];
@@ -410,4 +421,14 @@ Z_AdvancedTradingInit = true;
 };
 
 createDialog "AdvancedTrading";
+{lbAdd[7405,_x]} forEach ['Selling'];
+{lbAdd[7404,_x]} forEach ['Backpack','Vehicle','Gear'];
+
+_dialog = findDisplay 711197;
+(_dialog displayCtrl 7414) ctrlSetText " < ";
+(_dialog displayCtrl 7415) ctrlSetText " << ";
+
+ 
+(_dialog displayCtrl 7405) lbSetSelected [0, true];
+(_dialog displayCtrl 7404) lbSetSelected [2, true];
 call Z_getGearItems; 
