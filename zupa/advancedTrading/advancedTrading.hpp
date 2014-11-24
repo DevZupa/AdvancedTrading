@@ -274,7 +274,7 @@ class AdvancedTrading
 		class RscText_ATT8: RscTextT
 		{
 			idc = 7404;
-			text = "Available Slots: 0/0";
+			text = "Available Slots: 0/0/0";
 			x = 0.55 * safezoneW + safezoneX;
 			y = 0.32 * safezoneH + safezoneY;
 			w = 0.15 * safezoneW;

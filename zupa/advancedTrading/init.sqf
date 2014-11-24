@@ -37,6 +37,8 @@ if(isNil "Z_AdvancedTradingInit")then{
 	};
 
 	Z_getContainer = {
+		_dialog = findDisplay 711197;
+		(_dialog displayCtrl 7404) ctrlSetText format["0 / 0 / 0"];
 		Z_clearBuyingList;
 		Z_clearLists;
 		Z_SellableArray = [];
@@ -74,7 +76,13 @@ if(isNil "Z_AdvancedTradingInit")then{
 				};
 				case 1: { 
 					["Buying in vehicle."] call Z_filleTradeTitle;
-					[1] call Z_calculateFreeSpace; 
+					_canBuyInVehicle = call Z_CheckCloseVehicle;
+					if(_canBuyInVehicle)then{
+						[1] call Z_calculateFreeSpace; 
+					}else{
+						systemChat format["Get in driver seat to be able to trade to your vehicle."];						
+						(_dialog displayCtrl 7404) ctrlSetText format["Free Slots: %1 / %2 / %3",0,0,0];
+					};
 				};
 				case 2: { 
 					["Buying in gear."] call Z_filleTradeTitle;
@@ -92,11 +100,9 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_backpack = unitBackpack player;
 		if (!isNil "_backpack") then {    				
 			_mags = getMagazineCargo _backpack;
-			_weaps = getWeaponCargo _backpack;
-			
+			_weaps = getWeaponCargo _backpack;		
 			_normalMags = [];
-			_normalWeaps = [];
-			
+			_normalWeaps = [];			
 			_kinds = _mags select 0;
 			_ammmounts = _mags select 1;
 			{
@@ -398,8 +404,19 @@ if(isNil "Z_AdvancedTradingInit")then{
 	
 	Z_BuyItems = {
 	
+		_magazinesToBuy = [];
+		_weaponsToBuy = [];
+		_backpacksToBuy = [];
+		
+		
 	
-
+		_canBuy = call Z_allowBuying;
+		
+		if(_canBuy)then{
+		
+		
+		};
+	
 	};
 
 	/* ----------------------------------------------------------------------------
@@ -476,35 +493,23 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_returnVar;
 	};
 
-	Z_ChangeBuySell = {
-		
-		_dialog = findDisplay 711197;
-		
-		Z_Selling = !Z_Selling;
-		
+	Z_ChangeBuySell = {		
+		_dialog = findDisplay 711197;		
+		Z_Selling = !Z_Selling;	
 		if(Z_Selling)then{	
 			(_dialog displayCtrl 7416) ctrlSetText "Buy";
 			(_dialog displayCtrl 7409) ctrlSetText "Selling";
 			{ctrlShow [_x,true];} forEach [7401,7402,7435,7430,7431,7432,7433]; // show
-			{ctrlShow [_x,false];} forEach [7421,7422,7436,7440,7441,7442,7443,7404]; // hide
-			
-			
-					
+			{ctrlShow [_x,false];} forEach [7421,7422,7436,7440,7441,7442,7443]; // hide											
 		}else{
 			(_dialog displayCtrl 7416) ctrlSetText "Sell";
 			(_dialog displayCtrl 7409) ctrlSetText "Buying";
-			{ctrlShow [_x,true];} forEach [7421,7422,7436,7440,7441,7442,7443,7404]; // show
+			{ctrlShow [_x,true];} forEach [7421,7422,7436,7440,7441,7442,7443]; // show
 			{ctrlShow [_x,false];} forEach [7401,7402,7435,7430,7431,7432,7433]; // hide	
 			call Z_fillBuyList;
-		};
-		
-		[2] call Z_getContainer; // default gear
-
-		
-		
+		};	
+		[2] call Z_getContainer; // default gear		
 	};
-
-
 
 	Z_removeAllFromBuyingList = {
 		Z_clearBuyingList;
@@ -525,13 +530,11 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_index = _this select 0;
 		_amount = parseNumber(_this select 1);		
 		if(!isNil"_index" && _index > -1 && (typeName _amount == "SCALAR") && _amount > 0 )then {
-			systemChat format["Selected from pos %1",_index];
 			_temp = Z_BuyArray select _index;
 			_item = [_temp select 0,_temp select 1 ,_temp select 2,_temp select 3, _temp select 4, _amount ];
 			Z_BuyingArray set [count(Z_BuyingArray),_item];		
 			_index2 = lbAdd [7422, format["%1x: %2",_item select 5,_item select 3]];
 			lbSetPicture [7422, _index2, _item select 4];
-			systemChat format["Added to pos %1",_index2];
 			call Z_calcPrice;
 		};	
 	};
@@ -545,7 +548,6 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_counter = 0;
 			{	
 						_cat =  format["Category_%1",(_arrayOfTraderCat select _forEachIndex select 1)];
-							systemChat str(_cat);
 						_cfgtraders = missionConfigFile >> "CfgTraderCategory"  >> _cat;
 						for "_i" from 0 to (count _cfgtraders)-1 do
 						{					
@@ -602,23 +604,62 @@ if(isNil "Z_AdvancedTradingInit")then{
 	};
 
 	Z_calculateFreeSpace = {
-		// 0 - backpack 1- vehicle 2 -gear
 		_selection = _this select 0;
-		
+		_returnArray = [0,0,0];
 		if(_selection == 2) then{ //gear
-			
-		};
-		
+			systemChat format["Only 1 weapon / 0 backpacks allowed to buy at a time for security reasons!"];
+			_allowedMags = 12 - count(magazines player);
+			_allowedWeapons = 0;
+			_allowedBackpacks = 0;		
+			_returnArray = [_allowedMags,_allowedWeapons,_allowedBackpacks];
+		};		
 		if(_selection == 1) then{ //vehicle
-		
-		};
-		
+			_allowedMags = 0;
+			_allowedWeapons = 0;
+			_allowedBackpacks = 0;
+			if (!isNull "Z_vehicle") then {   
+				_allowedWeapons = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxWeapons');
+				_allowedMags = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxMagazines');
+				_allowedBackpacks = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportmaxbackpacks ');
+			};									
+			_returnArray = [_allowedMags,_allowedWeapons,_allowedBackpacks];
+		};		
 		if(_selection == 0) then{ //backpack
+			_allowedWeapons = 0;
+			_allowedMags = 0;
+			_allowedBackpacks = 0;
+			_backpack = unitBackpack player;
+			if (!isNil "_backpack") then {   
+				_allowedWeapons = getNumber (configFile >> 'CfgVehicles' >> (typeOf _backpack) >> 'transportMaxWeapons');
+				_allowedMags = getNumber (configFile >> 'CfgVehicles' >> (typeOf _backpack) >> 'transportMaxMagazines');
+				_allowedBackpacks = 0;
+			};		
+			_returnArray = [_allowedMags,_allowedWeapons,_allowedBackpacks];
+		};				
+		_dialog = findDisplay 711197;
+		(_dialog displayCtrl 7404) ctrlSetText format["Free Slots: %1 / %2 / %3",_returnArray select 0,_returnArray select 1,_returnArray select 2];
+	};
+	
+	Z_CheckCloseVehicle = {	
+		Z_vehicle = objNull;
+		_vehicle = objNull;
+		_list = nearestObjects [(getPosATL player), ["AllVehicles"], Z_VehicleDistance];	
+		{	
+			if(!isNull _x && local _x && !isPlayer _x && alive _x && !(_x isKindOf "zZombie_base"))then{
+				systemChat format["Selected %1",typeOf _x];
+				_vehicle = _x;
+			};
+		}count _list;		
+		_result = false;		
+		if(!isNull _vehicle)then{
+			Z_vehicle = _vehicle;
+			_result = true;
+		};	
+		_result
+	};
+	
+	Z_allowBuying = {
 		
-		};
-			
-		// returns ammount of magazine/weapons capable to buy.
-		// show info message with false outcome to let him know what he can buy (ammounts).
 	};
 
 	Z_AdvancedTradingInit = true;
