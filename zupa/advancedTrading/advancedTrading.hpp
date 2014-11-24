@@ -35,7 +35,6 @@ class AdvancedTrading
 			y = 0.22 * safezoneH + safezoneY;
 			w = 0.38 * safezoneW;
 			h = 0.05 * safezoneH;		
-			colorBackground[] = {0,0,0,0.8};	
 			colorText[] = {1,1,1,1};			
 		};
 		
@@ -63,7 +62,7 @@ class AdvancedTrading
 		{
 			idc = -1;
 			text =  "Vehicle";
-			x = 0.41 * safezoneW + safezoneX;
+			x = 0.51 * safezoneW + safezoneX;
 			y = 0.26 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "[1] call Z_getContainer;";
@@ -73,7 +72,7 @@ class AdvancedTrading
 		{
 			idc = 7416;
 			text =  "Buy";
-			x = 0.41 * safezoneW + safezoneX;
+			x = 0.61 * safezoneW + safezoneX;
 			y = 0.26 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "call Z_ChangeBuySell;";
@@ -114,7 +113,7 @@ class AdvancedTrading
 		};		
 		class RscText_AT9: RscTextT
 		{
-			idc = -1;
+			idc = 7409;
 			text = "Selling";
 			x = 0.55 * safezoneW + safezoneX;
 			y = 0.38 * safezoneH + safezoneY;
@@ -136,6 +135,8 @@ class AdvancedTrading
 			h = 0.30 * safezoneH;
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
+			onLBSelChanged = "[(lbCurSel 7401),true] call  Z_showPrice";
+			
 		};
 		class RscListbox_AT11: RscListbox
 		{
@@ -162,6 +163,7 @@ class AdvancedTrading
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
 			onload = "ctrlShow [_this,false]";
+			onLBSelChanged = "[(lbCurSel 7421),false] call  Z_showPrice";
 		};
 		class RscListbox_AT21: RscListbox
 		{
@@ -225,7 +227,7 @@ class AdvancedTrading
 			idc = 7440;
 			text = " > ";
 			x = 0.46 * safezoneW + safezoneX;
-			y = 0.49 * safezoneH + safezoneY;
+			y = 0.41 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "[(lbCurSel 7421),(ctrlText 7441)] call Z_toBuyingList;";
 			onload = "ctrlShow [_this,false]";
@@ -274,15 +276,26 @@ class AdvancedTrading
 			idc = 7404;
 			text = "Available Slots: 0/0";
 			x = 0.55 * safezoneW + safezoneX;
-			y = 0.72 * safezoneH + safezoneY;
+			y = 0.32 * safezoneH + safezoneY;
 			w = 0.15 * safezoneW;
 			h = 0.03 * safezoneH;
 			colorText[] = {1,1,1,1};
 			onload = "ctrlShow [_this,false]";
 		};	
-
 		
 		class RscText_AT18: RscTextT
+		{
+			idc = 7410;
+			text = "Price: 0 Coins";
+			x = 0.55 * safezoneW + safezoneX;
+			y = 0.72 * safezoneH + safezoneY;
+			w = 0.15 * safezoneW;
+			h = 0.03 * safezoneH;
+			colorText[] = {1,1,1,1};
+		};	
+
+		
+		class RscText_ATZ18: RscTextT
 		{
 			idc = 7403;
 			text = "0 Coins";
@@ -299,7 +312,7 @@ class AdvancedTrading
 			x = 0.55 * safezoneW + safezoneX;
 			y = 0.77 * safezoneH + safezoneY;
 			w = 0.13 * safezoneW;
-			onButtonClick = "call Z_SellItems;";
+			onButtonClick = "//call Z_SellItems;";
 		};	
 
 		class Zupa_RscButtonMenu_AT27: Zupa_RscButtonMenu
@@ -310,8 +323,8 @@ class AdvancedTrading
 			y = 0.77 * safezoneH + safezoneY;
 			w = 0.13 * safezoneW;
 			onload = "ctrlShow [_this,false]";
-			onButtonClick = "call Z_BuyItems;";
-			onload = "ctrlShow [_this,false]";
+			onButtonClick = "//call Z_BuyItems;";
+		
 		};	
 		
 		class Zupa_RscButtonMenu_AT17: Zupa_RscButtonMenu

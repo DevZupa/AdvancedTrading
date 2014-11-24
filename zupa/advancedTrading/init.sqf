@@ -61,7 +61,13 @@ Z_getContainer = {
 			};
 		};
 	}else{
+		_ctrltext = format[" "];
+		ctrlSetText [7413, _ctrltext];
+		
+		_ctrltext = format["These are all the items I'm selling!"];
+		ctrlSetText [7412, _ctrltext];
 		switch (_lbIndex) do {
+		
 			case 0: { 
 				["Buying in backpack."] call Z_filleTradeTitle;
 				
@@ -478,11 +484,15 @@ Z_ChangeBuySell = {
 	
 	if(Selling)then{	
 		(_dialog displayCtrl 7416) ctrlSetText "Buy";
+		(_dialog displayCtrl 7409) ctrlSetText "Selling";
 		{ctrlShow [_x,true];} forEach [7401,7402,7435,7430,7431,7432,7433]; // show
 		{ctrlShow [_x,false];} forEach [7421,7422,7436,7440,7441,7442,7443,7404]; // hide
+		
+		
 				
 	}else{
 		(_dialog displayCtrl 7416) ctrlSetText "Sell";
+		(_dialog displayCtrl 7409) ctrlSetText "Buying";
 		{ctrlShow [_x,true];} forEach [7421,7422,7436,7440,7441,7442,7443,7404]; // show
 		{ctrlShow [_x,false];} forEach [7401,7402,7435,7430,7431,7432,7433]; // hide	
 		call Z_fillBuyList;
@@ -521,7 +531,7 @@ Z_toBuyingList = {
 		_temp = Z_BuyArray select _index;
 		_item = [_temp select 0,_temp select 1 ,_temp select 2,_temp select 3, _temp select 4, _amount ];
 		Z_BuyingArray set [count(Z_BuyingArray),_item];		
-		_index2 = lbAdd [7422, format["%1x: %2",_item select 5,_item select 3];
+		_index2 = lbAdd [7422, format["%1x: %2",_item select 5,_item select 3]];
 		lbSetPicture [7422, _index2, _item select 4];
 		systemChat format["Added to pos %1",_index2];
 		call Z_calcPrice;
@@ -537,12 +547,16 @@ Z_fillBuyList = {
 		_counter = 0;
 		{	
 					_cat =  format["Category_%1",(_arrayOfTraderCat select _forEachIndex select 1)];
-					
+						systemChat str(_cat);
 					_cfgtraders = missionConfigFile >> "CfgTraderCategory"  >> _cat;
 					for "_i" from 0 to (count _cfgtraders)-1 do
 					{					
 						_y  = _cfgtraders select _i;
-							
+						
+						
+						if (isClass _y) then
+					{
+							_y  = configName (_y );
 						_type =  getText(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "type");
 						_buy = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "sell");
 						_pic = "";
@@ -550,12 +564,20 @@ Z_fillBuyList = {
 						if(_type == "trade_items")then{
 							_pic = getText (configFile >> 'CfgMagazines' >> _y >> 'picture');
 							_text = getText (configFile >> 'CfgMagazines' >> _y >> 'displayName');
-						}else{
+							Z_BuyArray set [count(Z_BuyArray) , [_y,_type,_buy select 0,_text,_pic]];
+							_totalPrice = _totalPrice + (_buy select 0);	
+								
+							
+						};
+						if(_type == "trade_weapons")then{
 							_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
 							_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
-						};							
-						Z_BuyArray set [count(Z_BuyArray) , [_y,_type,_buy select 0,_text,_pic]];
-						_totalPrice = _totalPrice + (_buy select 0);	
+							Z_BuyArray set [count(Z_BuyArray) , [_y,_type,_buy select 0,_text,_pic]];
+							_totalPrice = _totalPrice + (_buy select 0);	
+						};
+
+					};							
+						
 											
 					};																	
 		}forEach _arrayOfTraderCat;	
@@ -577,9 +599,22 @@ Z_fillBuyingList = {
 	}count Z_BuyingArray;
 };
 
+Z_showPrice = {
+	_index = _this;
+};
+
+Z_calculateFreeSpace = {
+
+	
+	// return true or false
+	// show info message with false outcome to let him know what he can buy (ammounts).
+};
+
 Z_AdvancedTradingInit = true;
 
 };
+
+
 
 createDialog "AdvancedTrading";
 
