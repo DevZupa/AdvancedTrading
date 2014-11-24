@@ -305,14 +305,14 @@ class AdvancedTrading
 			h = 0.03 * safezoneH;
 			colorText[] = {1,1,1,1};
 		};		
-			class Zupa_RscButtonMenu_AT16: Zupa_RscButtonMenu
+		class Zupa_RscButtonMenu_AT16: Zupa_RscButtonMenu
 		{
 			idc = 7435;
 			text = "Sell";
 			x = 0.55 * safezoneW + safezoneX;
 			y = 0.77 * safezoneH + safezoneY;
 			w = 0.13 * safezoneW;
-			onButtonClick = "//call Z_SellItems;";
+			onButtonClick = "call Z_SellItems;";
 		};	
 
 		class Zupa_RscButtonMenu_AT27: Zupa_RscButtonMenu
@@ -323,7 +323,7 @@ class AdvancedTrading
 			y = 0.77 * safezoneH + safezoneY;
 			w = 0.13 * safezoneW;
 			onload = "ctrlShow [_this,false]";
-			onButtonClick = "//call Z_BuyItems;";
+			onButtonClick = "call Z_BuyItems;";
 		
 		};	
 		
