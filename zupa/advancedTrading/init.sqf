@@ -16,8 +16,8 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_BuyingArray = [];
 	Z_vehicle = objNull;
 	Z_VehicleDistance = 30;
-	Z_MoneyVariable = "cashMoney"; // Change this to whichever currency u are using.
-	
+	Z_MoneyVariable = "cashMoney"; // Change this to whichever currency You are using.
+	Z_NormalCurrency = false; // No effect yet. Not supported yet
 
 	Z_filleTradeTitle = {
 		_text = _this select 0;
@@ -398,13 +398,10 @@ if(isNil "Z_AdvancedTradingInit")then{
 				systemChat format["Received %1 %2", _money , CurrencyName];			
 			}else{
 				systemChat format["Money is not a number. Something went wrong."];			
-			};		
-							
+			};									
 		}else{
 			systemChat format["No Items to Sell"];
-		};	
-		
-			
+		};						
 	};
 	
 	Z_BuyItems = {	
@@ -464,22 +461,25 @@ if(isNil "Z_AdvancedTradingInit")then{
 					} count Z_BuyingArray;	
 				};
 				
-				if(Z_SellingFrom == 2)then{//gear
-					/* disabled currently.
+				if(Z_SellingFrom == 2)then{//gear				
 					{
 						if( _x select 1 == "trade_weapons")then{
-							unitBackpack player addWeaponCargoGlobal [_x select 0, _x select 5];																			
+							_count = 0;
+							while(_count < _x select 5)do{
+								player addWeapon (_x select 0);	
+								_count = _count + 1;
+							};							 
 						};
 						if( _x select 1 == "trade_items")then{
-							unitBackpack player addMagazineCargoGlobal  [_x select 0, _x select 5];	
+							_count = 0;						
+							 while(_count < _x select 5)do{
+								player addMagazine (_x select 0);	
+								_count = _count + 1;
+							};	
 						};					
-					} count Z_BuyingArray;	
-					*/
-					
-				};
-				
-				[player,_priceToBuy] call SC_fnc_removeCoins;
-					
+					} count Z_BuyingArray;										
+				};				
+				[player,_priceToBuy] call SC_fnc_removeCoins;					
 			};				
 		}else{
 			systemChat format["You need %1 %2 to buy all these items.",_priceToBuy,CurrencyName];
