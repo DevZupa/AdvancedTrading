@@ -16,6 +16,8 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_BuyingArray = [];
 	Z_vehicle = objNull;
 	Z_VehicleDistance = 30;
+	Z_MoneyVariable = "cashMoney"; // Change this to whichever currency u are using.
+	
 
 	Z_filleTradeTitle = {
 		_text = _this select 0;
@@ -71,10 +73,12 @@ if(isNil "Z_AdvancedTradingInit")then{
 			switch (_lbIndex) do {
 			
 				case 0: { 
+					Z_SellingFrom = 0;
 					["Buying in backpack."] call Z_filleTradeTitle;
 					[0] call Z_calculateFreeSpace;
 				};
 				case 1: { 
+					Z_SellingFrom = 1;
 					["Buying in vehicle."] call Z_filleTradeTitle;
 					_canBuyInVehicle = call Z_CheckCloseVehicle;
 					if(_canBuyInVehicle)then{
@@ -84,7 +88,8 @@ if(isNil "Z_AdvancedTradingInit")then{
 						(_dialog displayCtrl 7404) ctrlSetText format["Free Slots: %1 / %2 / %3",0,0,0];
 					};
 				};
-				case 2: { 
+				case 2: {
+					Z_SellingFrom = 2;				
 					["Buying in gear."] call Z_filleTradeTitle;
 					[2] call Z_calculateFreeSpace;
 				};
@@ -402,19 +407,82 @@ if(isNil "Z_AdvancedTradingInit")then{
 			
 	};
 	
-	Z_BuyItems = {
-	
-		_magazinesToBuy = [];
-		_weaponsToBuy = [];
-		_backpacksToBuy = [];
+	Z_BuyItems = {	
+		_magazinesToBuy = 0;
+		_weaponsToBuy = 0;
+		_backpacksToBuy = 0;
 		
+		_priceToBuy = 0;
 		
-	
-		_canBuy = call Z_allowBuying;
+		{
+			if( _x select 1 == "trade_weapons")then{
+				_weaponsToBuy = _weaponsToBuy + _x select 5 ;
+				_priceToBuy	= _priceToBuy + _x select 2;			
+			};
+			if( _x select 1 == "trade_items")then{
+				_magazinesToBuy = _magazinesToBuy + _x select 5 ;
+				_priceToBuy	= _priceToBuy + _x select 2;
+			};
+			if( _x select 1 == "trade_backpacks")then{
+				_backpacksToBuy = _backpacksToBuy + _x select 5 ;
+				_priceToBuy	= _priceToBuy + _x select 2;
+			};	
+		} count Z_BuyingArray;
+
+		//recheck if there is enough space -> not that some douche put extra stuff in.
 		
-		if(_canBuy)then{
+		_canBuy = [_weaponsToBuy,_magazinesToBuy,_backpacksToBuy] call Z_allowBuying;
 		
+		_myMoney = player getVariable[Z_MoneyVariable,0];
 		
+		if(_myMoney >= _priceToBuy)then{
+		
+			if(_canBuy)then{	
+			
+				if(Z_SellingFrom == 0)then{//backpack
+					{
+						if( _x select 1 == "trade_weapons")then{
+							unitBackpack player addWeaponCargoGlobal [_x select 0, _x select 5];																			
+						};
+						if( _x select 1 == "trade_items")then{
+							unitBackpack player addMagazineCargoGlobal  [_x select 0, _x select 5];	
+						};					
+					} count Z_BuyingArray;			
+				};
+				
+				if(Z_SellingFrom == 1)then{//vehicle
+					{
+						if( _x select 1 == "trade_weapons")then{
+							Z_vehicle addWeaponCargoGlobal [_x select 0, _x select 5];																			
+						};
+						if( _x select 1 == "trade_items")then{
+							Z_vehicle addMagazineCargoGlobal [_x select 0, _x select 5];	
+						};	
+						if( _x select 1 == "trade_backpacks")then{
+							Z_vehicle addBackpackCargoGlobal [_x select 0, _x select 5];	
+						};	
+					} count Z_BuyingArray;	
+				};
+				
+				if(Z_SellingFrom == 2)then{//gear
+					/* disabled currently.
+					{
+						if( _x select 1 == "trade_weapons")then{
+							unitBackpack player addWeaponCargoGlobal [_x select 0, _x select 5];																			
+						};
+						if( _x select 1 == "trade_items")then{
+							unitBackpack player addMagazineCargoGlobal  [_x select 0, _x select 5];	
+						};					
+					} count Z_BuyingArray;	
+					*/
+					
+				};
+				
+				[player,_priceToBuy] call SC_fnc_removeCoins;
+					
+			};				
+		}else{
+			systemChat format["You need %1 %2 to buy all these items.",_priceToBuy,CurrencyName];
 		};
 	
 	};
@@ -599,16 +667,13 @@ if(isNil "Z_AdvancedTradingInit")then{
 		}count Z_BuyingArray;
 	};
 
-	Z_showPrice = {
-		_index = _this;
-	};
 
 	Z_calculateFreeSpace = {
 		_selection = _this select 0;
 		_returnArray = [0,0,0];
 		if(_selection == 2) then{ //gear
-			systemChat format["Only 1 weapon / 0 backpacks allowed to buy at a time for security reasons!"];
-			_allowedMags = 12 - count(magazines player);
+			systemChat format["No buying of weapons/backpacks currently into gear for security reasons!"];
+			_allowedMags = 20 - count(magazines player);
 			_allowedWeapons = 0;
 			_allowedBackpacks = 0;		
 			_returnArray = [_allowedMags,_allowedWeapons,_allowedBackpacks];
@@ -659,7 +724,156 @@ if(isNil "Z_AdvancedTradingInit")then{
 	};
 	
 	Z_allowBuying = {
+		//	Z_SellingFrom = 0 - backpack, 1 - car, 2 -gear
 		
+		_buyProperties = _this;
+		_selection = Z_SellingFrom;
+		_return = false;
+		_toBuyWeaps = _this select 0;
+		_toBuyMags = _this select 1;
+		_toBuyBags = _this select 2;
+		if(_selection == 2) then{ //gear
+			systemChat format["Only 1 weapon / 0 backpacks allowed to buy at a time for security reasons!"];
+			_allowedMags = 20 - count(magazines player);
+			_allowedWeapons = 0;
+			_allowedBackpacks = 0;	
+			
+			_check1 = false;
+			_check2 = false;
+			_check3 = false;
+
+			if( _allowedWeapons => _toBuyWeaps)then{
+				_check1 = true;
+			}else{
+				systemChat format["You can only buy %1 weapons in your gear.",_allowedWeapons];
+			};
+			if( _allowedMags => _toBuyMags)then{
+				_check2 = true;
+			}else{
+				systemChat format["You can only buy %1 magazines  in your gear.",_allowedMags];
+			};		
+			if( _allowedBackpacks => _toBuyBags)then{
+				_check3 = true;
+			}else{
+				systemChat format["You can only buy %1 backpacks  in your gear.",_allowedBackpacks];
+			};
+			
+			if(_check1 && _check2 && _check3)then{
+				_return = true;
+			};
+			
+		};		
+		if(_selection == 1) then{ //vehicle
+			_allowedMags = 0;
+			_allowedWeapons = 0;
+			_allowedBackpacks = 0;
+			if (!isNull "Z_vehicle") then {   
+			
+			
+				_mags = getMagazineCargo Z_vehicle;
+				_weaps = getWeaponCargo Z_vehicle;
+				_bags = getBackpackCargo Z_vehicle;
+				
+				_normalMags = [];
+				_normalWeaps = [];
+				_normalBags = [];
+				
+				_kinds = _mags select 0;
+				_ammmounts = _mags select 1;
+				{
+					_counter = 0 ;
+					while{	_counter < ( 	_ammmounts select _forEachIndex)}do{
+					_normalMags set [count(_normalMags),_x];
+							_counter = _counter + 1;
+					};
+				}forEach _kinds;
+				
+				_kinds2 = _weaps select 0;
+				_ammmounts2 = _weaps select 1;
+				{
+					_counter = 0 ;
+					while{	_counter < ( 	_ammmounts2 select _forEachIndex)}do{
+						_normalWeaps set [count(_normalWeaps),_x];
+						_counter = _counter + 1;
+					};
+				}forEach _kinds2;
+				
+				_kinds3 = _bags select 0;
+				_ammmounts3 = _bags select 1;
+				{
+					_counter = 0 ;
+					while{	_counter < ( 	_ammmounts3 select _forEachIndex)}do{
+						_normalBags set [count(_normalBags),_x];
+						_counter = _counter + 1;
+					};
+				}forEach _kinds3;
+			
+						
+				_allowedWeapons = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxWeapons') - count(_normalWeaps);
+				_allowedMags = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxMagazines') - count(_normalMags);
+				_allowedBackpacks = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportmaxbackpacks ') - count(_normalBags);
+			};	
+			
+			_check1 = false;
+			_check2 = false;
+			_check3 = false;
+
+			if( _allowedWeapons => _toBuyWeaps)then{
+				_check1 = true;
+			}else{
+				systemChat format["You can only buy %1 weapons in your vehicle.",_allowedWeapons];
+			};
+			if( _allowedMags => _toBuyMags)then{
+				_check2 = true;
+			}else{
+				systemChat format["You can only buy %1 magazines in your vehicle.",_allowedMags];
+			};			
+			if( _allowedBackpacks => _toBuyBags)then{
+				_check3 = true;
+			}else{
+				systemChat format["You can only buy %1 backpacks in your vehicle.",_allowedBackpacks];
+			};
+			
+			if(_check1 && _check2 && _check3)then{
+				_return = true;
+			};
+			
+			
+		};		
+		if(_selection == 0) then{ //backpack
+			_allowedWeapons = 0;
+			_allowedMags = 0;
+			_allowedBackpacks = 0;
+			_backpack = unitBackpack player;
+			if (!isNil "_backpack") then {   
+				_allowedWeapons = getNumber (configFile >> 'CfgVehicles' >> (typeOf _backpack) >> 'transportMaxWeapons');
+				_allowedMags = getNumber (configFile >> 'CfgVehicles' >> (typeOf _backpack) >> 'transportMaxMagazines');
+				_allowedBackpacks = 0;
+			};		
+			
+			_check1 = false;
+			_check2 = false;
+			_check3 = false;
+			_check4 = false;
+
+			if( _allowedWeapons => _toBuyWeaps)then{
+				_check1 = true;
+			};
+			if( _allowedMags => _toBuyMags)then{
+				_check2 = true;
+			};			
+			if( _allowedBackpacks => _toBuyBags)then{
+				_check3 = true;
+			};									
+			if(_check1 && _check2 && _check3 && _check4)then{
+				_return = true;			
+			};	
+			
+			systemChat format["Buying to backpack is currently disabled for security reasons"];
+		};
+
+
+		_return
 	};
 
 	Z_AdvancedTradingInit = true;
