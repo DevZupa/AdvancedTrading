@@ -9,7 +9,7 @@ if( isNil "Z_traderData" || count (Z_traderData) == 0)exitWith{
 };
 
 if(isNil "Z_AdvancedTradingInit")then{
-
+// initiate the functions and variables for advanced trading -- easier for the people :) otherwise it would be in compiles or different file.
 	Z_SellableArray = [];
 	Z_SellArray = [];
 	Z_BuyArray = [];
@@ -24,7 +24,6 @@ if(isNil "Z_AdvancedTradingInit")then{
 		ctrlSetText [7408, _text];
 	};
 
-	// initiate the functions for advanced trading -- easier for the people :) otherwise it would be in compiles.
 	Z_clearLists = {
 		lbClear 7401;
 		lbClear 7402;
@@ -40,7 +39,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 
 	Z_getContainer = {
 		_dialog = findDisplay 711197;
-		(_dialog displayCtrl 7404) ctrlSetText format["0 / 0 / 0"];
+		(_dialog displayCtrl 7404) ctrlSetText format["Free Slots: 0 / 0 / 0"];
 		Z_clearBuyingList;
 		Z_clearLists;
 		Z_SellableArray = [];
@@ -85,7 +84,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 						[1] call Z_calculateFreeSpace; 
 					}else{
 						systemChat format["Get in driver seat to be able to trade to your vehicle."];						
-						(_dialog displayCtrl 7404) ctrlSetText format["Free Slots: %1 / %2 / %3",0,0,0];
+					//	(_dialog displayCtrl 7404) ctrlSetText format["Free Slots: %1 / %2 / %3",0,0,0];
 					};
 				};
 				case 2: {
@@ -262,7 +261,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 			}count Z_BuyingArray;
 		};
 		_ctrltext = format["%1 %2", _sellPrice , CurrencyName];
-		ctrlSetText [7403, _ctrltext];	
+		ctrlSetText [7410, _ctrltext];	
 	};
 
 	Z_fillSellList = {
@@ -702,7 +701,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_returnArray = [_allowedMags,_allowedWeapons,_allowedBackpacks];
 		};				
 		_dialog = findDisplay 711197;
-		(_dialog displayCtrl 7404) ctrlSetText format["Free Slots: %1 / %2 / %3",_returnArray select 0,_returnArray select 1,_returnArray select 2];
+		(_dialog displayCtrl 7404) ctrlSetText format["Free Slots: %1 / %2 / %3",_returnArray select 1,_returnArray select 0,_returnArray select 2];
 	};
 	
 	Z_CheckCloseVehicle = {	
@@ -872,15 +871,12 @@ if(isNil "Z_AdvancedTradingInit")then{
 			systemChat format["Buying to backpack is currently disabled for security reasons"];
 		};
 
-
 		_return
 	};
 
 	Z_AdvancedTradingInit = true;
 
 };
-
-
 
 createDialog "AdvancedTrading";
 
@@ -889,4 +885,5 @@ _dialog = findDisplay 711197;
 (_dialog displayCtrl 7433) ctrlSetText " << ";
 (_dialog displayCtrl 7442) ctrlSetText " < ";
 (_dialog displayCtrl 7443) ctrlSetText " << ";
+{ctrlShow [_x,false];} forEach [7441]; // hide	- double hide ( first one didn't work it seems.
 call Z_getGearItems; 

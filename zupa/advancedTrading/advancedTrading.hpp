@@ -36,7 +36,7 @@ class AdvancedTrading
 			colorText[] = {1,1,1,1};			
 		};
 		
-		class ZSC_RscButtonMenu_Z1: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_Z1: ZSC_RscShortcutButton
 		{
 			idc = -1;
 			text =  "Gear";
@@ -46,7 +46,7 @@ class AdvancedTrading
 			onButtonClick = "[2] call Z_getContainer;";
 		};
 		
-		class ZSC_RscButtonMenu_Z2: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_Z2: ZSC_RscShortcutButton
 		{
 			idc = -1;
 			text =  "Backpack";
@@ -56,7 +56,7 @@ class AdvancedTrading
 			onButtonClick = "[0] call Z_getContainer;";
 		};
 		
-		class ZSC_RscButtonMenu_Z3: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_Z3: ZSC_RscShortcutButton
 		{
 			idc = -1;
 			text =  "Vehicle";
@@ -66,7 +66,7 @@ class AdvancedTrading
 			onButtonClick = "[1] call Z_getContainer;";
 		};
 		
-		class ZSC_RscButtonMenu_Z4: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_Z4: ZSC_RscShortcutButton
 		{
 			idc = 7416;
 			text =  "Buy";
@@ -177,7 +177,7 @@ class AdvancedTrading
 		
 		
 		
-		class ZSC_RscButtonMenu_AT12: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_AT12: ZSC_RscShortcutButton
 		{
 			idc = 7430;
 			text =  " > ";
@@ -187,7 +187,7 @@ class AdvancedTrading
 			onButtonClick = "[(lbCurSel 7401)] call Z_pushItemToList;";
 		};
 		
-		class ZSC_RscButtonMenu_AT14: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_AT14: ZSC_RscShortcutButton
 		{
 			idc = 7431;
 			text = " >> ";
@@ -197,7 +197,7 @@ class AdvancedTrading
 			onButtonClick = "call Z_pushAllToList;";
 		};
 				
-		class ZSC_RscButtonMenu_AT13: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_AT13: ZSC_RscShortcutButton
 		{
 			idc = 7432;
 			text = " < ";
@@ -208,7 +208,7 @@ class AdvancedTrading
 		};	
 		
 
-		class ZSC_RscButtonMenu_AT15: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_AT15: ZSC_RscShortcutButton
 		{
 			idc = 7433;
 			text = " << ";
@@ -219,7 +219,7 @@ class AdvancedTrading
 		};
 
 // buying
-		class ZSC_RscButtonMenu_ATT1: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_ATT1: ZSC_RscShortcutButton
 
 		{
 			idc = 7440;
@@ -245,7 +245,7 @@ class AdvancedTrading
 			onload = "ctrlShow [_this,false]";
 		};
 		
-		class ZSC_RscButtonMenu_ATT3: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_ATT3: ZSC_RscShortcutButton
 		{
 			idc = 7442;
 			text = " < ";
@@ -257,7 +257,7 @@ class AdvancedTrading
 		};	
 		
 
-		class ZSC_RscButtonMenu_ATT4: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_ATT4: ZSC_RscShortcutButton
 		{
 			idc = 7443;
 			text = " << ";
@@ -272,7 +272,7 @@ class AdvancedTrading
 		class RscText_ATT8: ZSC_RscText
 		{
 			idc = 7404;
-			text = "Available Slots: 0/0/0";
+			text = "Free Slots: 0/0/0";
 			x = 0.55 * safezoneW + safezoneX;
 			y = 0.32 * safezoneH + safezoneY;
 			w = 0.15 * safezoneW;
@@ -284,26 +284,15 @@ class AdvancedTrading
 		class RscText_AT18: ZSC_RscText
 		{
 			idc = 7410;
-			text = "Price: 0 Coins";
+			text = "Nothing";
 			x = 0.55 * safezoneW + safezoneX;
 			y = 0.72 * safezoneH + safezoneY;
 			w = 0.15 * safezoneW;
 			h = 0.03 * safezoneH;
 			colorText[] = {1,1,1,1};
 		};	
-
-		
-		class RscText_ATZ18: ZSC_RscText
-		{
-			idc = 7403;
-			text = "0 Coins";
-			x = 0.55 * safezoneW + safezoneX;
-			y = 0.72 * safezoneH + safezoneY;
-			w = 0.15 * safezoneW;
-			h = 0.03 * safezoneH;
-			colorText[] = {1,1,1,1};
-		};		
-		class ZSC_RscButtonMenu_AT16: ZSC_RscButtonMenu
+			
+		class ZSC_RscButtonMenu_AT16: ZSC_RscShortcutButton
 		{
 			idc = 7435;
 			text = "Sell";
@@ -313,7 +302,7 @@ class AdvancedTrading
 			onButtonClick = "call Z_SellItems;";
 		};	
 
-		class ZSC_RscButtonMenu_AT27: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_AT27: ZSC_RscShortcutButton
 		{
 			idc = 7436;
 			text = "Buy";
@@ -325,7 +314,7 @@ class AdvancedTrading
 		
 		};	
 		
-		class ZSC_RscButtonMenu_AT17: ZSC_RscButtonMenu
+		class ZSC_RscButtonMenu_AT17: ZSC_RscShortcutButton
 		{
 			idc = -1;
 			text = "Close";
