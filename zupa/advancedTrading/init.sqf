@@ -742,17 +742,17 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_check2 = false;
 			_check3 = false;
 
-			if( _allowedWeapons => _toBuyWeaps)then{
+			if( _allowedWeapons >=_toBuyWeaps)then{
 				_check1 = true;
 			}else{
 				systemChat format["You can only buy %1 weapons in your gear.",_allowedWeapons];
 			};
-			if( _allowedMags => _toBuyMags)then{
+			if( _allowedMags >= _toBuyMags)then{
 				_check2 = true;
 			}else{
 				systemChat format["You can only buy %1 magazines  in your gear.",_allowedMags];
 			};		
-			if( _allowedBackpacks => _toBuyBags)then{
+			if( _allowedBackpacks >= _toBuyBags)then{
 				_check3 = true;
 			}else{
 				systemChat format["You can only buy %1 backpacks  in your gear.",_allowedBackpacks];
@@ -818,17 +818,17 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_check2 = false;
 			_check3 = false;
 
-			if( _allowedWeapons => _toBuyWeaps)then{
+			if( _allowedWeapons >= _toBuyWeaps)then{
 				_check1 = true;
 			}else{
 				systemChat format["You can only buy %1 weapons in your vehicle.",_allowedWeapons];
 			};
-			if( _allowedMags => _toBuyMags)then{
+			if( _allowedMags >= _toBuyMags)then{
 				_check2 = true;
 			}else{
 				systemChat format["You can only buy %1 magazines in your vehicle.",_allowedMags];
 			};			
-			if( _allowedBackpacks => _toBuyBags)then{
+			if( _allowedBackpacks >= _toBuyBags)then{
 				_check3 = true;
 			}else{
 				systemChat format["You can only buy %1 backpacks in your vehicle.",_allowedBackpacks];
@@ -856,13 +856,13 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_check3 = false;
 			_check4 = false;
 
-			if( _allowedWeapons => _toBuyWeaps)then{
+			if( _allowedWeapons >= _toBuyWeaps)then{
 				_check1 = true;
 			};
-			if( _allowedMags => _toBuyMags)then{
+			if( _allowedMags >= _toBuyMags)then{
 				_check2 = true;
 			};			
-			if( _allowedBackpacks => _toBuyBags)then{
+			if( _allowedBackpacks >= _toBuyBags)then{
 				_check3 = true;
 			};									
 			if(_check1 && _check2 && _check3 && _check4)then{
