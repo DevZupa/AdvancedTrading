@@ -1,3 +1,8 @@
+class AT_Zupa_BlueButton: ZSC_RscButtonMenu {
+	colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
+	colorText[] = {0.8784,0.8471,0.651,1};
+};
+
 class AdvancedTrading
 {
 	idd = 711197;
@@ -36,7 +41,7 @@ class AdvancedTrading
 			colorText[] = {1,1,1,1};			
 		};
 		
-		class ZSC_RscButtonMenu_Z1: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_Z1: AT_Zupa_BlueButton
 		{
 			idc = -1;
 			text =  "Gear";
@@ -46,7 +51,7 @@ class AdvancedTrading
 			onButtonClick = "[2] call Z_getContainer;";
 		};
 		
-		class ZSC_RscButtonMenu_Z2: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_Z2: AT_Zupa_BlueButton
 		{
 			idc = -1;
 			text =  "Backpack";
@@ -56,7 +61,7 @@ class AdvancedTrading
 			onButtonClick = "[0] call Z_getContainer;";
 		};
 		
-		class ZSC_RscButtonMenu_Z3: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_Z3: AT_Zupa_BlueButton
 		{
 			idc = -1;
 			text =  "Vehicle";
@@ -66,7 +71,7 @@ class AdvancedTrading
 			onButtonClick = "[1] call Z_getContainer;";
 		};
 		
-		class ZSC_RscButtonMenu_Z4: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_Z4: AT_Zupa_BlueButton
 		{
 			idc = 7416;
 			text =  "Buy";
@@ -134,6 +139,8 @@ class AdvancedTrading
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
 			onLBSelChanged = "[(lbCurSel 7401),true] call  Z_showPrice";
+			class ListScrollBar: ZSC_RscScrollBar{};
+			class ScrollBar: ZSC_RscScrollBar{};
 			
 		};
 		class RscListbox_AT11: ZSC_RscListBox
@@ -145,6 +152,8 @@ class AdvancedTrading
 			h = 0.30 * safezoneH;
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
+			class ListScrollBar: ZSC_RscScrollBar{};
+			class ScrollBar: ZSC_RscScrollBar{};
 		};
 		
 		
@@ -177,7 +186,7 @@ class AdvancedTrading
 		
 		
 		
-		class ZSC_RscButtonMenu_AT12: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_AT12: AT_Zupa_BlueButton
 		{
 			idc = 7430;
 			text =  " > ";
@@ -187,7 +196,7 @@ class AdvancedTrading
 			onButtonClick = "[(lbCurSel 7401)] call Z_pushItemToList;";
 		};
 		
-		class ZSC_RscButtonMenu_AT14: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_AT14: AT_Zupa_BlueButton
 		{
 			idc = 7431;
 			text = " >> ";
@@ -197,7 +206,7 @@ class AdvancedTrading
 			onButtonClick = "call Z_pushAllToList;";
 		};
 				
-		class ZSC_RscButtonMenu_AT13: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_AT13: AT_Zupa_BlueButton
 		{
 			idc = 7432;
 			text = " < ";
@@ -208,7 +217,7 @@ class AdvancedTrading
 		};	
 		
 
-		class ZSC_RscButtonMenu_AT15: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_AT15: AT_Zupa_BlueButton
 		{
 			idc = 7433;
 			text = " << ";
@@ -219,7 +228,7 @@ class AdvancedTrading
 		};
 
 // buying
-		class ZSC_RscButtonMenu_ATT1: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_ATT1: AT_Zupa_BlueButton
 
 		{
 			idc = 7440;
@@ -245,7 +254,7 @@ class AdvancedTrading
 			onload = "ctrlShow [_this,false]";
 		};
 		
-		class ZSC_RscButtonMenu_ATT3: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_ATT3: AT_Zupa_BlueButton
 		{
 			idc = 7442;
 			text = " < ";
@@ -257,7 +266,7 @@ class AdvancedTrading
 		};	
 		
 
-		class ZSC_RscButtonMenu_ATT4: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_ATT4: AT_Zupa_BlueButton
 		{
 			idc = 7443;
 			text = " << ";
@@ -292,7 +301,7 @@ class AdvancedTrading
 			colorText[] = {1,1,1,1};
 		};	
 			
-		class ZSC_RscButtonMenu_AT16: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_AT16: AT_Zupa_BlueButton
 		{
 			idc = 7435;
 			text = "Sell";
@@ -302,7 +311,7 @@ class AdvancedTrading
 			onButtonClick = "call Z_SellItems;";
 		};	
 
-		class ZSC_RscButtonMenu_AT27: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_AT27: AT_Zupa_BlueButton
 		{
 			idc = 7436;
 			text = "Buy";
@@ -314,7 +323,7 @@ class AdvancedTrading
 		
 		};	
 		
-		class ZSC_RscButtonMenu_AT17: ZSC_RscShortcutButton
+		class ZSC_RscButtonMenu_AT17: AT_Zupa_BlueButton
 		{
 			idc = -1;
 			text = "Close";
