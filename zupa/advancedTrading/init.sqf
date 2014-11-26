@@ -129,10 +129,10 @@ if(isNil "Z_AdvancedTradingInit")then{
 		
 			[_normalMags,_normalWeaps, typeOf _backpack] call	Z_checkArrayInConfig;	
 		}else{
-			_ctrltext = format["I'm not stupid.."];
+			_ctrltext = format["I'm not stupid."];
 			ctrlSetText [7413, _ctrltext];
 			
-			_ctrltext = format["I do not see any backpack on your back ?!"];
+			_ctrltext = format["You are not wearing a backpack."];
 			ctrlSetText [7412, _ctrltext];
 		};
 	};
@@ -188,7 +188,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_ctrltext = format["Get in driver seat first!"];
 			ctrlSetText [7413, _ctrltext];
 			
-			_ctrltext = format["I do not see any vehicle owned by you."];
+			_ctrltext = format["I do not see any vehicle."];
 			ctrlSetText [7412, _ctrltext];
 		};	
 	};
@@ -238,11 +238,14 @@ if(isNil "Z_AdvancedTradingInit")then{
 					};					
 				}forEach _arrayOfTraderCat;				
 			}count _all;	
-							
+					
+			_backUpText = _extraText;
 			if(Z_SellingFrom != 2)then{
 				_extraText = getText (configFile >> 'CfgVehicles' >> _extraText >> 'displayName');
 			};
-			_ctrltext = format["I would pay %1 %2 to you for all those items.", _totalPrice,CurrencyName];
+			if (isNil '_extraText' || isNull '_extraText')then{_extraText = _backUpText;};
+			
+			_ctrltext = format["I would offer %1 %2.", _totalPrice,CurrencyName];
 			ctrlSetText [7413, _ctrltext];		
 			_ctrltext = format["I accept %1 items from %2.", count(Z_SellableArray) , _extraText];
 			ctrlSetText [7412, _ctrltext];	
