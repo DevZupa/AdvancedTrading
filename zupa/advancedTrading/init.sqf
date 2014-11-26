@@ -232,7 +232,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 							_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
 							_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
 						};	
-						if( isNil '_text' || isNull '_text')then{_text = _y};
+						if( isNil '_text' || isNull '_text')then{_text = _y;};
 						Z_SellableArray set [count(Z_SellableArray) , [_y,_type,_sell select 0,_text,_pic]];
 						_totalPrice = _totalPrice + (_sell select 0);				
 					};					
