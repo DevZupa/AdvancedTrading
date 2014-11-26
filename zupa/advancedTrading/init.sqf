@@ -420,16 +420,16 @@ if(isNil "Z_AdvancedTradingInit")then{
 		
 		{
 			if( _x select 1 == "trade_weapons")then{
-				_weaponsToBuy = _weaponsToBuy + _x select 5 ;
-				_priceToBuy	= _priceToBuy + _x select 2;			
+				_weaponsToBuy = _weaponsToBuy + (_x select 5) ;
+				_priceToBuy	= _priceToBuy + (_x select 2);			
 			};
 			if( _x select 1 == "trade_items")then{
-				_magazinesToBuy = _magazinesToBuy + _x select 5 ;
-				_priceToBuy	= _priceToBuy + _x select 2;
+				_magazinesToBuy = _magazinesToBuy + (_x select 5) ;
+				_priceToBuy	= _priceToBuy + (_x select 2);
 			};
 			if( _x select 1 == "trade_backpacks")then{
-				_backpacksToBuy = _backpacksToBuy + _x select 5 ;
-				_priceToBuy	= _priceToBuy + _x select 2;
+				_backpacksToBuy = _backpacksToBuy + (_x select 5) ;
+				_priceToBuy	= _priceToBuy + (_x select 2);
 			};	
 		} count Z_BuyingArray;
 
@@ -724,9 +724,15 @@ if(isNil "Z_AdvancedTradingInit")then{
 		}count _list;		
 		_result = false;		
 		if(!isNull _vehicle)then{
-			Z_vehicle = _vehicle;
-			_result = true;
+			Z_vehicle = _vehicle;			
 		};	
+		
+		if( typeName Z_vehicle == 'OBJECT') then {
+			_result = true;	
+		}else{
+			Z_vehicle = objNull;
+		};
+		
 		_result
 	};
 	

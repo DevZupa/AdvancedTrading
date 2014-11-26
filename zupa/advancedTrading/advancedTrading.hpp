@@ -195,6 +195,17 @@ class AdvancedTrading
 			colorBackground[] = {0.1,0.1,0.1,0.8};
 			onload = "ctrlShow [_this,false]";
 			onLBSelChanged = "[(lbCurSel 7421),false] call  Z_showPrice";
+			class ScrollBar
+			{
+				color[] = {1,1,1,0.6};
+				colorActive[] = {1,1,1,1};
+				colorDisabled[] = {1,1,1,0.3};
+				shadow = 0;
+				thumb = "\ca\ui\data\ui_scrollbar_thumb_ca.paa";
+				arrowFull = "\ca\ui\data\ui_arrow_top_active_ca.paa";
+				arrowEmpty = "\ca\ui\data\ui_arrow_top_ca.paa";
+				border = "\ca\ui\data\ui_border_scroll_ca.paa";
+			};
 		};
 		class RscListbox_AT21: ZSC_RscListBox
 		{
@@ -206,6 +217,17 @@ class AdvancedTrading
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
 			onload = "ctrlShow [_this,false]";
+			class ScrollBar
+			{
+				color[] = {1,1,1,0.6};
+				colorActive[] = {1,1,1,1};
+				colorDisabled[] = {1,1,1,0.3};
+				shadow = 0;
+				thumb = "\ca\ui\data\ui_scrollbar_thumb_ca.paa";
+				arrowFull = "\ca\ui\data\ui_arrow_top_active_ca.paa";
+				arrowEmpty = "\ca\ui\data\ui_arrow_top_ca.paa";
+				border = "\ca\ui\data\ui_border_scroll_ca.paa";
+			};
 		};
 		
 		
