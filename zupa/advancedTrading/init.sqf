@@ -236,7 +236,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 							_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
 							_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
 						};	
-						if( isNil '_text' || isNull '_text')then{_text = _y;};
+						if( isNil '_text')then{_text = _y;};
 						Z_SellableArray set [count(Z_SellableArray) , [_y,_type,_sell select 0,_text,_pic]];
 						_totalPrice = _totalPrice + (_sell select 0);				
 					};					
@@ -247,7 +247,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 			if(Z_SellingFrom != 2)then{
 				_extraText = getText (configFile >> 'CfgVehicles' >> _extraText >> 'displayName');
 			};
-			if (isNil '_extraText' || isNull '_extraText')then{_extraText = _backUpText;};
+			if (isNil '_extraText')then{_extraText = _backUpText;};
 			
 			_ctrltext = format["I would offer %1 %2.", _totalPrice,CurrencyName];
 			ctrlSetText [7413, _ctrltext];		
