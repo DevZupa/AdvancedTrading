@@ -1,6 +1,10 @@
 class AT_Zupa_BlueButton: ZSC_RscButtonMenu {
 	colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
 	colorText[] = {0.8784,0.8471,0.651,1};
+	class Attributes
+	{
+		align = "center";
+	};
 };
 
 class AdvancedTrading
@@ -140,7 +144,17 @@ class AdvancedTrading
 			colorBackground[] = {0.1,0.1,0.1,0.8};
 			onLBSelChanged = "[(lbCurSel 7401),true] call  Z_showPrice";
 			class ListScrollBar: ZSC_RscScrollBar{};
-			class ScrollBar: ZSC_RscScrollBar{};
+			class ScrollBar
+			{
+				color[] = {1,1,1,0.6};
+				colorActive[] = {1,1,1,1};
+				colorDisabled[] = {1,1,1,0.3};
+				shadow = 0;
+				thumb = "\ca\ui\data\ui_scrollbar_thumb_ca.paa";
+				arrowFull = "\ca\ui\data\ui_arrow_top_active_ca.paa";
+				arrowEmpty = "\ca\ui\data\ui_arrow_top_ca.paa";
+				border = "\ca\ui\data\ui_border_scroll_ca.paa";
+			};
 			
 		};
 		class RscListbox_AT11: ZSC_RscListBox
@@ -153,7 +167,17 @@ class AdvancedTrading
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
 			class ListScrollBar: ZSC_RscScrollBar{};
-			class ScrollBar: ZSC_RscScrollBar{};
+			class ScrollBar
+			{
+				color[] = {1,1,1,0.6};
+				colorActive[] = {1,1,1,1};
+				colorDisabled[] = {1,1,1,0.3};
+				shadow = 0;
+				thumb = "\ca\ui\data\ui_scrollbar_thumb_ca.paa";
+				arrowFull = "\ca\ui\data\ui_arrow_top_active_ca.paa";
+				arrowEmpty = "\ca\ui\data\ui_arrow_top_ca.paa";
+				border = "\ca\ui\data\ui_border_scroll_ca.paa";
+			};
 		};
 		
 		

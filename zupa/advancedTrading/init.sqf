@@ -575,11 +575,11 @@ if(isNil "Z_AdvancedTradingInit")then{
 			(_dialog displayCtrl 7416) ctrlSetText "Buy";
 			(_dialog displayCtrl 7409) ctrlSetText "Selling";
 			{ctrlShow [_x,true];} forEach [7401,7402,7435,7430,7431,7432,7433]; // show
-			{ctrlShow [_x,false];} forEach [7421,7422,7436,7440,7441,7442,7443]; // hide											
+			{ctrlShow [_x,false];} forEach [7421,7422,7436,7440,7441,7442,7443,7404]; // hide											
 		}else{
 			(_dialog displayCtrl 7416) ctrlSetText "Sell";
 			(_dialog displayCtrl 7409) ctrlSetText "Buying";
-			{ctrlShow [_x,true];} forEach [7421,7422,7436,7440,7441,7442,7443]; // show
+			{ctrlShow [_x,true];} forEach [7421,7422,7436,7440,7441,7442,7443,7404]; // show
 			{ctrlShow [_x,false];} forEach [7401,7402,7435,7430,7431,7432,7433]; // hide	
 			call Z_fillBuyList;
 		};	
@@ -893,5 +893,5 @@ _dialog = findDisplay 711197;
 (_dialog displayCtrl 7433) ctrlSetText " << ";
 (_dialog displayCtrl 7442) ctrlSetText " < ";
 (_dialog displayCtrl 7443) ctrlSetText " << ";
-{ctrlShow [_x,false];} forEach [7441]; // hide	- double hide ( first one didn't work it seems.
+{ctrlShow [_x,false];} forEach [7441,7436,7404]; // hide	- double hide ( first one didn't work it seems.
 call Z_getGearItems; 
