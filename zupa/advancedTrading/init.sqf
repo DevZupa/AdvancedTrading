@@ -479,7 +479,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 						};
 						if( _x select 1 == "trade_items")then{
 							_count = 0;						
-							 while(_count < _x select 5)do{
+							 while{_count < _x select 5}do{
 								player addMagazine (_x select 0);	
 								_count = _count + 1;
 							};	
