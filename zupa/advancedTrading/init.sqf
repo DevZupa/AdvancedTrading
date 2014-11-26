@@ -18,6 +18,10 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_VehicleDistance = 30;
 	Z_MoneyVariable = "cashMoney"; // Change this to whichever currency You are using.
 	Z_NormalCurrency = false; // No effect yet. Not supported yet
+	
+	if(isNil 'CurrencyName')then{
+		CurrencyName = 'Coins';
+	};
 
 	Z_filleTradeTitle = {
 		_text = _this select 0;
