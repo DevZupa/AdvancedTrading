@@ -3,7 +3,7 @@ disableSerialization;
 Z_traderData = (_this select 3); // gets the trader data ( menu_Functionary1 )
 
 Z_Selling = true;
-z_sellingfrom = 2;
+Z_SellingFrom = 2;
 
 if( isNil "Z_traderData" || count (Z_traderData) == 0)exitWith{
 	cutText [format["There went something wrong."], "PLAIN DOWN"];
@@ -456,15 +456,15 @@ if(isNil "Z_AdvancedTradingInit")then{
 		{
 			if( _x select 1 == "trade_weapons")then{
 				_weaponsToBuy = _weaponsToBuy + (_x select 5) ;
-				_priceToBuy	= _priceToBuy + (_x select 2);			
+				_priceToBuy	= _priceToBuy + ((_x select 5)*(_x select 2));			
 			};
 			if( _x select 1 == "trade_items")then{
 				_magazinesToBuy = _magazinesToBuy + (_x select 5) ;
-				_priceToBuy	= _priceToBuy + (_x select 2);
+				_priceToBuy	= _priceToBuy + ((_x select 2)*(_x select 5));
 			};
 			if( _x select 1 == "trade_backpacks")then{
 				_backpacksToBuy = _backpacksToBuy + (_x select 5) ;
-				_priceToBuy	= _priceToBuy + (_x select 2);
+				_priceToBuy	= _priceToBuy + ((_x select 2)*(_x select 5));
 			};	
 		} count Z_BuyingArray;
 
@@ -479,7 +479,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 			
 		
 			if(_canBuy)then{	
-			systemChat format["Start Buying"];
+			systemChat format["Start Buying for %1 %2",_priceToBuy,CurrencyName];
 			
 			closeDialog 2;
 			
@@ -775,7 +775,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_allowedMags = 0;
 			_allowedWeapons = 0;
 			_allowedBackpacks = 0;
-			if (!isNull "Z_vehicle") then {   
+			if (!isNull Z_vehicle) then {   
 				_allowedWeapons = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxWeapons');
 				_allowedMags = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxMagazines');
 				_allowedBackpacks = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportmaxbackpacks ');
@@ -859,8 +859,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_allowedMags = 0;
 			_allowedWeapons = 0;
 			_allowedBackpacks = 0;
-			if ( typeName Z_vehicle != "STRING" && !isNull "Z_vehicle") then {   
-			
+			if ( !isNull Z_vehicle) then {   
 			
 				_mags = getMagazineCargo Z_vehicle;
 				_weaps = getWeaponCargo Z_vehicle;
