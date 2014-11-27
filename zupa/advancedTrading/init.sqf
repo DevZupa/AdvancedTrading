@@ -56,14 +56,17 @@ if(isNil "Z_AdvancedTradingInit")then{
 			switch (_lbIndex) do {
 				case 0: { 
 					["Selling from backpack."] call Z_filleTradeTitle;
+					Z_SellingFrom = 0;
 					call Z_getBackpackItems; 
 				};
 				case 1: { 
 					["Selling from vehicle."] call Z_filleTradeTitle;
+					Z_SellingFrom = 1;
 					call Z_getVehicleItems; 
 				};
 				case 2: { 
 					["Selling from gear."] call Z_filleTradeTitle;
+					Z_SellingFrom = 2;
 					call Z_getGearItems; 
 				};
 			};
@@ -88,7 +91,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 						[1] call Z_calculateFreeSpace; 
 					}else{
 						systemChat format["Get in driver seat to be able to trade to your vehicle."];						
-					//	(_dialog displayCtrl 7404) ctrlSetText format["Free Slots: %1 / %2 / %3",0,0,0];
+						(_dialog displayCtrl 7404) ctrlSetText format["Free Slots: %1 / %2 / %3",0,0,0];
 					};
 				};
 				case 2: {
@@ -102,7 +105,6 @@ if(isNil "Z_AdvancedTradingInit")then{
 
 	Z_getBackpackItems = {
 		call Z_clearLists;
-		Z_SellingFrom = 0;
 		Z_SellableArray = [];
 		Z_SellArray = [];
 		_backpack = unitBackpack player;
@@ -144,11 +146,9 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_getVehicleItems = {
 		Z_vehicle = objNull;
 		call Z_clearLists;
-		Z_SellingFrom = 1;
 		Z_SellableArray = [];
 		Z_SellArray = [];
 		_vehicle = objNull;
-		_ownsCar = false;
 		
 		_list = nearestObjects [(getPosATL player), ["AllVehicles"], Z_VehicleDistance];	
 		{	
@@ -199,7 +199,6 @@ if(isNil "Z_AdvancedTradingInit")then{
 
 	Z_getGearItems = {
 		call Z_clearLists;
-		Z_SellingFrom = 2;
 		Z_SellArray = [];
 		Z_SellableArray = [];
 		 _mags = magazines player;
@@ -229,13 +228,26 @@ if(isNil "Z_AdvancedTradingInit")then{
 						_text = "";
 						_type = getText(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "type");
 						_sell = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "sell");									
-						if(_type == "trade_items")then{
-							_pic = getText (configFile >> 'CfgMagazines' >> _y >> 'picture');
-							_text = getText (configFile >> 'CfgMagazines' >> _y >> 'displayName');
-						}else{
-							_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
-							_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
-						};	
+						
+						switch (true) do {
+							case (_type == "trade_items") :
+							{
+								_pic = getText (configFile >> 'CfgMagazines' >> _y >> 'picture');
+								_text = getText (configFile >> 'CfgMagazines' >> _y >> 'displayName');
+							};
+							case (_type == "trade_weapons") :
+							{
+								_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
+								_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
+							};
+							case (_type == "trade_backpacks") :
+							{
+								_pic = getText (configFile >> 'CfgVehicles' >> _y >> 'picture');
+								_text = getText (configFile >> 'CfgVehicles' >> _y >> 'displayName');
+							};
+						};
+						
+						
 						if( isNil '_text')then{_text = _y;};
 						Z_SellableArray set [count(Z_SellableArray) , [_y,_type,_sell select 0,_text,_pic]];
 						_totalPrice = _totalPrice + (_sell select 0);				
@@ -343,62 +355,87 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_outcome = [];
 			_weaponsArray = [];
 			_itemsArray = [];	
+			_bpArray = [];	
+			_bpCheckArray = [];
 			_weaponsCheckArray = [];
 			_itemsCheckArray = [];
 			{ 		
 				_type = _x select 1;
 				_name = _x select 0;						
-				if(_type == "trade_items")then{		
-					_itemsArray set [count(_itemsArray),_name];
-					_itemsCheckArray set [count(_itemsArray),_x];
-				}else{
-					_weaponsArray set [count(_weaponsArray),_name];
-					_weaponsCheckArray set [count(_weaponsArray),_x];
-				};			
-			}count _tempArray;
+
+				switch (true) do {
+					case (_type == "trade_items") :
+					{
+						_itemsArray set [count(_itemsArray),_name];
+						_itemsCheckArray set [count(_itemsArray),_x];
+					};
+					case (_type == "trade_weapons") :
+					{
+						_weaponsArray set [count(_weaponsArray),_name];
+						_weaponsCheckArray set [count(_weaponsArray),_x];
+					};
+					case (_type == "trade_backpacks") :
+					{
+						_bpArray set [count(_bpArray),_name];
+						_bpCheckArray set [count(_bpArray),_x];
+					};
+				};
+
+
+				
+			}count Z_SellArray;
 			
-			closeDialog 2;
+			// closeDialog 2;
 					
 			if(Z_SellingFrom == 0)then{
 				_outcome = [unitBackpack player,_itemsArray,_weaponsArray] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;
 			};
 			if(Z_SellingFrom == 1)then{	
-				_outcome = [Z_vehicle,_itemsArray,_weaponsArray] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;		
+				_outcome = [Z_vehicle,_itemsArray,_weaponsArray,_bpArray] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;		
 			};
 								
 			//gear
 			if(Z_SellingFrom == 2)then{
-			_wA = [];
-			_mA = [];
-			{
-				_localResult = [player,(_x select 0),1] call BIS_fnc_invRemove;
-				if( _localResult != 1)then{
-					if(_x select 1 == "trade_items")then{
-						_mA set [count(_mA),0];
+				_wA = [];
+				_mA = [];
+				{
+					_localResult = [player,(_x select 0),1] call BIS_fnc_invRemove;
+					if( _localResult != 1)then{
+						if(_x select 1 == "trade_items")then{
+							_mA set [count(_mA),0];
+						}else{
+							_wA set [count(_wA),0];
+						};
 					}else{
-						_wA set [count(_wA),0];
+						if(_x select 1 == "trade_items")then{
+							_mA set [count(_mA),1];
+						}else{
+							_wA set [count(_wA),1];
+						};
 					};
-				}else{
-					if(_x select 1 == "trade_items")then{
-						_mA set [count(_mA),1];
-					}else{
-						_wA set [count(_wA),1];
-					};
-				};
-				
-			}count _tempArray;
-				
-			_outcome set [0,_mA];	
-			_outcome set [1,_wA];	
+					
+				}count Z_SellArray;
+					
+				_outcome set [0,_mA];	
+				_outcome set [1,_wA];
+				_outcome set [2,[]];					
 			};
 				
 			_money = 0;	
+			systemChat format["Money = %1 %2", _money , CurrencyName];		
 			{
-				_money = _money + ( (_itemsCheckArray select _forEachIndex select 2) * _x) ;	
+				_money = _money + ( ((_itemsCheckArray select _forEachIndex) select 2) * _x) ;
+				systemChat format["Money = %1 %2", _money , CurrencyName];				
 			}forEach (_outcome select 0);
 			{
-				_money = _money + ( (_weaponsCheckArray select _forEachIndex select 2) * _x) ;	
+				_money = _money + ( ((_weaponsCheckArray select _forEachIndex) select 2) * _x) ;	
+				systemChat format["Money = %1 %2", _money , CurrencyName];
 			}forEach (_outcome select 1);
+			
+			{
+				_money = _money + ( ( (_bpCheckArray select _forEachIndex) select 2) * _x) ;	
+				systemChat format["Money = %1 %2", _money , CurrencyName];
+			}forEach (_outcome select 2);
 			
 			if(typeName _money == "SCALAR")then{
 				[player,_money] call SC_fnc_addCoins;	
@@ -441,39 +478,50 @@ if(isNil "Z_AdvancedTradingInit")then{
 		
 		if(_myMoney >= _priceToBuy)then{
 		
+			systemChat format["Start trade: %1 >= %2",_myMoney,_priceToBuy];
+		
 			if(_canBuy)then{	
 			
 				if(Z_SellingFrom == 0)then{//backpack
+				systemChat format["Adding %1 Items in backpack",count (Z_BuyingArray)];
 					{
 						if( _x select 1 == "trade_weapons")then{
-							unitBackpack player addWeaponCargoGlobal [_x select 0, _x select 5];																			
+							(unitBackpack player) addWeaponCargoGlobal [_x select 0, _x select 5];
+							diag_log format ["%1 x %2 added", _x select 0, _x select 5];							
 						};
 						if( _x select 1 == "trade_items")then{
-							unitBackpack player addMagazineCargoGlobal  [_x select 0, _x select 5];	
+							(unitBackpack player) addMagazineCargoGlobal  [_x select 0, _x select 5];	
+							diag_log format ["%1 x %2 added", _x select 0, _x select 5];	
 						};					
 					} count Z_BuyingArray;			
 				};
 				
 				if(Z_SellingFrom == 1)then{//vehicle
 					{
+						systemChat format["Adding %1 Items in %2",count (Z_BuyingArray), typeOf Z_vehicle];
 						if( _x select 1 == "trade_weapons")then{
-							Z_vehicle addWeaponCargoGlobal [_x select 0, _x select 5];																			
+							Z_vehicle addWeaponCargoGlobal [_x select 0, _x select 5];	
+							diag_log format ["%1 x %2 added", _x select 0, _x select 5];								
 						};
 						if( _x select 1 == "trade_items")then{
-							Z_vehicle addMagazineCargoGlobal [_x select 0, _x select 5];	
+							Z_vehicle addMagazineCargoGlobal [_x select 0, _x select 5];
+							diag_log format ["%1 x %2 added", _x select 0, _x select 5];			
 						};	
 						if( _x select 1 == "trade_backpacks")then{
 							Z_vehicle addBackpackCargoGlobal [_x select 0, _x select 5];	
+							diag_log format ["%1 x %2 added", _x select 0, _x select 5];	
 						};	
 					} count Z_BuyingArray;	
 				};
 				
-				if(Z_SellingFrom == 2)then{//gear				
+				if(Z_SellingFrom == 2)then{//gear	
+					systemChat format["Adding %1 Items in gear",count (Z_BuyingArray)];
 					{
 						if( _x select 1 == "trade_weapons")then{
 							_count = 0;
 							while(_count < _x select 5)do{
 								player addWeapon (_x select 0);	
+								diag_log format ["%1 added", _x select 0];	
 								_count = _count + 1;
 							};							 
 						};
@@ -481,12 +529,15 @@ if(isNil "Z_AdvancedTradingInit")then{
 							_count = 0;						
 							 while{_count < _x select 5}do{
 								player addMagazine (_x select 0);	
+								diag_log format ["%1 added", _x select 0];	
 								_count = _count + 1;
 							};	
 						};					
 					} count Z_BuyingArray;										
-				};				
-				[player,_priceToBuy] call SC_fnc_removeCoins;					
+				};	
+				systemChat format["removing %1 coins ",_priceToBuy];
+				[player,_priceToBuy] call SC_fnc_removeCoins;	
+				systemChat format["removed %1 coins ",_priceToBuy];				
 			};				
 		}else{
 			systemChat format["You need %1 %2 to buy all these items.",_priceToBuy,CurrencyName];
@@ -497,7 +548,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 	/* ----------------------------------------------------------------------------
 	Examples:
 	   _result = [_backpack, ["SmokeShell","M16_AMMO"],["M16","M16","M240"]] call ZUPA_fnc_removeWeaponsAndMagazinesCargo; 
-	   _result == [[1,0,0,1,1,1,0],[1,0,0,1]]; // 1 = success, 0 = fail ( not in cargo)
+	   _result == [[1,0,0,1,1,1,0],[1,0,0,1],[1,0]]; // 1 = success, 0 = fail ->( item was not in cargo)
 	   
 	Author:
 	   Zupa 2014-09-30
@@ -507,16 +558,34 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_unit = _this select 0;
 		_items = _this select 1; 
 		_weaps = _this select 2; 
+		_bags = [];
+		if(count _this > 3)then{
+			_bags = _this select 3; 
+		};
+		
 		_normalItems = [];
 		_normalWeaps = [];
+		_normalBags = [];
+		
 		_unit_allItems = getMagazineCargo _unit; //  [[type1, typeN, ...],[count1, countN, ...]]
 		_unit_allItems_types = _unit_allItems select 0;
 		_unit_allItems_count = _unit_allItems select 1;	
+		
 		_unit_allWeaps = getWeaponCargo _unit; 
 		_unit_allWeaps_types = _unit_allWeaps select 0;
 		_unit_allWeaps_count = _unit_allWeaps select 1;	
-		clearMagazineCargo _unit;	
-		clearWeaponCargo _unit;
+		
+		_unit_allBags = getBackpackCargo _unit; 
+		_unit_allBags_types = _unit_allBags select 0;
+		_unit_allBags_count = _unit_allBags select 1;	
+		
+		clearMagazineCargoGlobal _unit;	
+		clearWeaponCargoGlobal _unit;
+		
+		if( count _bags > 0 )then{					
+			clearBackpackCargoGlobal  _unit;
+		};	
+		
 		{
 			_counter = 0 ;
 			while{	_counter < ( _unit_allItems_count select _forEachIndex)}do{
@@ -530,11 +599,19 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_normalWeaps set [count(_normalWeaps),_x];
 					_counter = _counter + 1;
 			};
-		}forEach _unit_allWeaps_types;			
+		}forEach _unit_allWeaps_types;	
+		{
+			_counter = 0 ;
+			while{	_counter < ( _unit_allBags_count select _forEachIndex)}do{
+			_normalBagss set [count(_normalBags),_x];
+					_counter = _counter + 1;
+			};
+		}forEach _unit_allBags_types;	
+		
 		_returnVar = [];	
 		_returnMag = [];	
 		_returnWeap = [];
-		
+		_returnBag = [];
 		{		
 			_inCargo = _normalItems find _x;
 			if(_inCargo > -1)then{
@@ -562,9 +639,24 @@ if(isNil "Z_AdvancedTradingInit")then{
 		{				
 			_unit addWeaponCargoGlobal [_x, 1];				
 		}count _normalWeaps;
+		
+		{		
+			_inCargo = _normalBags find _x;
+			if(_inCargo > -1)then{
+				_normalBags set [_inCargo, "soldItem"];
+				_returnBag set [count(_returnBag),1];
+			}else{
+				_returnBag set [count(_returnBag),0];	
+			};
+		}count _bags;	
+		_normalWeaps = _normalWeaps - ["soldItem"];
+		{				
+			_unit addBackpackCargoGlobal [_x, 1];				
+		}count _normalBags;
 				
 		_returnVar set [0,_returnMag];
 		_returnVar set [1,_returnWeap];
+		_returnVar set [2,_returnBag];
 		_returnVar;
 	};
 
@@ -626,34 +718,27 @@ if(isNil "Z_AdvancedTradingInit")then{
 						_cfgtraders = missionConfigFile >> "CfgTraderCategory"  >> _cat;
 						for "_i" from 0 to (count _cfgtraders)-1 do
 						{					
-							_y  = _cfgtraders select _i;
-							
-							
+							_y  = _cfgtraders select _i;														
 							if (isClass _y) then
-						{
+							{
 								_y  = configName (_y );
-							_type =  getText(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "type");
-							_buy = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "sell");
-							_pic = "";
-							_text = "";	
-							if(_type == "trade_items")then{
-								_pic = getText (configFile >> 'CfgMagazines' >> _y >> 'picture');
-								_text = getText (configFile >> 'CfgMagazines' >> _y >> 'displayName');
-								Z_BuyArray set [count(Z_BuyArray) , [_y,_type,_buy select 0,_text,_pic]];
-								_totalPrice = _totalPrice + (_buy select 0);	
-									
-								
-							};
-							if(_type == "trade_weapons")then{
-								_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
-								_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
-								Z_BuyArray set [count(Z_BuyArray) , [_y,_type,_buy select 0,_text,_pic]];
-								_totalPrice = _totalPrice + (_buy select 0);	
-							};
-
-						};							
-							
-												
+								_type =  getText(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "type");
+								_buy = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "sell");
+								_pic = "";
+								_text = "";	
+								if(_type == "trade_items")then{
+									_pic = getText (configFile >> 'CfgMagazines' >> _y >> 'picture');
+									_text = getText (configFile >> 'CfgMagazines' >> _y >> 'displayName');
+									Z_BuyArray set [count(Z_BuyArray) , [_y,_type,_buy select 0,_text,_pic]];
+									_totalPrice = _totalPrice + (_buy select 0);																				
+								};
+								if(_type == "trade_weapons")then{
+									_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
+									_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
+									Z_BuyArray set [count(Z_BuyArray) , [_y,_type,_buy select 0,_text,_pic]];
+									_totalPrice = _totalPrice + (_buy select 0);	
+								};
+							};																									
 						};																	
 			}forEach _arrayOfTraderCat;	
 			call Z_fillBuylList;
@@ -679,7 +764,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_selection = _this select 0;
 		_returnArray = [0,0,0];
 		if(_selection == 2) then{ //gear
-			systemChat format["No buying of weapons/backpacks currently into gear for security reasons!"];
+			systemChat format["No advanced buying of weapons/backpacks currently into gear for security reasons!"];
 			_allowedMags = 20 - count(magazines player);
 			_allowedWeapons = 0;
 			_allowedBackpacks = 0;		
@@ -724,15 +809,10 @@ if(isNil "Z_AdvancedTradingInit")then{
 		}count _list;		
 		_result = false;		
 		if(!isNull _vehicle)then{
-			Z_vehicle = _vehicle;			
-		};	
-		
-		if( typeName Z_vehicle == 'OBJECT') then {
-			_result = true;	
-		}else{
-			Z_vehicle = objNull;
-		};
-		
+			Z_vehicle = _vehicle;
+			_result = true;
+			[format["Buying in %1.", typeOf Z_vehicle]] call Z_filleTradeTitle;				
+		};						
 		_result
 	};
 	
@@ -780,7 +860,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_allowedMags = 0;
 			_allowedWeapons = 0;
 			_allowedBackpacks = 0;
-			if (!isNull "Z_vehicle") then {   
+			if ( typeName Z_vehicle != "STRING" && !isNull "Z_vehicle") then {   
 			
 			
 				_mags = getMagazineCargo Z_vehicle;
@@ -825,6 +905,8 @@ if(isNil "Z_AdvancedTradingInit")then{
 				_allowedWeapons = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxWeapons') - count(_normalWeaps);
 				_allowedMags = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxMagazines') - count(_normalMags);
 				_allowedBackpacks = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportmaxbackpacks ') - count(_normalBags);
+			}else{
+				systemChat format["%1", typeName "Z_vehicle"];
 			};	
 			
 			_check1 = false;
@@ -899,5 +981,5 @@ _dialog = findDisplay 711197;
 (_dialog displayCtrl 7433) ctrlSetText " << ";
 (_dialog displayCtrl 7442) ctrlSetText " < ";
 (_dialog displayCtrl 7443) ctrlSetText " << ";
-{ctrlShow [_x,false];} forEach [7441,7436,7404]; // hide	- double hide ( first one didn't work it seems.
+{ctrlShow [_x,false];} forEach [7441,7436,7404,7422,7421,7436]; // hide	- double hide ( first one didn't work it seems.
 call Z_getGearItems; 

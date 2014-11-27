@@ -195,6 +195,7 @@ class AdvancedTrading
 			colorBackground[] = {0.1,0.1,0.1,0.8};
 			onload = "ctrlShow [_this,false]";
 			onLBSelChanged = "[(lbCurSel 7421),false] call  Z_showPrice";
+			class ListScrollBar: ZSC_RscScrollBar{};
 			class ScrollBar
 			{
 				color[] = {1,1,1,0.6};
