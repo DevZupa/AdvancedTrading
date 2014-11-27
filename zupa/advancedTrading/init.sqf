@@ -3,6 +3,7 @@ disableSerialization;
 Z_traderData = (_this select 3); // gets the trader data ( menu_Functionary1 )
 
 Z_Selling = true;
+z_sellingfrom = 2;
 
 if( isNil "Z_traderData" || count (Z_traderData) == 0)exitWith{
 	cutText [format["There went something wrong."], "PLAIN DOWN"];
@@ -304,12 +305,12 @@ if(isNil "Z_AdvancedTradingInit")then{
 		if(!isNil"_index" && _index > -1)then {
 			lbDelete [7401, _index];
 			_temp = Z_SellableArray select _index;
-			_item = [_temp select 0,_temp select 1 ,_temp select 2,_temp select 3, _temp select 4  ];
-			Z_SellArray set [count(Z_SellArray),_item];
+			//_item = [_temp select 0,_temp select 1 ,_temp select 2,_temp select 3, _temp select 4  ];
+			Z_SellArray set [count(Z_SellArray),_temp];
 			Z_SellableArray set [_index,"deleted"];
 			Z_SellableArray = Z_SellableArray - ["deleted"];
-			_index2 = lbAdd [7402, _item select 3];
-			lbSetPicture [7402, _index2, _item select 4];
+			_index2 = lbAdd [7402, _temp select 3];
+			lbSetPicture [7402, _index2, _temp select 4];
 			call Z_calcPrice;
 		};
 	};
@@ -352,6 +353,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_tempArray = Z_SellArray;
 		if(_index > -1)then{
 			systemChat "Selling items.";	
+			closeDialog 2;
 			_outcome = [];
 			_weaponsArray = [];
 			_itemsArray = [];	
@@ -367,17 +369,17 @@ if(isNil "Z_AdvancedTradingInit")then{
 					case (_type == "trade_items") :
 					{
 						_itemsArray set [count(_itemsArray),_name];
-						_itemsCheckArray set [count(_itemsArray),_x];
+						_itemsCheckArray set [count(_itemsCheckArray),_x select 2];									
 					};
 					case (_type == "trade_weapons") :
 					{
 						_weaponsArray set [count(_weaponsArray),_name];
-						_weaponsCheckArray set [count(_weaponsArray),_x];
+						_weaponsCheckArray set [count(_weaponsCheckArray),_x select 2];
 					};
 					case (_type == "trade_backpacks") :
 					{
 						_bpArray set [count(_bpArray),_name];
-						_bpCheckArray set [count(_bpArray),_x];
+						_bpCheckArray set [count(_bpCheckArray),_x select 2];
 					};
 				};
 
@@ -421,23 +423,19 @@ if(isNil "Z_AdvancedTradingInit")then{
 				_outcome set [2,[]];					
 			};
 				
-			_money = 0;	
-			systemChat format["Money = %1 %2", _money , CurrencyName];		
+			_money = 0;		
 			{
-				_money = _money + ( ((_itemsCheckArray select _forEachIndex) select 2) * _x) ;
-				systemChat format["Money = %1 %2", _money , CurrencyName];				
+				_money = _money + ( ((_itemsCheckArray select _forEachIndex)) * _x) ;			
 			}forEach (_outcome select 0);
 			{
-				_money = _money + ( ((_weaponsCheckArray select _forEachIndex) select 2) * _x) ;	
-				systemChat format["Money = %1 %2", _money , CurrencyName];
+				_money = _money + ( ((_weaponsCheckArray select _forEachIndex)) * _x) ;				
 			}forEach (_outcome select 1);
 			
 			{
-				_money = _money + ( ( (_bpCheckArray select _forEachIndex) select 2) * _x) ;	
-				systemChat format["Money = %1 %2", _money , CurrencyName];
+				_money = _money + ( ( (_bpCheckArray select _forEachIndex) ) * _x) ;	
 			}forEach (_outcome select 2);
 			
-			if(typeName _money == "SCALAR")then{
+			if(typeName _money  == "SCALAR")then{
 				[player,_money] call SC_fnc_addCoins;	
 				systemChat format["Received %1 %2", _money , CurrencyName];			
 			}else{
@@ -477,10 +475,13 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_myMoney = player getVariable[Z_MoneyVariable,0];
 		
 		if(_myMoney >= _priceToBuy)then{
-		
-			systemChat format["Start trade: %1 >= %2",_myMoney,_priceToBuy];
+		    
+			
 		
 			if(_canBuy)then{	
+			systemChat format["Start Buying"];
+			
+			closeDialog 2;
 			
 				if(Z_SellingFrom == 0)then{//backpack
 				systemChat format["Adding %1 Items in backpack",count (Z_BuyingArray)];
@@ -824,7 +825,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_toBuyMags = _this select 1;
 		_toBuyBags = _this select 2;
 		if(_selection == 2) then{ //gear
-			systemChat format["Only 1 weapon / 0 backpacks allowed to buy at a time for security reasons!"];
+			systemChat format["Only 0 weapon /  backpack allowed to buy at a time for security reasons!"];
 			_allowedMags = 20 - count(magazines player);
 			_allowedWeapons = 0;
 			_allowedBackpacks = 0;	
@@ -977,5 +978,5 @@ _dialog = findDisplay 711197;
 (_dialog displayCtrl 7433) ctrlSetText " << ";
 (_dialog displayCtrl 7442) ctrlSetText " < ";
 (_dialog displayCtrl 7443) ctrlSetText " << ";
-{ctrlShow [_x,false];} forEach [7441,7436,7404,7422,7421,7436]; // hide	- double hide ( first one didn't work it seems.
+{ctrlShow [_x,false];} forEach [7441,7436,7404,7422,7421,7436,7440,7442,7443,7404]; // hide	- double hide ( first one didn't work it seems.
 call Z_getGearItems; 
