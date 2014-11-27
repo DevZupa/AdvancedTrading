@@ -818,8 +818,6 @@ if(isNil "Z_AdvancedTradingInit")then{
 	
 	Z_allowBuying = {
 		//	Z_SellingFrom = 0 - backpack, 1 - car, 2 -gear
-		
-		_buyProperties = _this;
 		_selection = Z_SellingFrom;
 		_return = false;
 		_toBuyWeaps = _this select 0;
@@ -931,9 +929,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 			
 			if(_check1 && _check2 && _check3)then{
 				_return = true;
-			};
-			
-			
+			};					
 		};		
 		if(_selection == 0) then{ //backpack
 			_allowedWeapons = 0;
