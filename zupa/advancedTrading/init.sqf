@@ -724,7 +724,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 							{
 								_y  = configName (_y );
 								_type =  getText(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "type");
-								_buy = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "sell");
+								_buy = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "buy");
 								_pic = "";
 								_text = "";	
 								if(_type == "trade_items")then{
