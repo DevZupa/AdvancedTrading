@@ -699,7 +699,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_amount = parseNumber(_this select 1);		
 		if(!isNil"_index" && _index > -1 && (typeName _amount == "SCALAR") && _amount > 0 )then {
 			_temp = Z_BuyArray select _index;
-			_item = [_temp select 0,_temp select 1 ,_temp select 2,_temp select 3, _temp select 4, _amount ];
+			_item = [_temp select 0,_temp select 1 ,_temp select 2,_temp select 3, _temp select 4, (ceil _amount) ];
 			Z_BuyingArray set [count(Z_BuyingArray),_item];		
 			_index2 = lbAdd [7422, format["%1x: %2",_item select 5,_item select 3]];
 			lbSetPicture [7422, _index2, _item select 4];
