@@ -176,7 +176,6 @@ if(isNil "Z_AdvancedTradingInit")then{
 				};
 			}forEach _kinds2;
 			
-			
 			[_normalWeaps,_normalMags, typeOf _vehicle] call Z_checkArrayInConfig;
 		}else{
 			_ctrltext = format["Get in driver seat first!"];
@@ -197,7 +196,38 @@ if(isNil "Z_AdvancedTradingInit")then{
 	};
 
 	Z_filterList = {
-
+		if(count _this > 0) then {
+			_query = _this select 0;  // the search string.
+			if(Z_Selling)then {
+				// filter your items
+				if(isNil '_query' || _query = "") then {
+					Z_SellableArray = Z_OriginalSellableArray;
+				}else {
+					_newSellArray = [];
+					{
+					  // filtercode...  [_name,_type,_sell select 0,_text,_pic]
+					  if((_x select 0 find _query > -1) || (_x select 3 find _query > -1) ) then {
+					  	_newSellArray set [count(_newSellArray), _x];	
+					  };
+					} forEach Z_OriginalSellableArray;	
+					Z_SellableArray = _newSellArray;
+				};				
+			}else {
+				// filter the store his items
+				if(isNil '_query' || _query = "") then {
+					Z_BuyableArray = Z_OriginalBuyableArray;
+				}else {
+					_newBuyArray = [];
+					{
+					  // filtercode... [_name,_type,_buy select 0,_text,_pic]
+					  if((_x select 0 find _query > -1) || (_x select 3 find _query > -1) ) then {
+					  	_newBuyArray set [count(_newBuyArray), _x];	
+					  };
+					} forEach Z_OriginalBuyableArray;	
+					Z_BuyableArray = _newBuyArray;	
+				};	
+			};
+		};		
 	};
 
 	Z_checkArrayInConfig = {
@@ -248,6 +278,8 @@ if(isNil "Z_AdvancedTradingInit")then{
 					};					
 				}forEach _arrayOfTraderCat;				
 			}count _all;	
+
+			Z_OriginalSellableArray = [] + Z_SellableArray;
 					
 			_backUpText = _extraText;
 			if(Z_SellingFrom != 2)then{
@@ -691,7 +723,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_index = _this select 0;
 		_amount = parseNumber(_this select 1);		
 		if(!isNil"_index" && _index > -1 && (typeName _amount == "SCALAR") && _amount > 0 )then {
-			_temp = Z_BuyArray select _index;
+			_temp = Z_BuyableArray select _index;
 			_item = [_temp select 0,_temp select 1 ,_temp select 2,_temp select 3, _temp select 4, (ceil _amount) ];
 			Z_BuyingArray set [count(Z_BuyingArray),_item];		
 			_index2 = lbAdd [7422, format["%1x: %2",_item select 5,_item select 3]];
@@ -703,7 +735,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_fillBuyList = {
 			call Z_clearBuyList;
 			call Z_clearBuyingList;
-			Z_BuyArray = [];
+			Z_BuyableArray = [];
 			Z_BuyingArray = [];
 			_arrayOfTraderCat = Z_traderData;	
 			_counter = 0;
@@ -723,18 +755,19 @@ if(isNil "Z_AdvancedTradingInit")then{
 								if(_type == "trade_items")then{
 									_pic = getText (configFile >> 'CfgMagazines' >> _y >> 'picture');
 									_text = getText (configFile >> 'CfgMagazines' >> _y >> 'displayName');
-									Z_BuyArray set [count(Z_BuyArray) , [_y,_type,_buy select 0,_text,_pic]];
+									Z_BuyableArray set [count(Z_BuyableArray) , [_y,_type,_buy select 0,_text,_pic]];
 									_totalPrice = _totalPrice + (_buy select 0);																				
 								};
 								if(_type == "trade_weapons")then{
 									_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
 									_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
-									Z_BuyArray set [count(Z_BuyArray) , [_y,_type,_buy select 0,_text,_pic]];
+									Z_BuyableArray set [count(Z_BuyableArray) , [_y,_type,_buy select 0,_text,_pic]];
 									_totalPrice = _totalPrice + (_buy select 0);	
 								};
 							};																									
 						};																	
 			}forEach _arrayOfTraderCat;	
+			Z_OriginalBuyableArray = [] + Z_BuyableArray;
 			call Z_fillBuylList;
 			call Z_calcPrice;
 	};
@@ -743,7 +776,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 		{
 			_index = lbAdd [7421,  _x select 3];
 			lbSetPicture [7421, _index, _x select 4 ];
-		}count Z_BuyArray;
+		}count Z_BuyableArray;
 	};
 
 	Z_fillBuyingList = {
