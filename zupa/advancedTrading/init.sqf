@@ -1,6 +1,6 @@
 disableSerialization;
 
-Z_traderData = (_this select 3); // gets the trader data ( menu_Functionary1 )
+Z_traderData = (_this select 3); // gets the trader data ( e.g menu_Functionary1 )
 
 Z_Selling = true;
 Z_SellingFrom = 2;
@@ -10,19 +10,8 @@ if( isNil "Z_traderData" || count (Z_traderData) == 0)exitWith{
 };
 
 if(isNil "Z_AdvancedTradingInit")then{
-// initiate the functions and variables for advanced trading -- easier for the people :) otherwise it would be in compiles or different file.
-	Z_SellableArray = [];
-	Z_SellArray = [];
-	Z_BuyArray = [];
-	Z_BuyingArray = [];
-	Z_vehicle = objNull;
-	Z_VehicleDistance = 30;
-	Z_MoneyVariable = "cashMoney"; // Change this to whichever currency You are using.
-	Z_NormalCurrency = false; // No effect yet. Not supported yet
-	
-	if(isNil 'CurrencyName')then{
-		CurrencyName = 'Coins';
-	};
+
+	#include "config.sqf";
 
 	Z_filleTradeTitle = {
 		_text = _this select 0;
@@ -205,6 +194,10 @@ if(isNil "Z_AdvancedTradingInit")then{
 		 _mags = magazines player;
 		 _weaps = weapons player;
 		[_weaps,_mags,"your gear"] call	Z_checkArrayInConfig;			
+	};
+
+	Z_filterList = {
+
 	};
 
 	Z_checkArrayInConfig = {
