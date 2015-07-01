@@ -13,24 +13,66 @@ if(isNil "Z_AdvancedTradingInit")then{
 
 	#include "config.sqf";
 
+	/**
+	*	[_text] call Z_filleTradeTitle
+	*
+	*	@param String _this select 0 (_text) -> The text you want in the label.
+	*
+	*	Changes the indication of where you are selling/buying from in the trade window.
+	**/
 	Z_filleTradeTitle = {
 		_text = _this select 0;
 		ctrlSetText [7408, _text];
 	};
 
+	/**
+	*	call Z_clearLists
+	*
+	*	Clears the visual listbox of items you were going to sell and could be selled.
+	**/
 	Z_clearLists = {
 		lbClear 7401;
 		lbClear 7402;
 	};
 
+	/**
+	*	call Z_clearBuyList
+	*
+	*	Clears the visual listbox of items you could buy.
+	**/
 	Z_clearBuyList = {
 	  lbClear 7421;
 	};
 
+	/**
+	*	call Z_clearBuyingList
+	*
+	*	Clears the visual listbox of items you were going to buy.
+	**/
 	Z_clearBuyingList = {
 	  lbClear 7422;
 	};
 
+	/**
+	*	[_selectedIndex, _listIndicator] call Z_showPrice
+	*	
+	*   @param Integer _this select 0 (_selectedIndex) -> the current selected item.
+	*	@param Integer _this select 1 (_listIndicator) -> indicator which list we are selecting in
+	*
+	*	This shows us the info of an selected item.
+	**/
+	Z_showPrice = {
+		_selectedIndex = _this select 0;
+		_listIndicator = _this select 1;
+
+		//todo
+	};
+
+	/**
+	*	call Z_getContainer
+	*
+	*	Switches between selling and buying and the item container (gear/vehicle/bakcpack) and initiates item loading.
+	**/
 	Z_getContainer = {
 		_dialog = findDisplay 711197;
 		(_dialog displayCtrl 7404) ctrlSetText format["Free Slots: 0 / 0 / 0"];
@@ -64,7 +106,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_ctrltext = format[" "];
 			ctrlSetText [7413, _ctrltext];
 			
-			_ctrltext = format["These are all the items I'm selling!"];
+			_ctrltext = format["These are all the items I'm selling."];
 			ctrlSetText [7412, _ctrltext];
 			switch (_lbIndex) do {
 			
@@ -93,6 +135,11 @@ if(isNil "Z_AdvancedTradingInit")then{
 		};
 	};
 
+	/**
+	*	call Z_getBackpackItems
+	*
+	*	Gets all your items stored in your backpack and innitiates the selling list.
+	**/
 	Z_getBackpackItems = {
 		call Z_clearLists;
 		Z_SellableArray = [];
@@ -133,6 +180,11 @@ if(isNil "Z_AdvancedTradingInit")then{
 		};
 	};
 
+	/**
+	*	call Z_getBackpackItems
+	*
+	*	Gets all your items stored in your vehicle and innitiates the selling list.
+	**/
 	Z_getVehicleItems = {
 		Z_vehicle = objNull;
 		call Z_clearLists;
@@ -186,6 +238,11 @@ if(isNil "Z_AdvancedTradingInit")then{
 		};	
 	};
 
+	/**
+	*	call Z_getBackpackItems
+	*
+	*	Gets all your items stored in your gear and innitiates the selling list.
+	**/
 	Z_getGearItems = {
 		call Z_clearLists;
 		Z_SellArray = [];
@@ -195,6 +252,13 @@ if(isNil "Z_AdvancedTradingInit")then{
 		[_weaps,_mags,"your gear"] call	Z_checkArrayInConfig;			
 	};
 
+	/**
+	*	call Z_filterList
+	*
+	*   @param String _this select 0 (_query) -> the current string in the filter input
+	*
+	*	Filters the buyable or sellable list on your input.
+	**/
 	Z_filterList = {
 		if(count _this > 0) then {
 			_query = _this select 0;  // the search string.
@@ -230,6 +294,15 @@ if(isNil "Z_AdvancedTradingInit")then{
 		};		
 	};
 
+	/**
+	*	[_weaps,_mags,_extraText]call Z_checkArrayInConfig
+	*
+	*   @param Array of Strings _this select 0 (_weaps) -> all weapons/items in the container
+	*   @param Array of Strings _this select 1 (_mags) -> all magazines in the container
+	*	@param String 			_this select 2 (_extraText) -> Indicator what container you are trading from
+	*
+	*	Fills up the sell or buy list if the item has a valid config.
+	**/
 	Z_checkArrayInConfig = {
 		_weaps = _this select 0;
 		_mags = _this select 1;
@@ -295,6 +368,11 @@ if(isNil "Z_AdvancedTradingInit")then{
 		};		
 	};
 
+	/**
+	*	call Z_calcPrice
+	*
+	*	Calculate the total price for single currency.
+	**/
 	Z_calcPrice = {
 		_sellPrice = 0;
 		if(Z_Selling)then{	
@@ -310,6 +388,11 @@ if(isNil "Z_AdvancedTradingInit")then{
 		ctrlSetText [7410, _ctrltext];	
 	};
 
+	/**
+	*	call Z_fillSellList
+	*
+	*	Visualy fills in the listbox of items that can be sold.
+	**/
 	Z_fillSellList = {
 		
 		{
@@ -318,6 +401,11 @@ if(isNil "Z_AdvancedTradingInit")then{
 		}count Z_SellableArray;
 	};
 
+	/**
+	*	call Z_fillSellingList
+	*
+	*	Visualy fills in the listbox of items currently being sold.
+	**/
 	Z_fillSellingList = {
 		{  		
 			_index = lbAdd [7402, _x select 3];
