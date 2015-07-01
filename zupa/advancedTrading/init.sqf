@@ -40,7 +40,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 		Z_SellArray = [];
 		Z_BuyingArray = [];
 		
-		_lbIndex= _this select 0;
+		_lbIndex = _this select 0;
 
 		if(Z_Selling)then{
 			switch (_lbIndex) do {
@@ -123,7 +123,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 				};
 			}forEach _kinds2;
 		
-			[_normalMags,_normalWeaps, typeOf _backpack] call	Z_checkArrayInConfig;	
+			[_normalMags,_normalWeaps, typeOf _backpack] call Z_checkArrayInConfig;	
 		}else{
 			_ctrltext = format["I'm not stupid."];
 			ctrlSetText [7413, _ctrltext];
@@ -199,13 +199,13 @@ if(isNil "Z_AdvancedTradingInit")then{
 		if(count _this > 0) then {
 			_query = _this select 0;  // the search string.
 			if(Z_Selling)then {
-				// filter your items
 				if(isNil '_query' || _query = "") then {
-					Z_SellableArray = Z_OriginalSellableArray;
+					ctrlSetText [Z_AT_FILTERWORD, "FILTER"];
+					Z_SellableArray = [] + Z_OriginalSellableArray;
 				}else {
+					ctrlSetText [Z_AT_FILTERWORD, ""];
 					_newSellArray = [];
 					{
-					  // filtercode...  [_name,_type,_sell select 0,_text,_pic]
 					  if((_x select 0 find _query > -1) || (_x select 3 find _query > -1) ) then {
 					  	_newSellArray set [count(_newSellArray), _x];	
 					  };
@@ -213,13 +213,13 @@ if(isNil "Z_AdvancedTradingInit")then{
 					Z_SellableArray = _newSellArray;
 				};				
 			}else {
-				// filter the store his items
 				if(isNil '_query' || _query = "") then {
-					Z_BuyableArray = Z_OriginalBuyableArray;
+					ctrlSetText [Z_AT_FILTERWORD, "FILTER"];
+					Z_BuyableArray = [] + Z_OriginalBuyableArray;
 				}else {
+					ctrlSetText [Z_AT_FILTERWORD, ""];
 					_newBuyArray = [];
 					{
-					  // filtercode... [_name,_type,_buy select 0,_text,_pic]
 					  if((_x select 0 find _query > -1) || (_x select 3 find _query > -1) ) then {
 					  	_newBuyArray set [count(_newBuyArray), _x];	
 					  };

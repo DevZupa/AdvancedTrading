@@ -19,5 +19,15 @@ if(isNil 'CurrencyName')then{
 };
 
 
-// displays
+// displays constants
+
+Z_AT_FILTERWORD = 7444; // todo change this to the one.
+
+Z_AT_SELLABLELIST = 7401;
+Z_AT_SELLINGLIST = 7402;
+
+Z_AT_BUYABLELIST = 7421;
+Z_AT_BUYINGLIST = 7422;
+
+
 
