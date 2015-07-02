@@ -1,6 +1,6 @@
 class AT_Zupa_BlueButton: ZSC_RscButtonMenu {
-	colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.3843])", "(profilenamespace getvariable ['GUI_BCG_RGB_G',0.7019])", "(profilenamespace getvariable ['GUI_BCG_RGB_B',0.8862])", 0.5};
-	colorText[] = {0.8784,0.8471,0.651,1};
+	colorBackground[] = {0.2,0.75,1,1};
+	colorText[] = {1,1,1,1};
 	class Attributes
 	{
 		align = "center";
@@ -19,18 +19,28 @@ class AdvancedTrading
 			y = 0.15 * safezoneH + safezoneY;
 			w = 0.40 * safezoneW;
 			h = 0.70 * safezoneH;
-			colorBackground[] = {0,0,0,0.8};
-		};	
+			colorBackground[] = {0.2,0.2,0.2,1};
+		};
+
+		class RscText_AT2: ZSC_RscText
+		{
+			idc = -1;
+			x = 0.70 * safezoneW + safezoneX;
+			y = 0.15 * safezoneH + safezoneY;
+			w = 0.15 * safezoneW;
+			h = 0.70 * safezoneH;
+			colorBackground[] = {0.1,0.1,0.1,1};
+		};
 		
-	class RscText_AT2: ZSC_RscText
+	    class RscText_AT2: ZSC_RscText
 		{
 			idc = -1;
 			text = "Advanced Trading";
 			x = 0.30 * safezoneW + safezoneX;
 			y = 0.15 * safezoneH + safezoneY;
-			w = 0.40 * safezoneW;
-			h = 0.05 * safezoneH;		
-			colorBackground[] = {0,0,0,0.8};	
+			w = 0.55 * safezoneW;
+			h = 0.04 * safezoneH;		
+			colorBackground[] = {0.2,0.75,1,1};
 			colorText[] = {1,1,1,1};			
 		};
 		
@@ -122,13 +132,36 @@ class AdvancedTrading
 		{
 			idc = 7409;
 			text = "Selling";
-			x = 0.55 * safezoneW + safezoneX;
+			x = 0.66 * safezoneW + safezoneX;
 			y = 0.38 * safezoneH + safezoneY;
 			w = 0.13 * safezoneW;
 			h = 0.03 * safezoneH;
 			colorText[] = {1,1,1,1};
 		};
 		
+		class RscBackgroundText_Zupa_1: ZSC_RscText
+		{
+			idc = -1;
+			text = "";
+			x = 0.31* safezoneW + safezoneX;
+			y = 0.41 * safezoneH + safezoneY;
+			w = 0.13 * safezoneW;
+			h = 0.30 * safezoneH;	
+			colorText[] = {1,1,1,1};
+			colorBackground[] = {0.1,0.1,0.1,1};			
+		};
+
+		class RscBackgroundText_Zupa_2: ZSC_RscText
+		{
+			idc = -1;
+			text = "";
+			x = 0.66 * safezoneW + safezoneX;
+			y = 0.41* safezoneH + safezoneY;
+			w = 0.13 * safezoneW;
+			h = 0.30 * safezoneH;	
+			colorText[] = {1,1,1,1};	
+			colorBackground[] = {0.1,0.1,0.1,1};		
+		};
 		
 		class RscListbox_AT10: ZSC_RscListBox
 		{
@@ -160,7 +193,7 @@ class AdvancedTrading
 		class RscListbox_AT11: ZSC_RscListBox
 		{
 			idc = 7402;
-			x = 0.55 * safezoneW + safezoneX;
+			x = 0.66 * safezoneW + safezoneX;
 			y = 0.41* safezoneH + safezoneY;
 			w = 0.13 * safezoneW;
 			h = 0.30 * safezoneH;
@@ -211,7 +244,7 @@ class AdvancedTrading
 		class RscListbox_AT21: ZSC_RscListBox
 		{
 			idc = 7422;
-			x = 0.55 * safezoneW + safezoneX;
+			x = 0.66 * safezoneW + safezoneX;
 			y = 0.41* safezoneH + safezoneY;
 			w = 0.13 * safezoneW;
 			h = 0.30 * safezoneH;
@@ -230,9 +263,41 @@ class AdvancedTrading
 				border = "\ca\ui\data\ui_border_scroll_ca.paa";
 			};
 		};
+
+		class RscSearchBackground: ZSC_RscText
+		{
+			idc = -1;
+			x = 0.31 * safezoneW + safezoneX;
+			y = 0.72 * safezoneH + safezoneY;
+			w = 0.13 * safezoneW;
+			h = 0.03 * safezoneH;
+			colorText[] = {1,1,1,1};
+			colorBackground[] = {0.1,0.1,0.1,1};
+		};	
 		
+		class Zupa_Filter_Edit : ZSC_RscEdit {	
+			idc = 7444;
+			colorText[] = {1,1,1,1};
+			text = "";
+			sizeEx = 0.030;
+			x = 0.31 * safezoneW + safezoneX;
+			y = 0.72 * safezoneH + safezoneY;
+			w = 0.13 * safezoneW;
+			h = 0.04;
+		};
+
+
+		class ZSC_RscButtonMenu_ATTFilter: AT_Zupa_BlueButton
+		{
+			idc = 7443;
+			text = "Filter";
+            x = 0.31 * safezoneW + safezoneX;
+			y = 0.77 * safezoneH + safezoneY;
+			w = 0.13 * safezoneW;
+			onButtonClick = "[(ctrlText 7444)] call Z_filterList;";
+		};
 		
-		
+	
 		class ZSC_RscButtonMenu_AT12: AT_Zupa_BlueButton
 		{
 			idc = 7430;
@@ -291,7 +356,7 @@ class AdvancedTrading
 	
 		class Zupa_Ammount_Edit : ZSC_RscEdit {	
 			idc = 7441;
-			colorText[] = {0.8784,0.8471,0.651,1};
+			colorText[] = {1,1,1,1};
 			text = "1";
 			sizeEx = 0.030;
 			x = 0.46 * safezoneW + safezoneX;
@@ -328,7 +393,7 @@ class AdvancedTrading
 		class RscText_ATT8: ZSC_RscText
 		{
 			idc = 7404;
-			text = "Free Slots: 0/0/0";
+			text = "0/0/0";
 			x = 0.55 * safezoneW + safezoneX;
 			y = 0.32 * safezoneH + safezoneY;
 			w = 0.15 * safezoneW;
@@ -336,14 +401,27 @@ class AdvancedTrading
 			colorText[] = {1,1,1,1};
 			onload = "ctrlShow [_this,false]";
 		};	
+
+		class RscSearchBackground2: ZSC_RscText
+		{
+			idc = -1;
+			text = "";
+			x = 0.66 * safezoneW + safezoneX;
+			y = 0.72 * safezoneH + safezoneY;
+			w = 0.13 * safezoneW;
+			h = 0.03 * safezoneH;
+			colorText[] = {1,1,1,1};
+			colorBackground[] = {0.1,0.1,0.1,1};
+		};	
+				
 		
 		class RscText_AT18: ZSC_RscText
 		{
 			idc = 7410;
 			text = "Nothing";
-			x = 0.55 * safezoneW + safezoneX;
+			x = 0.66 * safezoneW + safezoneX;
 			y = 0.72 * safezoneH + safezoneY;
-			w = 0.15 * safezoneW;
+			w = 0.13 * safezoneW;
 			h = 0.03 * safezoneH;
 			colorText[] = {1,1,1,1};
 		};	
@@ -352,8 +430,8 @@ class AdvancedTrading
 		{
 			idc = 7435;
 			text = "Sell";
-			x = 0.55 * safezoneW + safezoneX;
-			y = 0.77 * safezoneH + safezoneY;
+			x = 0.66 * safezoneW + safezoneX;
+			y = 0.87 * safezoneH + safezoneY;
 			w = 0.13 * safezoneW;
 			onButtonClick = "call Z_SellItems;";
 		};	
@@ -362,23 +440,57 @@ class AdvancedTrading
 		{
 			idc = 7436;
 			text = "Buy";
-			x = 0.55 * safezoneW + safezoneX;
-			y = 0.77 * safezoneH + safezoneY;
+			x = 0.66 * safezoneW + safezoneX;
+			y = 0.87 * safezoneH + safezoneY;
 			w = 0.13 * safezoneW;
 			onload = "ctrlShow [_this,false]";
 			onButtonClick = "call Z_BuyItems;";
 		
 		};	
 		
-		class ZSC_RscButtonMenu_AT17: AT_Zupa_BlueButton
+		class ZSC_RscButtonMenu_AT28: AT_Zupa_BlueButton
 		{
 			idc = -1;
 			text = "Close";
 			x = 0.31 * safezoneW + safezoneX;
-			y = 0.77 * safezoneH + safezoneY;
+			y = 0.87 * safezoneH + safezoneY;
 			w = 0.13 * safezoneW;		
 			onButtonClick = "((ctrlParent (_this select 0)) closeDisplay 9000);";
-		};		
+		};
 
+
+        class ZSC_RscButtonMenu_AT29: AT_Zupa_BlueButton
+            {
+                idc = -1;
+                text = "Toggle Currency";
+                x = 0.71 * safezoneW + safezoneX;
+                y = 0.26 * safezoneH + safezoneY;
+                w = 0.13 * safezoneW;
+                onButtonClick = "call Z_toggleCurrency;";
+            };
+
+         class RscText_AT_InfoLabel: ZSC_RscText
+                {
+                    idc = -1;
+                    text = "Advanced Trading";
+                    x = 0.30 * safezoneW + safezoneX;
+                    y = 0.38 * safezoneH + safezoneY;
+                    w = 0.55 * safezoneW;
+                    h = 0.04 * safezoneH;
+                    colorBackground[] = {0.2,0.75,1,1};
+                    colorText[] = {1,1,1,1};
+                };
+
+        class RscStrText_AT_ItemInfo: ZSC_RscStructuredText
+                {
+                    idc = 7445;
+                    text = "";
+                    x = 0.41 * safezoneW + safezoneX;
+                    y = 0.71 * safezoneH + safezoneY;
+                    w = 0.14 * safezoneW;
+                    h = 0.59 * safezoneH;
+                    colorBackground[] = {0.2,0.75,1,1};
+                    colorText[] = {1,1,1,1};
+                };
 	};
 };

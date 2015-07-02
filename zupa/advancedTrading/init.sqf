@@ -200,10 +200,8 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_query = _this select 0;  // the search string.
 			if(Z_Selling)then {
 				if(isNil '_query' || _query = "") then {
-					ctrlSetText [Z_AT_FILTERWORD, "FILTER"];
 					Z_SellableArray = [] + Z_OriginalSellableArray;
 				}else {
-					ctrlSetText [Z_AT_FILTERWORD, ""];
 					_newSellArray = [];
 					{
 					  if((_x select 0 find _query > -1) || (_x select 3 find _query > -1) ) then {
@@ -214,10 +212,8 @@ if(isNil "Z_AdvancedTradingInit")then{
 				};				
 			}else {
 				if(isNil '_query' || _query = "") then {
-					ctrlSetText [Z_AT_FILTERWORD, "FILTER"];
 					Z_BuyableArray = [] + Z_OriginalBuyableArray;
 				}else {
-					ctrlSetText [Z_AT_FILTERWORD, ""];
 					_newBuyArray = [];
 					{
 					  if((_x select 0 find _query > -1) || (_x select 3 find _query > -1) ) then {
