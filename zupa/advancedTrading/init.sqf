@@ -13,6 +13,40 @@ if(isNil "Z_AdvancedTradingInit")then{
 
 	#include "config.sqf";
 
+	KK_fnc_inString = {
+        /*
+        Author: Killzone_Kid
+
+        Description:
+        Find a string within a string (case insensitive)
+
+        Parameter(s):
+        _this select 0: <string> string to be found
+        _this select 1: <string> string to search in
+
+        Returns:
+        Boolean (true when string is found)
+
+        How to use:
+        _found = ["needle", "Needle in Haystack"] call KK_fnc_inString;
+        */
+
+        private ["_needle","_haystack","_needleLen","_hay","_found"];
+        _needle = [_this, 0, "", [""]] call BIS_fnc_param;
+        _haystack = toArray ([_this, 1, "", [""]] call BIS_fnc_param);
+        _needleLen = count toArray _needle;
+        _hay = +_haystack;
+        _hay resize _needleLen;
+        _found = false;
+        for "_i" from _needleLen to count _haystack do {
+            if (toString _hay == _needle) exitWith {_found = true};
+            _hay set [_needleLen, _haystack select _i];
+            _hay set [0, "x"];
+            _hay = _hay - ["x"]
+        };
+        _found
+    };
+
 	Z_filleTradeTitle = {
 		_text = _this select 0;
 		ctrlSetText [7408, _text];
@@ -21,6 +55,10 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_clearLists = {
 		lbClear 7401;
 		lbClear 7402;
+	};
+
+	Z_clearSellableList = {
+		lbClear 7401;
 	};
 
 	Z_clearBuyList = {
@@ -199,28 +237,36 @@ if(isNil "Z_AdvancedTradingInit")then{
 		if(count _this > 0) then {
 			_query = _this select 0;  // the search string.
 			if(Z_Selling)then {
-				if(isNil '_query' || _query = "") then {
+				if(isNil '_query' || _query == "") then {
 					Z_SellableArray = [] + Z_OriginalSellableArray;
+					call Z_clearSellableList;
+					call Z_fillSellList;
 				}else {
 					_newSellArray = [];
 					{
-					  if((_x select 0 find _query > -1) || (_x select 3 find _query > -1) ) then {
+					  if(( [_query,(_x select 0)] call KK_fnc_inString) || ([_query,(_x select 3)] call KK_fnc_inString) ) then {
 					  	_newSellArray set [count(_newSellArray), _x];	
 					  };
 					} forEach Z_OriginalSellableArray;	
-					Z_SellableArray = _newSellArray;
+					Z_SellableArray = [] + _newSellArray;
+					call Z_clearSellableList;
+					call Z_fillSellList;
 				};				
 			}else {
-				if(isNil '_query' || _query = "") then {
+				if(isNil '_query' || _query == "") then {
 					Z_BuyableArray = [] + Z_OriginalBuyableArray;
+					call Z_clearBuyList;
+					call Z_fillBuylList;
 				}else {
 					_newBuyArray = [];
 					{
-					  if((_x select 0 find _query > -1) || (_x select 3 find _query > -1) ) then {
+					  if(( [_query,(_x select 0)] call KK_fnc_inString) || ([_query,(_x select 3)] call KK_fnc_inString) ) then {
 					  	_newBuyArray set [count(_newBuyArray), _x];	
 					  };
 					} forEach Z_OriginalBuyableArray;	
-					Z_BuyableArray = _newBuyArray;	
+					Z_BuyableArray =  [] + _newBuyArray;
+					call Z_clearBuyList;
+					call Z_fillBuylList;	
 				};	
 			};
 		};		
