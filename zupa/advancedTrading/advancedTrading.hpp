@@ -481,6 +481,17 @@ class AdvancedTrading
                     colorText[] = {1,1,1,1};
                 };
 
+
+		class RscText_AT_BreakLine: ZSC_RscText
+		{
+			idc = -1;
+			x = 0.70 * safezoneW + safezoneX;
+			y = 0.15 * safezoneH + safezoneY;
+			w = 0.005 * safezoneW;
+			h = 0.70 * safezoneH;
+			   colorBackground[] = {0.2,0.75,1,1};
+		};
+
         class RscStrText_AT_ItemInfo: ZSC_RscStructuredText
                 {
                     idc = 7445;
