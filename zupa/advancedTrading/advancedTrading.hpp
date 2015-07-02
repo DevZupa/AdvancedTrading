@@ -43,6 +43,17 @@ class AdvancedTrading
 			colorBackground[] = {0.2,0.75,1,1};
 			colorText[] = {1,1,1,1};			
 		};
+
+		class RscText_AT_Blackseperator: ZSC_RscText
+            {
+                idc = -1;
+                text = "";
+                x = 0.30 * safezoneW + safezoneX;
+                y = 0.38 * safezoneH + safezoneY;
+                w = 0.40 * safezoneW;
+                h = 0.04 * safezoneH;
+                colorBackground[] = {0.05,0.05,0.05,1};
+            };
 		
 		class RscText_Zupa_1: ZSC_RscText
 		{
@@ -472,8 +483,8 @@ class AdvancedTrading
          class RscText_AT_InfoLabel: ZSC_RscText
                 {
                     idc = -1;
-                    text = "Advanced Trading";
-                    x = 0.30 * safezoneW + safezoneX;
+                    text = "Item info";
+                    x = 0.70 * safezoneW + safezoneX;
                     y = 0.38 * safezoneH + safezoneY;
                     w = 0.55 * safezoneW;
                     h = 0.04 * safezoneH;
