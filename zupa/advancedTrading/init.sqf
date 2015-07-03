@@ -70,7 +70,62 @@ if(isNil "Z_AdvancedTradingInit")then{
 	};
 
 	Z_getItemInfo = {
+		private ['_item','_selectedList','_selectedIndex'];
 
+		_selectedList = _this select 0;
+		_selectedIndex = _this select 1;
+
+		_item = nil;
+		
+		if(_selectedIndex > 0) then {
+			switch(_selectedList) do {
+				case 'sellable': {
+					_item = Z_SellableArray select _selectedIndex;
+				};
+				case 'selling': {
+					_item = Z_SellArray select _selectedIndex;
+				};
+				case 'buyable': {
+					_item = Z_BuyableArray select _selectedIndex;	
+				};
+				case 'buying': {
+					_item = Z_BuyingArray select _selectedIndex;
+				};
+			};
+		};
+
+		if(!isNil '_item' || _item != nil) then {
+			[_item] call Z_getItemConfig;
+		};
+	};
+
+	Z_getItemConfig = {
+		private ['_item', '_type'];
+		_item = _this select 0;
+		_type = _this select 1;
+
+		//todo [_y,_type,_sell select 0,_text,_pic, _forEachIndex]
+
+		_pic = _this select 4;
+		_displayName = _this select 3;
+
+		switch (true) do {
+			case (_type == "trade_items") :
+			{
+				//_pic = getText (configFile >> 'CfgMagazines' >> _y >> 'picture');
+				//_text = getText (configFile >> 'CfgMagazines' >> _y >> 'displayName');
+			};
+			case (_type == "trade_weapons") :
+			{
+				//_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
+				//_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
+			};
+			case (_type == "trade_backpacks") :
+			{
+				//_pic = getText (configFile >> 'CfgVehicles' >> _y >> 'picture');
+				//_text = getText (configFile >> 'CfgVehicles' >> _y >> 'displayName');
+			};
+		};
 	};
 
 	Z_getContainer = {
