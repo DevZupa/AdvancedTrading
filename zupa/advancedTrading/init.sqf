@@ -69,6 +69,10 @@ if(isNil "Z_AdvancedTradingInit")then{
 	  lbClear 7422;
 	};
 
+	Z_getItemInfo = {
+
+	};
+
 	Z_getContainer = {
 		_dialog = findDisplay 711197;
 		(_dialog displayCtrl 7404) ctrlSetText format["Free Slots: 0 / 0 / 0"];
@@ -238,14 +242,24 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_query = _this select 0;  // the search string.
 			if(Z_Selling)then {
 				if(isNil '_query' || _query == "") then {
-					Z_SellableArray = [] + Z_OriginalSellableArray;
+					_newSellArray = [];
+					{
+					  if( _x find Z_SellArray < 0) then {
+					  	_newSellArray set [count(_newSellArray), _x];	
+					  };
+					} forEach Z_OriginalSellableArray;
+
+					Z_SellableArray	= [] + _newSellArray;
+
 					call Z_clearSellableList;
 					call Z_fillSellList;
 				}else {
 					_newSellArray = [];
 					{
 					  if(( [_query,(_x select 0)] call KK_fnc_inString) || ([_query,(_x select 3)] call KK_fnc_inString) ) then {
-					  	_newSellArray set [count(_newSellArray), _x];	
+					  	if( _x find Z_SellArray < 0 ) then {
+					  		_newSellArray set [count(_newSellArray), _x];	
+					  	};
 					  };
 					} forEach Z_OriginalSellableArray;	
 					Z_SellableArray = [] + _newSellArray;
@@ -315,7 +329,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 						
 						
 						if( isNil '_text')then{_text = _y;};
-						Z_SellableArray set [count(Z_SellableArray) , [_y,_type,_sell select 0,_text,_pic]];
+						Z_SellableArray set [count(Z_SellableArray) , [_y,_type,_sell select 0,_text,_pic, _forEachIndex]];
 						_totalPrice = _totalPrice + (_sell select 0);				
 					};					
 				}forEach _arrayOfTraderCat;				
