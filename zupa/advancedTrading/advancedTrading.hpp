@@ -183,7 +183,7 @@ class AdvancedTrading
 			h = 0.30 * safezoneH;
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
-			onLBSelChanged = "[(lbCurSel 7401),true] call  Z_showPrice";
+			onLBSelChanged = "[(lbCurSel 7401)] call Z_showPrice";
 			class ListScrollBar: ZSC_RscScrollBar{};
 			class ScrollBar
 			{
@@ -235,7 +235,7 @@ class AdvancedTrading
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
 			onload = "ctrlShow [_this,false]";
-			onLBSelChanged = "[(lbCurSel 7421),false] call  Z_showPrice";
+			onLBSelChanged = "[(lbCurSel 7421)] call  Z_showPrice";
 			class ListScrollBar: ZSC_RscScrollBar{};
 			class ScrollBar
 			{
