@@ -13,24 +13,23 @@ if(isNil "Z_AdvancedTradingInit")then{
 
 	#include "config.sqf";
 
+    /*
+    * Author: Killzone_Kid
+    *
+    * Description:
+    * Find a string within a string (case insensitive)
+    *
+    * Parameter(s):
+    * _this select 0: <string> string to be found
+    * _this select 1: <string> string to search in
+    *
+    * Returns:
+    * Boolean (true when string is found)
+    *
+    * How to use:
+    * _found = ["needle", "Needle in Haystack"] call KK_fnc_inString;
+    */
 	KK_fnc_inString = {
-        /*
-        Author: Killzone_Kid
-
-        Description:
-        Find a string within a string (case insensitive)
-
-        Parameter(s):
-        _this select 0: <string> string to be found
-        _this select 1: <string> string to search in
-
-        Returns:
-        Boolean (true when string is found)
-
-        How to use:
-        _found = ["needle", "Needle in Haystack"] call KK_fnc_inString;
-        */
-
         private ["_needle","_haystack","_needleLen","_hay","_found"];
         _needle = [_this, 0, "", [""]] call BIS_fnc_param;
         _haystack = toArray ([_this, 1, "", [""]] call BIS_fnc_param);
@@ -102,30 +101,165 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_getItemConfig = {
 		private ['_item', '_type'];
 		_item = _this select 0;
-		_type = _this select 1;
-
-		//todo [_y,_type,_sell select 0,_text,_pic, _forEachIndex]
-
-		_pic = _this select 4;
-		_displayName = _this select 3;
-
+		_type = _item select 1;
 		switch (true) do {
 			case (_type == "trade_items") :
 			{
-				//_pic = getText (configFile >> 'CfgMagazines' >> _y >> 'picture');
-				//_text = getText (configFile >> 'CfgMagazines' >> _y >> 'displayName');
+				[_item] call Z_displayItemInfo;
 			};
 			case (_type == "trade_weapons") :
 			{
-				//_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
-				//_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
+				[_item] call Z_displayWeaponInfo;
 			};
 			case (_type == "trade_backpacks") :
-			{
-				//_pic = getText (configFile >> 'CfgVehicles' >> _y >> 'picture');
-				//_text = getText (configFile >> 'CfgVehicles' >> _y >> 'displayName');
+			{	
+				[_item] call Z_displayBackpackInfo;
 			};
+			case (_type == "trade_vehicles") :
+			{
+				[_item] call Z_displayVehicleInfo;
+			};
+			default: {
+				(_dialog displayCtrl 7445) ctrlSetStructuredText "<t color='#ffffff'>No info found</t>";
+			}
 		};
+	};
+
+	Z_displayItemInfo = {
+		private ['_item'];
+		_item = _this select 0;
+
+		// [_y,_type,_sell select 0,_text,_pic, _forEachIndex, _buy select 0];
+
+		_picture = _item select 4;
+		_class = _item select 0;
+		_display = _item select 3;
+		_count = nil;
+		_buyPrice = 0;
+		_sellPrice = 0;
+		if(Z_Selling)then{
+			_buyPrice = _item select 6;
+			_sellPrice = _item select 2;
+		}else{
+			_buyPrice = _item select 2;
+			_sellPrice = _item select 6;
+		};
+
+		_count = getText (configFile >> 'CfgMagazines' >> _class >> 'count');
+
+		_formattedText = formatText [
+			"<img image='%1'/><br />" + 
+			"<t color='#ffffff'>Name: %2 </t><br />" +
+			"<t color='#ffffff'>Class: %6 </t><br />" +
+			"<t color='#ffffff'>Item amount: %4 </t><br />" +
+			"<t color='#ffffff'>Sell price: %5 %7</t><br />" +
+			"<t color='#ffffff'>Buy price: %6 %7</t><br />" 
+			, _picture, _display, _class, _count, _sellPrice, _buyPrice, Z_MoneyVariable	
+		];
+
+		(_dialog displayCtrl 7445) ctrlSetStructuredText _formattedText;
+	};
+	Z_displayWeaponInfo = {
+		_item = _this select 0;
+		_picture = _item select 4;
+		_class = _item select 0;
+		_display = _item select 3;
+		_buyPrice = 0;
+		_sellPrice = 0;
+		if(Z_Selling)then{
+			_buyPrice = _item select 6;
+			_sellPrice = _item select 2;
+		}else{
+			_buyPrice = _item select 2;
+			_sellPrice = _item select 6;
+		};
+
+		_magazines = [];
+		_magazines = getArray (configFile >> 'CfgWeapons' >> _class >> 'count');
+		_magText = "";
+		{
+			_magText = _magText + _x;
+		}count _magazines;
+
+		_formattedText = formatText [
+			"<img image='%1'/><br />" + 
+			"<t color='#ffffff'>Name: %2 </t><br />" +
+			"<t color='#ffffff'>Class: %6 </t><br />" +
+			"<t color='#ffffff'>Item amount: %4 </t><br />" +
+			"<t color='#ffffff'>Sell price: %5 %7</t><br />" +
+			"<t color='#ffffff'>Buy price: %6 %7</t><br />" + 
+			"<t color='#ffffff'>Mags: %8 </t><br />" 
+			, _picture, _display, _class, _count, _sellPrice, _buyPrice, Z_MoneyVariable, _magText	
+		];
+
+		(_dialog displayCtrl 7445) ctrlSetStructuredText _formattedText;
+
+	};
+	Z_displayBackpackInfo = {
+			_item = _this select 0;
+
+			_picture = _item select 4;
+			_class = _item select 0;
+			_display = _item select 3;
+			
+			_transportMaxWeapons = 0;
+			_transportMaxMagazines = 0; 
+
+			_buyPrice = 0;
+			_sellPrice = 0;
+			if(Z_Selling)then{
+				_buyPrice = _item select 6;
+				_sellPrice = _item select 2;
+			}else{
+				_buyPrice = _item select 2;
+				_sellPrice = _item select 6;
+			};
+
+			_transportMaxWeapons = getText (configFile >> 'CfgVehicles' >> _class >> 'transportMaxWeapons');
+			_transportMaxMagazines  = getText (configFile >> 'CfgVehicles' >> _class >> '_transportMaxMagazines');
+
+			_formattedText = formatText [
+			"<img image='%1'/><br />" + 
+			"<t color='#ffffff'>Name: %2 </t><br />" +
+			"<t color='#ffffff'>Class: %6 </t><br />" +
+			"<t color='#ffffff'>Item amount: %4 </t><br />" +
+			"<t color='#ffffff'>Sell price: %5 %7</t><br />" +
+			"<t color='#ffffff'>Buy price: %6 %7</t><br />" + 
+			"<t color='#ffffff'>Mags: %8 </t><br />" +
+			"<t color='#ffffff'>Weaps: %9 </t><br />" 
+			, _picture, _display, _class, _count, _sellPrice, _buyPrice, Z_MoneyVariable, _transportMaxWeapons,_transportMaxMagazines	
+			];
+
+			(_dialog displayCtrl 7445) ctrlSetStructuredText _formattedText;
+	};
+
+	Z_displayVehicleInfo = {
+		private ['_item', '_type'];
+			_item = _this select 0;
+
+			_picture = _item select 4;
+			_class = _item select 0;
+			_display = _item select 3;
+
+			_fuelCapacity = nil;
+			_maxSpeed = nil;
+			_armor = nil;
+			_seats = nil;
+			_weapons = nil;
+
+			_transportMaxWeapons = 0;
+			_transportMaxMagazines = 0; 
+			_transportmaxbackpacks = 0;
+
+			_buyPrice = 0;
+			_sellPrice = 0;
+			if(Z_Selling)then{
+				_buyPrice = _item select 6;
+				_sellPrice = _item select 2;
+			}else{
+				_buyPrice = _item select 2;
+				_sellPrice = _item select 6;
+			};
 	};
 
 	Z_getContainer = {
@@ -363,7 +497,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 						_text = "";
 						_type = getText(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "type");
 						_sell = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "sell");									
-						
+						_buy = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "sell");
 						switch (true) do {
 							case (_type == "trade_items") :
 							{
@@ -381,10 +515,9 @@ if(isNil "Z_AdvancedTradingInit")then{
 								_text = getText (configFile >> 'CfgVehicles' >> _y >> 'displayName');
 							};
 						};
-						
-						
+										
 						if( isNil '_text')then{_text = _y;};
-						Z_SellableArray set [count(Z_SellableArray) , [_y,_type,_sell select 0,_text,_pic, _forEachIndex]];
+						Z_SellableArray set [count(Z_SellableArray) , [_y,_type,_sell select 0,_text,_pic, _forEachIndex, _buy select 0];
 						_totalPrice = _totalPrice + (_sell select 0);				
 					};					
 				}forEach _arrayOfTraderCat;				
@@ -861,18 +994,19 @@ if(isNil "Z_AdvancedTradingInit")then{
 								_y  = configName (_y );
 								_type =  getText(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "type");
 								_buy = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "buy");
+									_sell = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "buy");
 								_pic = "";
 								_text = "";	
 								if(_type == "trade_items")then{
 									_pic = getText (configFile >> 'CfgMagazines' >> _y >> 'picture');
 									_text = getText (configFile >> 'CfgMagazines' >> _y >> 'displayName');
-									Z_BuyableArray set [count(Z_BuyableArray) , [_y,_type,_buy select 0,_text,_pic]];
+									Z_BuyableArray set [count(Z_BuyableArray) , [_y,_type,_buy select 0,_text,_pic,_forEachIndex,_sell select 0]];
 									_totalPrice = _totalPrice + (_buy select 0);																				
 								};
 								if(_type == "trade_weapons")then{
 									_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
 									_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
-									Z_BuyableArray set [count(Z_BuyableArray) , [_y,_type,_buy select 0,_text,_pic]];
+									Z_BuyableArray set [count(Z_BuyableArray) , [_y,_type,_buy select 0,_text,_pic,_forEachIndex,_sell select 0]];
 									_totalPrice = _totalPrice + (_buy select 0);	
 								};
 							};																									
