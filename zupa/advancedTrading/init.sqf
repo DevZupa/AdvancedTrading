@@ -95,15 +95,23 @@ if(isNil "Z_AdvancedTradingInit")then{
 	  lbClear 7422;
 	};
 
+	/**
+	*	[_selectedList, _selectedIndex ]call Z_clearBuyingList
+	*
+	*	Innitiates the item info to be displayed by getting the right item out of the corresponding list based on your sellection.
+	**/
 	Z_getItemInfo = {
 		private ['_item','_selectedList','_selectedIndex'];
 
 		_selectedList = _this select 0;
 		_selectedIndex = _this select 1;
 
-		_item = nil;
+		_item = [];
+
+		systemChat _selectedList;
+		systemChat format ["%1",_selectedIndex];		
 		
-		if(_selectedIndex > 0) then {
+		if(_selectedIndex >= 0) then {
 			switch(_selectedList) do {
 				case 'sellable': {
 					_item = Z_SellableArray select _selectedIndex;
@@ -120,15 +128,20 @@ if(isNil "Z_AdvancedTradingInit")then{
 			};
 		};
 
-		if(!isNil '_item' || _item != nil) then {
+		systemChat (_item select 0);
+
+		if( count _item > 0) then {
+			systemChat "getCOnfig";
 			[_item] call Z_getItemConfig;
 		};
+
 	};
 
 	Z_getItemConfig = {
 		private ['_item', '_type'];
 		_item = _this select 0;
 		_type = _item select 1;
+		systemChat _type;
 		switch (true) do {
 			case (_type == "trade_items") :
 			{
@@ -146,7 +159,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 			{
 				[_item] call Z_displayVehicleInfo;
 			};
-			default: {
+			default {
 				(_dialog displayCtrl 7445) ctrlSetStructuredText "<t color='#ffffff'>No info found</t>";
 			}
 		};
@@ -187,12 +200,16 @@ if(isNil "Z_AdvancedTradingInit")then{
 		(_dialog displayCtrl 7445) ctrlSetStructuredText _formattedText;
 	};
 	Z_displayWeaponInfo = {
+
+		systemChat 'getting weapon info';
+
 		_item = _this select 0;
 		_picture = _item select 4;
 		_class = _item select 0;
 		_display = _item select 3;
 		_buyPrice = 0;
 		_sellPrice = 0;
+
 		if(Z_Selling)then{
 			_buyPrice = _item select 6;
 			_sellPrice = _item select 2;
@@ -204,6 +221,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_magazines = [];
 		_magazines = getArray (configFile >> 'CfgWeapons' >> _class >> 'count');
 		_magText = "";
+		
 		{
 			_magText = _magText + _x;
 		}count _magazines;
@@ -218,6 +236,8 @@ if(isNil "Z_AdvancedTradingInit")then{
 			"<t color='#ffffff'>Mags: %8 </t><br />" 
 			, _picture, _display, _class, _count, _sellPrice, _buyPrice, Z_MoneyVariable, _magText	
 		];
+
+			systemChat _magText;
 
 		(_dialog displayCtrl 7445) ctrlSetStructuredText _formattedText;
 
@@ -595,7 +615,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 						};
 										
 						if( isNil '_text')then{_text = _y;};
-						Z_SellableArray set [count(Z_SellableArray) , [_y,_type,_sell select 0,_text,_pic, _forEachIndex, _buy select 0];
+						Z_SellableArray set [count(Z_SellableArray) , [_y,_type,_sell select 0,_text,_pic, _forEachIndex, _buy select 0]];
                        _totalPrice = _totalPrice + (_sell select 0);				
 					};					
 				}forEach _arrayOfTraderCat;				

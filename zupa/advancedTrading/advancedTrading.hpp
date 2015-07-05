@@ -183,7 +183,7 @@ class AdvancedTrading
 			h = 0.30 * safezoneH;
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
-			onLBSelChanged = "[(lbCurSel 7401)] call Z_showPrice";
+			onLBSelChanged = "['sellable',(lbCurSel 7401)] call Z_getItemInfo";
 			class ListScrollBar: ZSC_RscScrollBar{};
 			class ScrollBar
 			{
@@ -207,6 +207,7 @@ class AdvancedTrading
 			h = 0.30 * safezoneH;
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
+			onLBSelChanged = "['selling',(lbCurSel 7402)] call Z_getItemInfo";
 			class ListScrollBar: ZSC_RscScrollBar{};
 			class ScrollBar
 			{
@@ -235,7 +236,7 @@ class AdvancedTrading
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
 			onload = "ctrlShow [_this,false]";
-			onLBSelChanged = "[(lbCurSel 7421)] call  Z_showPrice";
+			onLBSelChanged = "['buyable',(lbCurSel 7421)] call Z_getItemInfo";
 			class ListScrollBar: ZSC_RscScrollBar{};
 			class ScrollBar
 			{
@@ -259,6 +260,7 @@ class AdvancedTrading
 			soundSelect[] = {"",0.1,1};
 			colorBackground[] = {0.1,0.1,0.1,0.8};
 			onload = "ctrlShow [_this,false]";
+			onLBSelChanged = "['buying',(lbCurSel 7422)] call Z_getItemInfo";
 			class ScrollBar
 			{
 				color[] = {1,1,1,0.6};
@@ -538,14 +540,14 @@ class AdvancedTrading
 		};
 
         class RscStrText_AT_ItemInfo: ZSC_RscStructuredText
-                {
-                    idc = 7445;
-                    text = "";
-                    x = 0.71 * safezoneW + safezoneX;
-                    y = 0.43 * safezoneH + safezoneY;
-                    w = 0.14 * safezoneW;
-                    h = 0.59 * safezoneH;
-                    colorText[] = {1,1,1,1};
-                };
+        {
+            idc = 7445;
+            text = "";
+            x = 0.71 * safezoneW + safezoneX;
+            y = 0.43 * safezoneH + safezoneY;
+            w = 0.14 * safezoneW;
+            h = 0.59 * safezoneH;
+            colorText[] = {1,1,1,1};
+        };
 	};
 };
