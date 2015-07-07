@@ -1,33 +1,44 @@
-// initiate the functions and variables for advanced trading -- easier for the people :) otherwise it would be in compiles or different file.
-Z_OriginalSellableArray = [];
-Z_SellableArray = [];
-Z_SellArray = [];
-
-Z_OriginalBuyableArray = [];
-Z_BuyableArray = [];
-Z_BuyingArray = [];
-
-Z_vehicle = objNull;
+// Configs that user can edit
 Z_VehicleDistance = 30;
 
 Z_NormalCurrency = false; // No effect yet. Not supported yet
 
-// When normal currency is false
+// When normal currency is false this is applied
 Z_MoneyVariable = "cashMoney"; // Change this to whichever currency You are using.
-if(isNil 'CurrencyName')then{
-	CurrencyName = 'Coins';
-};
 
+/* Defines ( should not be edited unless you want custom window control */
 
-// displays constants
+// #define Z_AT_DIALOGWINDOW 711197;
+#define Z_AT_DIALOGWINDOW 711197; 
 
-Z_AT_FILTERWORD = 7444; // todo change this to the one.
+// #define Z_AT_SELLABLELIST 7401;
+#define Z_AT_SELLABLELIST 7401; 
 
-Z_AT_SELLABLELIST = 7401;
-Z_AT_SELLINGLIST = 7402;
+// #define Z_AT_SELLINGLIST 7402;
+#define Z_AT_SELLINGLIST 7402; 
 
-Z_AT_BUYABLELIST = 7421;
-Z_AT_BUYINGLIST = 7422;
+// #define Z_AT_BUYABLELIST 7421;
+#define Z_AT_BUYABLELIST 7421; 
 
+// #define Z_AT_BUYINGLIST 7422;
+#define Z_AT_BUYINGLIST 7422; 
+
+// #define Z_AT_CONTAINERINDICATOR 7408;
+#define Z_AT_CONTAINERINDICATOR 7408; 
+
+// #define Z_AT_ITEMINFO 7445;
+#define Z_AT_ITEMINFO 7445; 
+
+// #define Z_AT_SLOTSDISPLAY 7404;
+#define Z_AT_SLOTSDISPLAY 7404; 
+
+// #define Z_AT_TRADERLINE1 7412;
+#define Z_AT_TRADERLINE1 7412; 
+
+// #define Z_AT_TRADERLINE2 7413;
+#define Z_AT_TRADERLINE2 7413; 
+
+// #define Z_AT_PRICEDISPLAY 7410;
+#define Z_AT_PRICEDISPLAY 7410; 
 
 
