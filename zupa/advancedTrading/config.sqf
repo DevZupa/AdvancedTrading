@@ -1,3 +1,5 @@
+Z_FolderLocation = 'zupa\advancedTrading\';
+
 // Configs that user can edit
 Z_VehicleDistance = 30;
 
