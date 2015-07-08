@@ -22,9 +22,22 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_BuyingArray = [];
 	Z_AT_DIALOG = findDisplay Z_AT_DIALOGWINDOW;
 
-	if(isNil 'CurrencyName' && !Z_NormalCurrency)then{
+	if( isNil 'CurrencyName' && Z_SingleCurrency )then{
 		CurrencyName = 'Coins'; // fallback 
 	};
+	if (!Z_SingleCurrency) then { 
+		CurrencyName = '';
+	};
+
+	/*
+	*	Gets the worth value of all the money items.
+	*
+	*
+	*/
+	Z_getDefaultCurrencyWorth = {
+
+	};
+
 	/* end script config */
 
     /*
@@ -120,10 +133,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_selectedList = _this select 0;
 		_selectedIndex = _this select 1;
 
-		_item = [];
-
-		systemChat _selectedList;
-		systemChat format ["%1",_selectedIndex];		
+		_item = [];	
 		
 		if(_selectedIndex >= 0) then {
 			switch(_selectedList) do {
@@ -142,10 +152,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 			};
 		};
 
-		systemChat (_item select 0);
-
 		if( count _item > 0) then {
-			systemChat "getCOnfig";
 			[_item] call Z_getItemConfig;
 		};
 
@@ -192,16 +199,22 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_buyPrice = 0;
 		_sellPrice = 0;
 		if(Z_Selling)then{
-			_buyPrice = _item select 6;
-			_sellPrice = _item select 2;
+			_buyPrice = _item select 6; _buyCurrency = _item select 8;
+			_sellPrice = _item select 2; _buyCurrency = _item select 7;
 		}else{
-			_buyPrice = _item select 2;
-			_sellPrice = _item select 6;
+			_buyPrice = _item select 2; _buyCurrency = _item select 7;
+			_sellPrice = _item select 6; _buyCurrency = _item select 8;
 		};
+
+
+
+		systemChat 'getting count config info';
 
 		if ( isText (configFile >> 'CfgMagazines' >> _class >> 'count') ) then {
 			_count = getText (configFile >> 'CfgMagazines' >> _class >> 'count');
 		};
+
+		systemChat 'got count config info';
 
 		_formattedText = formatText [
 			"<img image='%1'/><br />" + 
@@ -227,19 +240,20 @@ if(isNil "Z_AdvancedTradingInit")then{
 		_sellPrice = 0;
 
 		if(Z_Selling)then{
-			_buyPrice = _item select 6;
-			_sellPrice = _item select 2;
+			_buyPrice = _item select 6; _buyCurrency = _item select 8;
+			_sellPrice = _item select 2; _buyCurrency = _item select 7;
 		}else{
-			_buyPrice = _item select 2;
-			_sellPrice = _item select 6;
+			_buyPrice = _item select 2; _buyCurrency = _item select 7;
+			_sellPrice = _item select 6; _buyCurrency = _item select 8;
 		};
+		systemChat 'getting config info';
 
 		_magazines = [];
 		if( isArray (configFile >> 'CfgWeapons' >> _class >> 'magazines')) then {
 			_magazines = getArray (configFile >> 'CfgWeapons' >> _class >> 'magazines');
 		};
 		_magText = "";
-		
+		systemChat 'got config info';
 		{
 			_magText = _magText + _x;
 		}count _magazines;
@@ -272,11 +286,11 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_buyPrice = 0;
 			_sellPrice = 0;
 			if(Z_Selling)then{
-				_buyPrice = _item select 6;
-				_sellPrice = _item select 2;
+				_buyPrice = _item select 6; _buyCurrency = _item select 8;
+				_sellPrice = _item select 2; _buyCurrency = _item select 7;
 			}else{
-				_buyPrice = _item select 2;
-				_sellPrice = _item select 6;
+				_buyPrice = _item select 2; _buyCurrency = _item select 7;
+				_sellPrice = _item select 6; _buyCurrency = _item select 8;
 			};
 
 			if ( isText (configFile >> 'CfgVehicles' >> _class >> 'transportMaxWeapons')) then {
@@ -323,11 +337,11 @@ if(isNil "Z_AdvancedTradingInit")then{
 			_buyPrice = 0;
 			_sellPrice = 0;
 			if(Z_Selling)then{
-				_buyPrice = _item select 6;
-				_sellPrice = _item select 2;
+				_buyPrice = _item select 6; _buyCurrency = _item select 8;
+				_sellPrice = _item select 2; _buyCurrency = _item select 7;
 			}else{
-				_buyPrice = _item select 2;
-				_sellPrice = _item select 6;
+				_buyPrice = _item select 2; _buyCurrency = _item select 7;
+				_sellPrice = _item select 6; _buyCurrency = _item select 8;
 			};
 
 			if ( isText (configFile >> 'CfgVehicles' >> _class >> 'transportMaxWeapons')) then {
@@ -342,7 +356,19 @@ if(isNil "Z_AdvancedTradingInit")then{
 				_transportmaxBackpacks  = getText (configFile >> 'CfgVehicles' >> _class >> 'transportmaxBackpacks');
 			};
 
+			_formattedText = formatText [
+			"<img image='%1'/><br />" + 
+			"<t color='#ffffff'>Name: %2 </t><br />" +
+			"<t color='#ffffff'>Class: %6 </t><br />" +
+			"<t color='#ffffff'>Sell price: %5 %7</t><br />" +
+			"<t color='#ffffff'>Buy price: %6 %7</t><br />" + 
+			"<t color='#ffffff'>Mags: %8 </t><br />" +
+			"<t color='#ffffff'>Weaps: %9 </t><br />" +
+			"<t color='#ffffff'>Backs: %4 </t><br />" 
+			, _picture, _display, _class, _transportmaxBackpacks, _sellPrice, _buyPrice, Z_MoneyVariable, _transportMaxWeapons,_transportMaxMagazines	
+			];
 
+			(Z_AT_DIALOG displayCtrl Z_AT_ITEMINFO) ctrlSetStructuredText _formattedText;
 	};
 
 	/**
@@ -620,11 +646,9 @@ if(isNil "Z_AdvancedTradingInit")then{
 			{
 				_y = _x;				
 				{	
-						_cat =  format["Category_%1",(_arrayOfTraderCat select _forEachIndex select 1)];
-						_excists = false;
-						if(isClass(missionConfigFile >> "CfgTraderCategory"  >> _cat >> _y ))then{
-						_excists = isClass(missionConfigFile >> "CfgTraderCategory"  >> _cat >> _y );		
-						};					
+					_cat =  format["Category_%1",(_arrayOfTraderCat select _forEachIndex select 1)];
+					_excists = isClass(missionConfigFile >> "CfgTraderCategory"  >> _cat >> _y );
+
 					if(_excists)exitWith{
 						_pic = "";
 						_text = "";
@@ -650,7 +674,16 @@ if(isNil "Z_AdvancedTradingInit")then{
 						};
 										
 						if( isNil '_text')then{_text = _y;};
-						Z_SellableArray set [count(Z_SellableArray) , [_y,_type,_sell select 0,_text,_pic, _forEachIndex, _buy select 0]];
+
+						_buyCurrency = CurrencyName;
+						_sellCurrency = CurrencyName;
+
+						if(!Z_SingleCurrency) then {
+							_buyCurrency = 	_buy select 1;
+							_sellCurrency = _sell select 1,
+						};
+
+						Z_SellableArray set [count(Z_SellableArray) , [_y,_type,_sell select 0,_text,_pic, _forEachIndex, _buy select 0, _sellCurrency, _buyCurrency, _cat]];
                        _totalPrice = _totalPrice + (_sell select 0);				
 					};					
 				}forEach _arrayOfTraderCat;				
@@ -659,15 +692,24 @@ if(isNil "Z_AdvancedTradingInit")then{
 			Z_OriginalSellableArray = [] + Z_SellableArray;
 					
 			_backUpText = _extraText;
+
 			if(Z_SellingFrom != 2)then{
 				_extraText = getText (configFile >> 'CfgVehicles' >> _extraText >> 'displayName');
 			};
-			if (isNil '_extraText')then{_extraText = _backUpText;};
+			if (isNil '_extraText')then{
+				_extraText = _backUpText;
+			};
 			
-			_ctrltext = format["I would offer %1 %2.", _totalPrice,CurrencyName];
-			ctrlSetText [Z_AT_TRADERLINE2, _ctrltext];		
+			if (Z_SingleCurrency) then {
+				_ctrltext = format["I would offer %1 %2.", _totalPrice,CurrencyName];
+				ctrlSetText [Z_AT_TRADERLINE2, _ctrltext];	
+			} else {
+				ctrlSetText [Z_AT_TRADERLINE2, ''];	
+			};
+
 			_ctrltext = format["I accept %1 items from %2.", count(Z_SellableArray) , _extraText];
 			ctrlSetText [Z_AT_TRADERLINE1, _ctrltext];	
+
 			call Z_fillSellList;
 		};		
 	};
@@ -1082,15 +1124,15 @@ if(isNil "Z_AdvancedTradingInit")then{
 		Z_AT_DIALOG = findDisplay 711197;		
 		Z_Selling = !Z_Selling;	
 		if(Z_Selling)then{	
-			(Z_AT_DIALOG displayCtrl 7416) ctrlSetText "Buy";
-			(Z_AT_DIALOG displayCtrl 7409) ctrlSetText "Selling";
-			{ctrlShow [_x,true];} forEach [Z_AT_SELLABLELIST,Z_AT_SELLINGLIST,7435,7430,7431,7432,7433]; // show
-			{ctrlShow [_x,false];} forEach [Z_AT_BUYABLELIST,Z_AT_BUYINGLIST,7436,7440,7441,7442,7443,Z_AT_SLOTSDISPLAY]; // hide											
+			(Z_AT_DIALOG displayCtrl Z_AT_SELLBUYTOGGLE) ctrlSetText "Buy";
+			(Z_AT_DIALOG displayCtrl Z_AT_RIGHTLISTTITLE) ctrlSetText "Selling";
+			{ctrlShow [_x,true];} forEach [Z_AT_SELLABLELIST,Z_AT_SELLINGLIST,Z_AT_SELLBUTTON,Z_AT_ADDSELLITEMBUTTON,Z_AT_ADDALLSELLITEMBUTTON,Z_AT_REMOVESELLITEMBUTTON,Z_AT_REMOVEALLSELLITEMBUTTON]; // show
+			{ctrlShow [_x,false];} forEach [Z_AT_BUYABLELIST,Z_AT_BUYINGLIST,Z_AT_BUYBUTTON,Z_AT_ADDBUYITEMBUTTON,Z_AT_BUYINGAMOUNT,Z_AT_REMOVEBUYITEMBUTTON,Z_AT_REMOVEALLBUYITEMBUTTON,Z_AT_SLOTSDISPLAY]; // hide											
 		}else{
-			(Z_AT_DIALOG displayCtrl 7416) ctrlSetText "Sell";
-			(Z_AT_DIALOG displayCtrl 7409) ctrlSetText "Buying";
-			{ctrlShow [_x,true];} forEach [Z_AT_BUYABLELIST,Z_AT_BUYINGLIST,7436,7440,7441,7442,7443,Z_AT_SLOTSDISPLAY]; // show
-			{ctrlShow [_x,false];} forEach [Z_AT_SELLABLELIST,Z_AT_SELLINGLIST,7435,7430,7431,7432,7433]; // hide	
+			(Z_AT_DIALOG displayCtrl Z_AT_SELLBUYTOGGLE) ctrlSetText "Sell";
+			(Z_AT_DIALOG displayCtrl Z_AT_RIGHTLISTTITLE) ctrlSetText "Buying";
+			{ctrlShow [_x,true];} forEach [Z_AT_BUYABLELIST,Z_AT_BUYINGLIST,Z_AT_BUYBUTTON,Z_AT_ADDBUYITEMBUTTON,Z_AT_BUYINGAMOUNT,Z_AT_REMOVEBUYITEMBUTTON,Z_AT_REMOVEALLBUYITEMBUTTON,Z_AT_SLOTSDISPLAY]; // show
+			{ctrlShow [_x,false];} forEach [Z_AT_SELLABLELIST,Z_AT_SELLINGLIST,Z_AT_SELLBUTTON,Z_AT_ADDSELLITEMBUTTON,Z_AT_ADDALLSELLITEMBUTTON,Z_AT_REMOVESELLITEMBUTTON,Z_AT_REMOVEALLSELLITEMBUTTON]; // hide	
 			call Z_fillBuyList;
 		};	
 		[2] call Z_getContainer; // default gear		
@@ -1142,19 +1184,33 @@ if(isNil "Z_AdvancedTradingInit")then{
 								_y  = configName (_y );
 								_type =  getText(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "type");
 								_buy = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "buy");
-									_sell = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "buy");
+								_sell = getArray(missionConfigFile >> "CfgTraderCategory"  >> _cat  >> _y >> "buy");
 								_pic = "";
 								_text = "";	
 								if(_type == "trade_items")then{
 									_pic = getText (configFile >> 'CfgMagazines' >> _y >> 'picture');
 									_text = getText (configFile >> 'CfgMagazines' >> _y >> 'displayName');
-									Z_BuyableArray set [count(Z_BuyableArray) , [_y,_type,_buy select 0,_text,_pic,_forEachIndex,_sell select 0]];
+									_buyCurrency = CurrencyName;
+									_sellCurrency = CurrencyName;
+
+									if(!Z_SingleCurrency) then {
+										_buyCurrency = 	_buy select 1;
+										_sellCurrency = _sell select 1,
+									};
+									Z_BuyableArray set [count(Z_BuyableArray) , [_y,_type,_buy select 0,_text,_pic,_forEachIndex,_sell select 0, _buyCurrency, _sellCurrency, _cat]];
 									_totalPrice = _totalPrice + (_buy select 0);																				
 								};
 								if(_type == "trade_weapons")then{
 									_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
 									_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
-									Z_BuyableArray set [count(Z_BuyableArray) , [_y,_type,_buy select 0,_text,_pic,_forEachIndex,_sell select 0]];
+									_buyCurrency = CurrencyName;
+									_sellCurrency = CurrencyName;
+
+									if(!Z_SingleCurrency) then {
+										_buyCurrency = 	_buy select 1;
+										_sellCurrency = _sell select 1,
+									};
+									Z_BuyableArray set [count(Z_BuyableArray) , [_y,_type,_buy select 0,_text,_pic,_forEachIndex,_sell select 0, _buyCurrency, _sellCurrency, _cat]];
 									_totalPrice = _totalPrice + (_buy select 0);	
 								};
 							};																									
@@ -1213,7 +1269,6 @@ if(isNil "Z_AdvancedTradingInit")then{
 			};		
 			_returnArray = [_allowedMags,_allowedWeapons,_allowedBackpacks];
 		};				
-		Z_AT_DIALOG = findDisplay 711197;
 		(Z_AT_DIALOG displayCtrl Z_AT_SLOTSDISPLAY) ctrlSetText format["Free Slots: %1 / %2 / %3",_returnArray select 1,_returnArray select 0,_returnArray select 2];
 	};
 	
@@ -1391,10 +1446,9 @@ if(isNil "Z_AdvancedTradingInit")then{
 
 createDialog "AdvancedTrading";
 
-Z_AT_DIALOG = findDisplay 711197;
-(Z_AT_DIALOG displayCtrl 7432) ctrlSetText " < ";
-(Z_AT_DIALOG displayCtrl 7433) ctrlSetText " << ";
-(Z_AT_DIALOG displayCtrl 7442) ctrlSetText " < ";
-(Z_AT_DIALOG displayCtrl 7443) ctrlSetText " << ";
-{ctrlShow [_x,false];} forEach [7441,7436,Z_AT_SLOTSDISPLAY,Z_AT_BUYINGLIST,Z_AT_BUYABLELIST,7436,7440,7442,7443,Z_AT_SLOTSDISPLAY]; // hide	- double hide ( first one didn't work it seems.
+(Z_AT_DIALOG displayCtrl Z_AT_REMOVESELLITEMBUTTON) ctrlSetText " < "; 
+(Z_AT_DIALOG displayCtrl Z_AT_REMOVEALLSELLITEMBUTTON) ctrlSetText " << ";
+(Z_AT_DIALOG displayCtrl Z_AT_REMOVEBUYITEMBUTTON) ctrlSetText " < ";
+(Z_AT_DIALOG displayCtrl Z_AT_REMOVEALLBUYITEMBUTTON) ctrlSetText " << ";
+{ctrlShow [_x,false];} forEach [Z_AT_BUYINGAMOUNT,Z_AT_BUYBUTTON,Z_AT_SLOTSDISPLAY,Z_AT_BUYINGLIST,Z_AT_BUYABLELIST,Z_AT_BUYBUTTON,Z_AT_ADDBUYITEMBUTTON,Z_AT_REMOVEBUYITEMBUTTON,Z_AT_REMOVEALLBUYITEMBUTTON,Z_AT_SLOTSDISPLAY]; // hide	- double hide ( first one didn't work it seems.
 call Z_getGearItems; 

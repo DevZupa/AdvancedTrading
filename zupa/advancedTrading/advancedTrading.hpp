@@ -75,8 +75,8 @@ class AdvancedTrading
 			y = 0.26 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "[0] call Z_getContainer;";
-				colorBackground[] =  {1,1,1,1};
-					color[] = {0,0,0,1};
+			colorBackground[] =  {1,1,1,1};
+			color[] = {0,0,0,1};
 		};
 
 		class ZSC_RscButtonMenu_Z3: AT_Zupa_BlueButton
@@ -87,8 +87,8 @@ class AdvancedTrading
 			y = 0.26 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "[1] call Z_getContainer;";
-				colorBackground[] =  {1,1,1,1};
-					color[] = {0,0,0,1};
+			colorBackground[] =  {1,1,1,1};
+			color[] = {0,0,0,1};
 		};
 
 		class ZSC_RscButtonMenu_Z4: AT_Zupa_BlueButton
@@ -99,8 +99,8 @@ class AdvancedTrading
 			y = 0.26 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "call Z_ChangeBuySell;";
-				colorBackground[] =  {1,1,1,1};
-					color[] = {0,0,0,1};
+			colorBackground[] =  {1,1,1,1};
+			color[] = {0,0,0,1};
 		};
 
 		class RscText_AT6: ZSC_RscText
@@ -307,7 +307,7 @@ class AdvancedTrading
 			w = 0.13 * safezoneW;
 			onButtonClick = "[(ctrlText 7444)] call Z_filterList;";
 			colorBackground[] =  {1,1,1,1};
-				color[] = {0,0,0,1};
+			color[] = {0,0,0,1};
 		};
 
 
@@ -320,7 +320,7 @@ class AdvancedTrading
 			w = 0.08 * safezoneW;
 			onButtonClick = "[(lbCurSel 7401)] call Z_pushItemToList;";
 			colorBackground[] =  {1,1,1,1};
-        				color[] = {0,0,0,1};
+        	color[] = {0,0,0,1};
 		};
 
 		class ZSC_RscButtonMenu_AT14: AT_Zupa_BlueButton
@@ -331,8 +331,8 @@ class AdvancedTrading
 			y = 0.49 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "call Z_pushAllToList;";
-				colorBackground[] =  {1,1,1,1};
-            				color[] = {0,0,0,1};
+			colorBackground[] =  {1,1,1,1};
+			color[] = {0,0,0,1};
 		};
 
 		class ZSC_RscButtonMenu_AT13: AT_Zupa_BlueButton
@@ -344,7 +344,7 @@ class AdvancedTrading
 			w = 0.08 * safezoneW;
 			onButtonClick = "[(lbCurSel 7402)] call Z_removeItemFromList;";
 			colorBackground[] =  {1,1,1,1};
-        				color[] = {0,0,0,1};
+			color[] = {0,0,0,1};
 		};
 
 
@@ -356,8 +356,8 @@ class AdvancedTrading
 			y = 0.65 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
 			onButtonClick = "call Z_removeAllToList;";
-				colorBackground[] =  {1,1,1,1};
-            				color[] = {0,0,0,1};
+			colorBackground[] =  {1,1,1,1};
+			color[] = {0,0,0,1};
 		};
 
 // buying
@@ -371,8 +371,8 @@ class AdvancedTrading
 			w = 0.08 * safezoneW;
 			onButtonClick = "[(lbCurSel 7421),(ctrlText 7441)] call Z_toBuyingList;";
 			onload = "ctrlShow [_this,false]";
-				colorBackground[] =  {1,1,1,1};
-            				color[] = {0,0,0,1};
+			colorBackground[] =  {1,1,1,1};
+			color[] = {0,0,0,1};
 		};
 
 	// textfield 7441
@@ -399,8 +399,8 @@ class AdvancedTrading
 			w = 0.08 * safezoneW;
 			onButtonClick = "[(lbCurSel 7422)] call Z_removeItemFromBuyingList;";
 			onload = "ctrlShow [_this,false]";
-				colorBackground[] =  {1,1,1,1};
-            				color[] = {0,0,0,1};
+			colorBackground[] =  {1,1,1,1};
+			color[] = {0,0,0,1};
 		};
 
 
@@ -413,8 +413,8 @@ class AdvancedTrading
 			w = 0.08 * safezoneW;
 			onButtonClick = "call Z_removeAllFromBuyingList;";
 			onload = "ctrlShow [_this,false]";
-				colorBackground[] =  {1,1,1,1};
-            				color[] = {0,0,0,1};
+			colorBackground[] =  {1,1,1,1};
+			color[] = {0,0,0,1};
 		};
 
 
@@ -430,7 +430,7 @@ class AdvancedTrading
 			onload = "ctrlShow [_this,false]";
 		};
 
-	class RscText_AT_CurrencyIndicator: ZSC_RscText
+		class RscText_AT_CurrencyIndicator: ZSC_RscText
 		{
 			idc = 7446;
 			text = "Single Currency";
@@ -474,7 +474,7 @@ class AdvancedTrading
 			w = 0.13 * safezoneW;
 			onButtonClick = "call Z_SellItems;";
 			colorBackground[] =  {1,1,1,1};
-        				color[] = {0,0,0,1};
+			color[] = {0,0,0,1};
 		};
 
 		class ZSC_RscButtonMenu_AT27: AT_Zupa_BlueButton
@@ -505,28 +505,28 @@ class AdvancedTrading
 
 
         class ZSC_RscButtonMenu_AT29: AT_Zupa_BlueButton
-            {
-                idc = -1;
-                text = "Toggle Currency";
-                x = 0.71 * safezoneW + safezoneX;
-                y = 0.26 * safezoneH + safezoneY;
-                w = 0.13 * safezoneW;
-                onButtonClick = "call Z_toggleCurrency;";
-             	colorBackground[] =  {1,1,1,1};
-             				color[] = {0,0,0,1};
-            };
+        {
+            idc = -1;
+            text = "Toggle Currency";
+            x = 0.71 * safezoneW + safezoneX;
+            y = 0.26 * safezoneH + safezoneY;
+            w = 0.13 * safezoneW;
+            onButtonClick = "call Z_toggleCurrency;";
+         	colorBackground[] =  {1,1,1,1};
+				color[] = {0,0,0,1};
+        };
 
-         class RscText_AT_InfoLabel: ZSC_RscText
-                {
-                    idc = -1;
-                    text = "   Item info";
-                    x = 0.70 * safezoneW + safezoneX;
-                    y = 0.38 * safezoneH + safezoneY;
-                    w = 0.15 * safezoneW;
-                    h = 0.03 * safezoneH;
-                  colorBackground[] = {0.2,0.75,1,1};
-                    colorText[] = {1,1,1,1};
-                };
+		class RscText_AT_InfoLabel: ZSC_RscText
+		{
+		    idc = -1;
+		    text = "   Item info";
+		    x = 0.70 * safezoneW + safezoneX;
+		    y = 0.38 * safezoneH + safezoneY;
+		    w = 0.15 * safezoneW;
+		    h = 0.03 * safezoneH;
+		    colorBackground[] = {0.2,0.75,1,1};
+		    colorText[] = {1,1,1,1};
+		};
 
 
 		class RscText_AT_BreakLine: ZSC_RscText
@@ -536,7 +536,7 @@ class AdvancedTrading
 			y = 0.15 * safezoneH + safezoneY;
 			w = 0.0005 * safezoneW;
 			h = 0.70 * safezoneH;
-			   colorBackground[] = {0.2,0.75,1,1};
+		   colorBackground[] = {0.2,0.75,1,1};
 		};
 
         class RscStrText_AT_ItemInfo: ZSC_RscStructuredText
