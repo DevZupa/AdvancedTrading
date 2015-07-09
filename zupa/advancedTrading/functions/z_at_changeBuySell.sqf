@@ -1,3 +1,5 @@
+#include "defines.sqf";
+
 Z_Selling = !Z_Selling;	
 if(Z_Selling)then{	
 	(findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_SELLBUYTOGGLE) ctrlSetText "Buy";

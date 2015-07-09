@@ -1,13 +1,25 @@
 _magazinesToBuy = 0;
 _weaponsToBuy = 0;
 _backpacksToBuy = 0;
+_toolsToBuy = 0;
+_sidearmToBuy = 0;
+_primaryToBuy = 0;
 
 _priceToBuy = 0;
 
 {
 	if( _x select 1 == "trade_weapons")then{
-		_weaponsToBuy = _weaponsToBuy + (_x select 9) ;
-		_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2));			
+		if( 'ItemCore' in _parentClasses || 'Binocular' in _parentClasses) then {
+			_toolsToBuy = _toolsToBuy + (_x select 9);
+		} else {
+			_weaponsToBuy = _weaponsToBuy + (_x select 9);
+			if('PistolCore' in _parentClasses)then {
+				_sidearmToBuy = _sidearmToBuy + (_x select 9);
+			} else {
+				_primaryToBuy = _primaryToBuy + (_x select 9);
+			};
+		};
+		_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2));	
 	};
 	if( _x select 1 == "trade_items")then{
 		_magazinesToBuy = _magazinesToBuy + (_x select 9) ;
@@ -19,22 +31,18 @@ _priceToBuy = 0;
 	};	
 } count Z_BuyingArray;
 
-//recheck if there is enough space -> not that some douche put extra stuff in.
-
-_canBuy = [_weaponsToBuy,_magazinesToBuy,_backpacksToBuy] call Z_allowBuying;
+_canBuy = [_weaponsToBuy,_magazinesToBuy,_backpacksToBuy,_toolsToBuy, _sidearmToBuy, _primaryToBuy] call Z_allowBuying;
 
 _myMoney = player getVariable[Z_MoneyVariable,0];
 
-if(_myMoney >= _priceToBuy)then{
+if(_myMoney >= _priceToBuy) then {
     
-	
-
-	if(_canBuy)then{	
+	if(_canBuy) then {	
 	systemChat format["Start Buying for %1 %2",_priceToBuy,CurrencyName];
 	
 	closeDialog 2;
 	
-		if(Z_SellingFrom == 0)then{//backpack
+		if(Z_SellingFrom == 0) then {//backpack
 		systemChat format["Adding %1 Items in backpack",count (Z_BuyingArray)];
 			{
 				if( _x select 1 == "trade_weapons")then{
