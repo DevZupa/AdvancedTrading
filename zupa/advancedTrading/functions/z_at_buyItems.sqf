@@ -9,6 +9,7 @@ _priceToBuy = 0;
 
 {
 	if( _x select 1 == "trade_weapons")then{
+		_parentClasses =  [(configFile >> "CfgWeapons" >> (_x select 0)),true] call BIS_fnc_returnParents;
 		if( 'ItemCore' in _parentClasses || 'Binocular' in _parentClasses) then {
 			_toolsToBuy = _toolsToBuy + (_x select 9);
 		} else {
