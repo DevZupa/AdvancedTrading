@@ -23,9 +23,9 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_BuyingArray = [];
 
 	if( isNil 'CurrencyName' && Z_SingleCurrency )then{
-		CurrencyName = 'Coins'; // fallback 
+		CurrencyName = 'Coins'; // fallback
 	};
-	if (!Z_SingleCurrency) then { 
+	if (!Z_SingleCurrency) then {
 		CurrencyName = '';
 	};
 
@@ -33,6 +33,8 @@ if(isNil "Z_AdvancedTradingInit")then{
 
 	KK_fnc_inString =							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\KK_fnc_inString.sqf");
 	ZUPA_fnc_removeWeaponsAndMagazinesCargo = 	compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\zupa_fnc_removeWeaponsAndMagazinesCargo.sqf");
+
+	if (!isNil "SC_fnc_removeCoins") then
 
 	Z_filleTradeTitle = 						compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_filleTradeTitle.sqf");
 	Z_clearLists =								compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_clearLists.sqf");
@@ -77,9 +79,9 @@ if(isNil "Z_AdvancedTradingInit")then{
 
 createDialog "AdvancedTrading";
 
-(findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_REMOVESELLITEMBUTTON) ctrlSetText " < "; 
+(findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_REMOVESELLITEMBUTTON) ctrlSetText " < ";
 (findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_REMOVEALLSELLITEMBUTTON) ctrlSetText " << ";
 (findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_REMOVEBUYITEMBUTTON) ctrlSetText " < ";
 (findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_REMOVEALLBUYITEMBUTTON) ctrlSetText " << ";
 {ctrlShow [_x,false];} forEach [Z_AT_BUYINGAMOUNT,Z_AT_BUYBUTTON,Z_AT_SLOTSDISPLAY,Z_AT_BUYINGLIST,Z_AT_BUYABLELIST,Z_AT_BUYBUTTON,Z_AT_ADDBUYITEMBUTTON,Z_AT_REMOVEBUYITEMBUTTON,Z_AT_REMOVEALLBUYITEMBUTTON,Z_AT_SLOTSDISPLAY]; // hide	- double hide ( first one didn't work it seems.
-call Z_getGearItems; 
+call Z_getGearItems;
