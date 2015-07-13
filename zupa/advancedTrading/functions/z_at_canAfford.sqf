@@ -1,7 +1,7 @@
 private ['_worth', '_total_currency','_return','_part','_worth','_totalToPay'];
 
 _totalToPay = _this;
-_return = false;
+_return = [false, 0, 0];
 
 _total_currency = 0;
 
