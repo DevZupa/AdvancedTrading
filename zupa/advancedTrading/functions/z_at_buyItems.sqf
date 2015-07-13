@@ -7,30 +7,57 @@ _primaryToBuy = 0;
 
 _priceToBuy = 0;
 
-{
-	if( _x select 1 == "trade_weapons")then{
-		_parentClasses =  [(configFile >> "CfgWeapons" >> (_x select 0)),true] call BIS_fnc_returnParents;
-		if( 'ItemCore' in _parentClasses || 'Binocular' in _parentClasses) then {
-			_toolsToBuy = _toolsToBuy + (_x select 9);
-		} else {
-			_weaponsToBuy = _weaponsToBuy + (_x select 9);
-			if('PistolCore' in _parentClasses)then {
-				_sidearmToBuy = _sidearmToBuy + (_x select 9);
+if (Z_SingleCurrency) then {
+	{
+		if( _x select 1 == "trade_weapons")then{
+			_parentClasses =  [(configFile >> "CfgWeapons" >> (_x select 0)),true] call BIS_fnc_returnParents;
+			if( 'ItemCore' in _parentClasses || 'Binocular' in _parentClasses) then {
+				_toolsToBuy = _toolsToBuy + (_x select 9);
 			} else {
-				_primaryToBuy = _primaryToBuy + (_x select 9);
+				_weaponsToBuy = _weaponsToBuy + (_x select 9);
+				if('PistolCore' in _parentClasses)then {
+					_sidearmToBuy = _sidearmToBuy + (_x select 9);
+				} else {
+					_primaryToBuy = _primaryToBuy + (_x select 9);
+				};
 			};
+			_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2));
 		};
-		_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2));
-	};
-	if( _x select 1 == "trade_items")then{
-		_magazinesToBuy = _magazinesToBuy + (_x select 9) ;
-		_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2));
-	};
-	if( _x select 1 == "trade_backpacks")then{
-		_backpacksToBuy = _backpacksToBuy + (_x select 9) ;
-		_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2));
-	};
-} count Z_BuyingArray;
+		if( _x select 1 == "trade_items")then{
+			_magazinesToBuy = _magazinesToBuy + (_x select 9) ;
+			_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2));
+		};
+		if( _x select 1 == "trade_backpacks")then{
+			_backpacksToBuy = _backpacksToBuy + (_x select 9) ;
+			_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2));
+		};
+	} count Z_BuyingArray;
+} else {
+	{
+		if( _x select 1 == "trade_weapons")then{
+			_parentClasses =  [(configFile >> "CfgWeapons" >> (_x select 0)),true] call BIS_fnc_returnParents;
+			if( 'ItemCore' in _parentClasses || 'Binocular' in _parentClasses) then {
+				_toolsToBuy = _toolsToBuy + (_x select 9);
+			} else {
+				_weaponsToBuy = _weaponsToBuy + (_x select 9);
+				if('PistolCore' in _parentClasses)then {
+					_sidearmToBuy = _sidearmToBuy + (_x select 9);
+				} else {
+					_primaryToBuy = _primaryToBuy + (_x select 9);
+				};
+			};
+			_priceToBuy	= _priceToBuy + ((_x select 11)*(_x select 2));
+		};
+		if( _x select 1 == "trade_items")then{
+			_magazinesToBuy = _magazinesToBuy + (_x select 9) ;
+			_priceToBuy	= _priceToBuy + ((_x select 11)*(_x select 2));
+		};
+		if( _x select 1 == "trade_backpacks")then{
+			_backpacksToBuy = _backpacksToBuy + (_x select 9) ;
+			_priceToBuy	= _priceToBuy + ((_x select 11)*(_x select 2));
+		};
+	} count Z_BuyingArray;
+};
 
 _canBuy = [_weaponsToBuy,_magazinesToBuy,_backpacksToBuy,_toolsToBuy, _sidearmToBuy, _primaryToBuy] call Z_allowBuying;
 
@@ -38,8 +65,15 @@ systemChat format  ["%1",_canBuy];
 
 _myMoney = player getVariable[Z_MoneyVariable,0];
 
-if(_myMoney >= _priceToBuy) then {
+_enoughMoney = false;
 
+if (Z_SingleCurrency) then {
+	_enoughMoney = {_myMoney >= _priceToBuy};
+} else {
+	_enoughMoney = _priceToBuy call Z_canAfford;
+}
+
+if(_enoughMoney) then {
 	if(_canBuy) then {
 	systemChat format["Start Buying for %1 %2",_priceToBuy,CurrencyName];
 
