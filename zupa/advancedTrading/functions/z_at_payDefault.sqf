@@ -7,15 +7,14 @@ _moneyInBackpack = _moneyInfo select 2;
 _moneyInVehicle = _moneyInfo select 3;
 
 {
-  //delete all money
+  [_player, _x ,1] call BIS_fnc_invRemove;
 }count _moneyInGear;
 
-{
-  //delete all money
-}count _moneyInBackpack;
-
-{
-  //delete all money
-}count _moneyInVehicle;
+if ( count _moneyInBackpack > 0 ) then {
+  [unitBackpack _player, _moneyInGear, []] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;
+};
+if ( !isNull 'Z_vehicle' && count _moneyInVehicle > 0 ) then {
+  [Z_vehicle, _moneyInVehicle, []] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;
+};
 
 [_toPay, _totalWorth] call Z_returnChange;

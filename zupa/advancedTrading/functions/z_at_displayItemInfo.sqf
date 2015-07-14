@@ -23,7 +23,8 @@ if (Z_Selling) then {
 };
 
 if (Z_SingleCurrency) then {
-	_buyCurrency = _sellCurrency = CurrencyName;
+ 	_sellCurrency = CurrencyName;
+	_buyCurrency = CurrencyName;
 };
 
 _formattedText = format [

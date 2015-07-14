@@ -34,8 +34,6 @@ if(isNil "Z_AdvancedTradingInit")then{
 	KK_fnc_inString =							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\KK_fnc_inString.sqf");
 	ZUPA_fnc_removeWeaponsAndMagazinesCargo = 	compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\zupa_fnc_removeWeaponsAndMagazinesCargo.sqf");
 
-	if (!isNil "SC_fnc_removeCoins") then
-
 	Z_filleTradeTitle = 						compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_filleTradeTitle.sqf");
 	Z_clearLists =								compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_clearLists.sqf");
 	Z_clearSellableList =						compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_clearSellableList.sqf");

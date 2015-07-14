@@ -67,14 +67,14 @@ _myMoney = player getVariable[Z_MoneyVariable,0];
 
 _enoughMoney = false;
 
-_moneyInfo = [false, [], [], []; 0];
+_moneyInfo = [false, [], [], [], 0];
 
 if (Z_SingleCurrency) then {
 	_enoughMoney = { _myMoney >= _priceToBuy };
 } else {
 	_moneyInfo = _priceToBuy call Z_canAfford;
 	_enoughMoney = _moneyInfo select 0;
-}
+};
 
 if(_enoughMoney) then {
 	if(_canBuy) then {
@@ -142,7 +142,7 @@ if(_enoughMoney) then {
 				[player,_priceToBuy, _moneyInfo] call Z_payDefault;
 		} else {
 				[player,_priceToBuy] call SC_fnc_removeCoins;
-		}
+		};
 
 		systemChat format["Removed %1 coins.", _priceToBuy];
 	};

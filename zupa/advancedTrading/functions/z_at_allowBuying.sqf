@@ -20,7 +20,7 @@ _toBuyMags,
 _toBuyBags,
 _toolsToBuy,
 _sidearmToBuy,
-_primaryToBuy,
+_primaryToBuy
 ];
 
 if(_selection == 2) then{ //gear

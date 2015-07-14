@@ -10,22 +10,22 @@ Z_SellableArray = [];
 Z_SellArray = [];
 _vehicle = objNull;
 
-_list = nearestObjects [(getPosATL player), ["AllVehicles"], Z_VehicleDistance];	
-{	
-	if(!isNull _x && local _x && !isPlayer _x && alive _x && !(_x isKindOf "zZombie_base"))then{
+_list = nearestObjects [(getPosATL player), ["AllVehicles"], Z_VehicleDistance];
+{
+	if (!isNull _x && local _x && !isPlayer _x && alive _x && !(_x isKindOf "zZombie_base")) then {
 		systemChat format["Selected %1",typeOf _x];
 		_vehicle = _x;
 	};
 }count _list;
 
-if(!isNull _vehicle)then{
+if (!isNull _vehicle) then {
 	Z_vehicle = _vehicle;
 	_mags = getMagazineCargo _vehicle;
 	_weaps = getWeaponCargo _vehicle;
-	
+
 	_normalMags = [];
 	_normalWeaps = [];
-	
+
 	_kinds = _mags select 0;
 	_ammmounts = _mags select 1;
 	{
@@ -35,7 +35,7 @@ if(!isNull _vehicle)then{
 				_counter = _counter + 1;
 		};
 	}forEach _kinds;
-	
+
 	_kinds2 = _weaps select 0;
 	_ammmounts2 = _weaps select 1;
 	{
@@ -45,12 +45,12 @@ if(!isNull _vehicle)then{
 			_counter = _counter + 1;
 		};
 	}forEach _kinds2;
-	
+
 	[_normalWeaps,_normalMags, typeOf _vehicle] call Z_checkArrayInConfig;
 }else{
 	_ctrltext = format["Get in driver seat first!"];
 	ctrlSetText [Z_AT_TRADERLINE2, _ctrltext];
-	
+
 	_ctrltext = format["I do not see any vehicle."];
 	ctrlSetText [Z_AT_TRADERLINE1, _ctrltext];
-};	
+};
