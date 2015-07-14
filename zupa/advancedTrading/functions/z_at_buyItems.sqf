@@ -46,15 +46,15 @@ if (Z_SingleCurrency) then {
 					_primaryToBuy = _primaryToBuy + (_x select 9);
 				};
 			};
-			_priceToBuy	= _priceToBuy + ((_x select 11)*(_x select 2));
+			_priceToBuy	= _priceToBuy + ((_x select 11)*(_x select 2)*(_x select 9)); // _worth * _price * _amount
 		};
 		if( _x select 1 == "trade_items")then{
 			_magazinesToBuy = _magazinesToBuy + (_x select 9) ;
-			_priceToBuy	= _priceToBuy + ((_x select 11)*(_x select 2));
+			_priceToBuy	= _priceToBuy + ((_x select 11)*(_x select 2)*(_x select 9));
 		};
 		if( _x select 1 == "trade_backpacks")then{
 			_backpacksToBuy = _backpacksToBuy + (_x select 9) ;
-			_priceToBuy	= _priceToBuy + ((_x select 11)*(_x select 2));
+			_priceToBuy	= _priceToBuy + ((_x select 11)*(_x select 2)*(_x select 9));
 		};
 	} count Z_BuyingArray;
 };
@@ -67,19 +67,22 @@ _myMoney = player getVariable[Z_MoneyVariable,0];
 
 _enoughMoney = false;
 
+_moneyInfo = [false, [], [], []; 0];
+
 if (Z_SingleCurrency) then {
-	_enoughMoney = {_myMoney >= _priceToBuy};
+	_enoughMoney = { _myMoney >= _priceToBuy };
 } else {
-	_enoughMoney = _priceToBuy call Z_canAfford;
+	_moneyInfo = _priceToBuy call Z_canAfford;
+	_enoughMoney = _moneyInfo select 0;
 }
 
 if(_enoughMoney) then {
 	if(_canBuy) then {
-	systemChat format["Start Buying for %1 %2",_priceToBuy,CurrencyName];
+	systemChat format["Start Buying for %1 %2", _priceToBuy, CurrencyName];
 
 	closeDialog 2;
 
-		if(Z_SellingFrom == 0) then {//backpack
+		if(Z_SellingFrom == 0) then { //backpack
 		systemChat format["Adding %1 Items in backpack",count (Z_BuyingArray)];
 			{
 				if( _x select 1 == "trade_weapons")then{
@@ -93,7 +96,7 @@ if(_enoughMoney) then {
 			} count Z_BuyingArray;
 		};
 
-		if(Z_SellingFrom == 1)then{//vehicle
+		if(Z_SellingFrom == 1)then{ //vehicle
 			{
 				systemChat format["Adding %1 Items in %2",count (Z_BuyingArray), typeOf Z_vehicle];
 				if( _x select 1 == "trade_weapons")then{
@@ -111,10 +114,10 @@ if(_enoughMoney) then {
 			} count Z_BuyingArray;
 		};
 
-		if(Z_SellingFrom == 2)then{//gear
+		if(Z_SellingFrom == 2)then{ //gear
 			systemChat format["Adding %1 Items in gear",count (Z_BuyingArray)];
 			{
-				if( _x select 1 == "trade_weapons")then{
+				if( _x select 1 == "trade_weapons") then {
 					_count = 0;
 					while( _count < _x select 9)do{
 						player addWeapon (_x select 0);
@@ -122,9 +125,9 @@ if(_enoughMoney) then {
 						_count = _count + 1;
 					};
 				};
-				if( _x select 1 == "trade_items")then{
+				if( _x select 1 == "trade_items") then {
 					_count = 0;
-					 while{_count < _x select 9}do{
+					 while {_count < _x select 9} do {
 						player addMagazine (_x select 0);
 						diag_log format ["%1 added", _x select 0];
 						_count = _count + 1;
@@ -135,7 +138,12 @@ if(_enoughMoney) then {
 				};
 			} count Z_BuyingArray;
 		};
-		[player,_priceToBuy] call SC_fnc_removeCoins;
+		if (Z_SingleCurrency) then {
+				[player,_priceToBuy, _moneyInfo] call Z_payDefault;
+		} else {
+				[player,_priceToBuy] call SC_fnc_removeCoins;
+		}
+
 		systemChat format["Removed %1 coins.", _priceToBuy];
 	};
 }else{

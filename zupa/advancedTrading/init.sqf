@@ -3,7 +3,7 @@ disableSerialization;
 Z_traderData = (_this select 3); // gets the trader data ( e.g menu_Functionary1 )
 
 if( isNil "Z_traderData" || count (Z_traderData) == 0)exitWith{
-	cutText [format["There went something wrong."], "PLAIN DOWN"];
+	cutText [format["There went something wrong selecting the trader."], "PLAIN DOWN"];
 };
 
 if(isNil "Z_AdvancedTradingInit")then{
@@ -74,6 +74,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_allowBuying =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_allowBuying.sqf");
 	Z_canAfford =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_canAfford.sqf");
 	Z_returnChange =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_returnChange.sqf");
+	Z_payDefault =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_payDefault.sqf");
 
 	Z_AdvancedTradingInit = true;
 
