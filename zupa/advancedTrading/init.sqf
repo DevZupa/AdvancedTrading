@@ -73,6 +73,8 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_canAfford =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_canAfford.sqf");
 	Z_returnChange =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_returnChange.sqf");
 	Z_payDefault =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_payDefault.sqf");
+	Z_toggleCurrency = 	compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_toggleCurrency.sqf");
+
 
 	Z_AdvancedTradingInit = true;
 

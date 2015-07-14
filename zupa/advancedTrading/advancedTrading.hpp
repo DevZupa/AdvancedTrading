@@ -499,22 +499,19 @@ class AdvancedTrading
 			onButtonClick = "((ctrlParent (_this select 0)) closeDisplay 9000);";
 			colorBackground[] =  {1,1,1,1};
 			color[] = {0,0,0,1};
-            text = "Close";
+      text = "Close";
 		};
-
-
-        class ZSC_RscButtonMenu_AT29: AT_Zupa_BlueButton
-        {
-            idc = -1;
-            text = "Toggle Currency";
-            x = 0.63 * safezoneW + safezoneX;
-            y = 0.26 * safezoneH + safezoneY;
-            w = 0.13 * safezoneW;
-            onButtonClick = "call Z_toggleCurrency;";
-         	colorBackground[] =  {1,1,1,1};
-			color[] = {0,0,0,1};
-        };
-
+    class ZSC_RscButtonMenu_AT29: AT_Zupa_BlueButton
+    {
+        idc = -1;
+        text = "";
+        x = 0.63 * safezoneW + safezoneX;
+        y = 0.26 * safezoneH + safezoneY;
+        w = 0.13 * safezoneW;
+        onButtonClick = "call Z_toggleCurrency;";
+     		colorBackground[] =  {1,1,1,1};
+				color[] = {0,0,0,1};
+    };
 		class RscText_AT_InfoLabel: ZSC_RscText
 		{
 		    idc = -1;
