@@ -70,7 +70,11 @@ _enoughMoney = false;
 _moneyInfo = [false, [], [], [], 0];
 
 if (Z_SingleCurrency) then {
-	_enoughMoney = { _myMoney >= _priceToBuy };
+	if (_myMoney >= _priceToBuy) then {
+		_enoughMoney = true;
+	} else {
+		_enoughMoney = false;
+	};
 } else {
 	_moneyInfo = _priceToBuy call Z_canAfford;
 	_enoughMoney = _moneyInfo select 0;

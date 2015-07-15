@@ -13,7 +13,7 @@ _moneyInVehicle = _moneyInfo select 3;
 if ( count _moneyInBackpack > 0 ) then {
   [unitBackpack _player, _moneyInGear, []] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;
 };
-if ( !isNull 'Z_vehicle' && count _moneyInVehicle > 0 ) then {
+if ( !isNull Z_vehicle && count _moneyInVehicle > 0 ) then {
   [Z_vehicle, _moneyInVehicle, []] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;
 };
 

@@ -19,6 +19,14 @@ _list = nearestObjects [(getPosATL player), ["AllVehicles"], Z_VehicleDistance];
 }count _list;
 
 if (!isNull _vehicle) then {
+	_pic = getText (configFile >> 'CfgVehicles' >> (typeOf _vehicle) >> 'picture');
+
+	_formattedText = format [
+		"<img image='%1'  size='3' align='center'/>"
+		, _pic
+	];
+
+	(findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_CONTAINERINFO) ctrlSetStructuredText parseText _formattedText;
 	Z_vehicle = _vehicle;
 	_mags = getMagazineCargo _vehicle;
 	_weaps = getWeaponCargo _vehicle;

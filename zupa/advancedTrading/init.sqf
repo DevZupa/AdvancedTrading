@@ -80,12 +80,6 @@ if(isNil "Z_AdvancedTradingInit")then{
 
 createDialog "AdvancedTrading";
 
-if (Z_SingleCurrency) then {
-	(findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_TOGGLECURRENCYLABEL) ctrlSetText "Single Currency";
-} else {
-	(findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_TOGGLECURRENCYLABEL) ctrlSetText "Default Currency";
-};
-
 (findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_REMOVESELLITEMBUTTON) ctrlSetText " < ";
 (findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_REMOVEALLSELLITEMBUTTON) ctrlSetText " << ";
 (findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_REMOVEBUYITEMBUTTON) ctrlSetText " < ";

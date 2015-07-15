@@ -429,18 +429,6 @@ class AdvancedTrading
 			colorText[] = {1,1,1,1};
 			onload = "ctrlShow [_this,false]";
 		};
-
-		class RscText_AT_CurrencyIndicator: ZSC_RscText
-		{
-			idc = 7446;
-			text = "Single Currency";
-			x = 0.63 * safezoneW + safezoneX;
-			y = 0.32 * safezoneH + safezoneY;
-			w = 0.13 * safezoneW;
-			h = 0.04 * safezoneH;
-			colorText[] = {1,1,1,1};
-		};
-
 		class RscSearchBackground2: ZSC_RscText
 		{
 			idc = -1;
@@ -547,5 +535,15 @@ class AdvancedTrading
             h = 0.59 * safezoneH;
             colorText[] = {1,1,1,1};
         };
+				class RscStrText_AT_ConatinerInfo: ZSC_RscStructuredText
+				{
+					idc = 7446;
+					text = "";
+					x = 0.61 * safezoneW + safezoneX;
+					y = 0.20 * safezoneH + safezoneY;
+					w = 0.19 * safezoneW;
+					h = 0.35 * safezoneH;
+					colorText[] = {1,1,1,1};
+				};
 	};
 };
