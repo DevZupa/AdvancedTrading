@@ -1,35 +1,33 @@
-#Advanced Trading
+# Advanced Trading
 
-Alternative selling/buying system. ( you can run default and this next to eachtoher without any problem. Which is recommended anyways).
+Alternative selling/buying system. (You can run the default and this next to each other without any problem. Which is recommended for vehicle buying & selling).
 
-##Alpha version 1.0 released.
- 
-First version will support only the following:
+## Alpha version 2.0.
+
+#### Supported:
 
 * Config traders
-* Single Currency ( ALL supported)
-* Selling/Buying From Gear/Vehicle/Backpack
-* Extra features will be added later on
- 
-#### The following is currently NOT supported.
- 
-* No buying of anything to backpack currently
-* No buying of Backs/weapons into your gear
-* No buying of any vehicles
+* Single Currency & Default Currency
+* Selling/Buying everything from and to Gear/Vehicle/Backpack
 
-##Description
+#### Not supported
 
-Sell directly from backpack, gear or the vehicle ( close) where you were driver from. Decide which items you sell. Traders will only make it possible to trade the items they accept ( goes fully automatic, so only items they accept will be listed on the left).
- 
-You push items to the right to sell, only the items on the right will get sold.
- 
-##Safety measurements
- 
+* No database traders (database traders make your server slow)
+* No ability to buy or sell vehicles.
+
+## Description
+
+Sell and buy directly from and to backpack, gear or the your current vehicle in the vicinity where you were driver from. Decide which items you sell. Traders will only make it possible to trade the items they accept ( goes fully automatic, so only items they accept will be listed on the left).
+
+You push items to the right to sell or buy.
+
+## Safety measurements
+
 Double checks what was deleted from backpacks/vehicles so that people can not cheat.
-Can only sell from your backpack and the vehicle were u was the last driver from ( in 30m radius)
+Can only sell from your vehicle were u was the last driver from (in x meter radius)
 
-##Install instructions
- 
+## Install instructions
+
 1. In your fn_selfactions.sqf
 
 Place:
@@ -61,13 +59,10 @@ AdvancedTrading
 711197
 ```
 
+3. Edit the config.sqf to reflect your server.
+
 ##Images
 
 ![alt text](http://i.imgur.com/7xKeniR.jpg "Screenshot 1")
 
 ![alt text](http://i.imgur.com/PUoRqYz.jpg "Screenshot 2")
- 
- 
- 
- 
- 

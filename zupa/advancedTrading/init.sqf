@@ -73,14 +73,18 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_canAfford =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_canAfford.sqf");
 	Z_returnChange =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_returnChange.sqf");
 	Z_payDefault =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_payDefault.sqf");
-	Z_toggleCurrency = 	compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_toggleCurrency.sqf");
-
+	Z_toggleCurrency = 					compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_toggleCurrency.sqf");
 
 	Z_AdvancedTradingInit = true;
-
 };
 
 createDialog "AdvancedTrading";
+
+if (Z_SingleCurrency) then {
+	(findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_TOGGLECURRENCYLABEL) ctrlSetText "Single Currency";
+} else {
+	(findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_TOGGLECURRENCYLABEL) ctrlSetText "Default Currency";
+};
 
 (findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_REMOVESELLITEMBUTTON) ctrlSetText " < ";
 (findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_REMOVEALLSELLITEMBUTTON) ctrlSetText " << ";

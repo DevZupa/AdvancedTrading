@@ -501,10 +501,11 @@ class AdvancedTrading
 			color[] = {0,0,0,1};
       text = "Close";
 		};
-    class ZSC_RscButtonMenu_AT29: AT_Zupa_BlueButton
+    /*
+		class ZSC_RscButtonMenu_AT29: AT_Zupa_BlueButton
     {
-        idc = -1;
-        text = "";
+        idc = 7450;
+        text = "Toggle Currency";
         x = 0.63 * safezoneW + safezoneX;
         y = 0.26 * safezoneH + safezoneY;
         w = 0.13 * safezoneW;
@@ -512,6 +513,7 @@ class AdvancedTrading
      		colorBackground[] =  {1,1,1,1};
 				color[] = {0,0,0,1};
     };
+		*/
 		class RscText_AT_InfoLabel: ZSC_RscText
 		{
 		    idc = -1;
