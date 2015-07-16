@@ -12,6 +12,7 @@ if(_index > -1)then{
 	_weaponsCheckArray = [];
 	_itemsCheckArray = [];
 	{
+		private ["_type","_name"];
 		_type = _x select 1;
 		_name = _x select 0;
 
