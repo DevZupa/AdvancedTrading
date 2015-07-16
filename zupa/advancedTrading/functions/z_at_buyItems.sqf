@@ -1,3 +1,7 @@
+private ["_magazinesToBuy", "_weaponsToBuy", "_backpacksToBuy", "_toolsToBuy", "_sidearmToBuy", "_primaryToBuy", "_priceToBuy"
+,"_enoughMoney", "_myMoney", "_canBuy", "_moneyInfo"
+];
+
 _magazinesToBuy = 0;
 _weaponsToBuy = 0;
 _backpacksToBuy = 0;
@@ -18,7 +22,7 @@ if (Z_SingleCurrency) then {
 				if('PistolCore' in _parentClasses)then {
 					_sidearmToBuy = _sidearmToBuy + (_x select 9);
 				} else {
-					_primaryToBuy = _primaryToBuy + (_x select 9);
+					_primaryToBuy = _primaryToBuy + (_x select 9); // _ammount
 				};
 			};
 			_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2));
@@ -29,7 +33,7 @@ if (Z_SingleCurrency) then {
 		};
 		if( _x select 1 == "trade_backpacks")then{
 			_backpacksToBuy = _backpacksToBuy + (_x select 9) ;
-			_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2));
+			_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2)); // _price * _amount
 		};
 	} count Z_BuyingArray;
 } else {
@@ -142,13 +146,23 @@ if(_enoughMoney) then {
 				};
 			} count Z_BuyingArray;
 		};
-		if (Z_SingleCurrency) then {
-				[player,_priceToBuy, _moneyInfo] call Z_payDefault;
+		if (!Z_SingleCurrency) then {
+				_success = [player,_priceToBuy, _moneyInfo] call Z_payDefault;
+				if (_success) then {
+					systemChat format["Trade successfull, payed %1 coins.", _priceToBuy];
+				} else {
+					systemchat "DEBUG: Something went wrong in the pay process. Please report this issue.";
+				};
 		} else {
-				[player,_priceToBuy] call SC_fnc_removeCoins;
+				_success = [player,_priceToBuy] call SC_fnc_removeCoins;
+				if (_success) then {
+					systemChat format["Trade successfull, payed %1 coins.", _priceToBuy];
+				} else {
+					systemchat "DEBUG: Something went wrong in the pay process. Please report this issue.";
+				};
 		};
-
-		systemChat format["Removed %1 coins.", _priceToBuy];
+	} else {
+		systemChat "You could not buy these items because the container lacks space to hold them.";
 	};
 }else{
 	systemChat format["You need %1 %2 to buy all these items.",_priceToBuy,CurrencyName];

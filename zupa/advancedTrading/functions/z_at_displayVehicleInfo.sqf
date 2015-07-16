@@ -1,6 +1,9 @@
+private ['_item', '_type','_picture',"_class","_display","_transportMaxWeapons","_transportMaxMagazines","_transportmaxBackpacks"
+,"_buyPrice","_sellPrice","_buyCurrency","_sellCurrency","_formattedText"
+];
+
 #include "defines.sqf";
 
-private ['_item', '_type'];
 _item = _this select 0;
 
 _picture = _item select 4;
@@ -14,7 +17,7 @@ _seats = nil;
 _weapons = nil;
 
 _transportMaxWeapons = 0;
-_transportMaxMagazines = 0; 
+_transportMaxMagazines = 0;
 _transportmaxBackpacks = 0;
 
 _buyPrice = 0;
@@ -39,16 +42,21 @@ if ( isText (configFile >> 'CfgVehicles' >> _class >> 'transportmaxBackpacks')) 
 	_transportmaxBackpacks  = getText (configFile >> 'CfgVehicles' >> _class >> 'transportmaxBackpacks');
 };
 
+if (Z_SingleCurrency) then {
+ 	_sellCurrency = CurrencyName;
+	_buyCurrency = CurrencyName;
+};
+
 _formattedText = format [
-"<img image='%1' size='3' /><br />" + 
-"<t color='#33BFFF'>Name: </t><t color='#ffffff'>%2</t><br />" +  
+"<img image='%1' size='3' /><br />" +
+"<t color='#33BFFF'>Name: </t><t color='#ffffff'>%2</t><br />" +
 "<t color='#33BFFF'>Class: </t><t color='#ffffff'>%3</t><br />" +
-"<t color='#33BFFF'>Sell: </t><t color='#ffffff'>%5 %7</t><br />" +
-"<t color='#33BFFF'>Buy: </t><t color='#ffffff'>%6 %7</t><br />" + 
+"<t color='#33BFFF'>Sell: </t><t color='#ffffff'>%5 %10</t><br />" +
+"<t color='#33BFFF'>Buy: </t><t color='#ffffff'>%6 %7</t><br />" +
 "<t color='#33BFFF'>Mags: </t><t color='#ffffff'>%8</t><br />" +
 "<t color='#33BFFF'>Weaps: </t><t color='#ffffff'>%9</t><br />" +
-"<t color='#33BFFF'>Backs: </t><t color='#ffffff'>%4</t><br />" 
-, _picture, _display, _class, _transportmaxBackpacks, _sellPrice, _buyPrice, CurrencyName, _transportMaxWeapons,_transportMaxMagazines	
+"<t color='#33BFFF'>Backs: </t><t color='#ffffff'>%4</t><br />"
+, _picture, _display, _class, _transportmaxBackpacks, _sellPrice, _buyPrice, _buyCurrency, _transportMaxWeapons,_transportMaxMagazines, _sellCurrency
 ];
 
 (findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_ITEMINFO) ctrlSetStructuredText parseText _formattedText;

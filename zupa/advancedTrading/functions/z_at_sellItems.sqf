@@ -1,3 +1,5 @@
+private ["_index","_tempArray","_outcome","_weaponsArray","_itemsArray","_bpArray","_bpCheckArray","_weaponsCheckArray","_itemsCheckArray"];
+
 _index = count (Z_SellArray) - 1;
 _tempArray = Z_SellArray;
 if(_index > -1)then{
@@ -31,8 +33,6 @@ if(_index > -1)then{
 			};
 		};
 	}count Z_SellArray;
-
-	// closeDialog 2;
 
 	if(Z_SellingFrom == 0)then{
 		_outcome = [unitBackpack player,_itemsArray,_weaponsArray] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;
@@ -97,10 +97,10 @@ if(_index > -1)then{
 
 	if(typeName _money  == "SCALAR") then {
 		if (Z_SingleCurrency) then {
-				[player,_money] call SC_fnc_addCoins;
+				_success = [player,_money] call SC_fnc_addCoins;
 				systemChat format["Received %1 %2", _money , CurrencyName];
 		} else {
-				[0, _money] call Z_returnChange;
+				_success = [_money, 0] call Z_returnChange;
 		};
 	}else{
 		systemChat format["Money is not a number. Something went wrong."];

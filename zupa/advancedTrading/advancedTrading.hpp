@@ -540,7 +540,7 @@ class AdvancedTrading
 					idc = 7446;
 					text = "";
 					x = 0.61 * safezoneW + safezoneX;
-					y = 0.20 * safezoneH + safezoneY;
+					y = 0.24 * safezoneH + safezoneY;
 					w = 0.19 * safezoneW;
 					h = 0.35 * safezoneH;
 					colorText[] = {1,1,1,1};

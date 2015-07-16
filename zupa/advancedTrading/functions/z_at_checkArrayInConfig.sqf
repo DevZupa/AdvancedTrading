@@ -7,7 +7,7 @@
 *
 *	Fills up the sell or buy list if the item has a valid config.
 **/
-
+private ["_weaps","_mags","_extraText","_all","_total","_arrayOfTraderCat","_totalPrice","_ctrltext","_backUpText"];
 #include "defines.sqf";
 
 _weaps = _this select 0;
@@ -21,6 +21,7 @@ if(_total > 0)then{
 	{
 		_y = _x;
 		{
+			private ["_cat","_excists","_pic","_text","_type","_sell","_buy","_buyCurrency","_sellCurrency","_worth"];
 			_cat =  format["Category_%1",(_arrayOfTraderCat select _forEachIndex select 1)];
 			_excists = isClass(missionConfigFile >> "CfgTraderCategory"  >> _cat >> _y );
 
