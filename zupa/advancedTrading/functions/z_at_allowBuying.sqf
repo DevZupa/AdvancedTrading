@@ -8,21 +8,6 @@ _toolsToBuy = _this select 3;
 _sidearmToBuy = _this select 4;
 _primaryToBuy = _this select 5;
 
-systemChat format [
-"_toBuyWeaps: %1"+
-"_toBuyMags: %2"+
-"_toBuyBags: %3"+
-"_toolsToBuy: %4"+
-"_sidearmToBuy: %5"+
-"_primaryToBuy: %6",
-_toBuyWeaps,
-_toBuyMags,
-_toBuyBags,
-_toolsToBuy,
-_sidearmToBuy,
-_primaryToBuy
-];
-
 if(_selection == 2) then{ //gear
 	_allowedMags = 20 - count(magazines player);
 
@@ -31,17 +16,15 @@ if(_selection == 2) then{ //gear
 	_p = primaryWeapon player;
 	if ( !isNil '_p' && _p != "" ) then {
 		_currentPrimarys = 1;
-		systemChat _p;
 	};
 
-	_allowedPrimary = 1 - _currentPrimary;
+	_allowedPrimary = 1 - _currentPrimarys;
 
 	_currentSecondarys = 0;
 
 	_s = secondaryWeapon player;
 	if ( !isNil '_s' && _s != "" ) then {
 		_currentSecondarys = 1;
-		systemChat _s;
 	};
 
 	_allowedSidearm = 1 - _currentSecondarys;
@@ -51,7 +34,6 @@ if(_selection == 2) then{ //gear
 	_b = unitBackpack player;
 	if ( !isNil '_b' ) then {
 		_currentBackpacks = 1;
-		systemChat "heeft backpack";
 	};
 
 	_allowedBackpacks = 1 - _currentBackpacks;
@@ -69,8 +51,6 @@ if(_selection == 2) then{ //gear
 	_check2 = false;
 	_check3 = false;
 
-	systemChat "hier al";
-
 	if( _allowedPrimary >= _primaryToBuy && _allowedSidearm >= _sidearmToBuy && _allowedTools >= _toolsToBuy)then{
 		_check1 = true;
 	}else{
@@ -86,8 +66,6 @@ if(_selection == 2) then{ //gear
 	}else{
 		systemChat format["You can only buy %1 backpacks in your gear.",_allowedBackpacks];
 	};
-
-	systemChat format ["we geraken hier.",""];
 
 	if(_check1 && _check2 && _check3)then{
 		_return = true;
@@ -142,8 +120,6 @@ if(_selection == 1) then{ //vehicle
 		_allowedWeapons = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxWeapons') - count(_normalWeaps);
 		_allowedMags = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxMagazines') - count(_normalMags);
 		_allowedBackpacks = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportmaxbackpacks ') - count(_normalBags);
-	}else{
-		systemChat format["%1", typeName "Z_vehicle"];
 	};
 
 	_check1 = false;
@@ -232,10 +208,10 @@ if(_selection == 0) then{ //backpack
 		} count _normalWeaps;
 
 
-		_alreadyInBackpack = 10 * _currentPrim + 5 * _currentSec + _currentTool + count(_normalMags);
-		systemChat format ["%1", _alreadyInBackpack ];
+		_alreadyInBackpack = (10 * _currentPrim) + (5 * _currentSec) + _currentTool + count(_normalMags);
+
 		_totalNewSpace = 10 * _primaryToBuy + 5 * _sidearmToBuy + _toolsToBuy + _toBuyMags;
-		systemChat format ["%1", _totalNewSpace ];
+
 		_totalSpace = _alreadyInBackpack + _totalNewSpace;
 
 	}else {
@@ -263,7 +239,7 @@ if(_selection == 0) then{ //backpack
 		systemChat format["Only %1 bags fit in the backpack." , _allowedBackpacks ];
 	};
 
-	if( _totalSpace > _allowedMags)then{
+	if( _totalSpace <= _allowedMags)then{
 		_check4 = true;
 	}else{
 		systemChat format["Total space succeeded: Mag=1, Tool=1, Side=5, Primary=10 slots and your bag capacity is %1 where you tried %2 slots.", _allowedMags, _totalNewSpace];
@@ -272,9 +248,6 @@ if(_selection == 0) then{ //backpack
 	if(_check0 && _check1 && _check2 && _check3 && _check4)then{
 		_return = true;
 	};
-
 };
-
-systemChat format ['%1', _return];
 
 _return

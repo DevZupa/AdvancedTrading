@@ -18,7 +18,6 @@ if(_selection == 2) then{ //gear
 	_backpack = unitBackpack player;
 	_backpackAmount = 0;
 	if (!isNil "_backpack") then {
-
 		_backpackAmount = 1;
 	};
 

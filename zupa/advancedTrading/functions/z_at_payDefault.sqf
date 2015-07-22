@@ -9,14 +9,14 @@ _moneyInBackpack = _moneyInfo select 2;
 _moneyInVehicle = _moneyInfo select 3;
 
 {
-  [_player, _x ,1] call BIS_fnc_invRemove;
+  _nil = [player, _x , 1] call BIS_fnc_invRemove;
 }count _moneyInGear;
 
 if (count _moneyInBackpack > 0 ) then {
-  [unitBackpack _player, _moneyInBackpack, []] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;
+  _nil = [unitBackpack _player, _moneyInBackpack, []] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;
 };
 if (!isNull Z_vehicle && count _moneyInVehicle > 0 ) then {
-  [Z_vehicle, _moneyInVehicle, []] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;
+  _nil = [Z_vehicle, _moneyInVehicle, []] call ZUPA_fnc_removeWeaponsAndMagazinesCargo;
 };
 
 _success = [_toPay, _totalWorth] call Z_returnChange;

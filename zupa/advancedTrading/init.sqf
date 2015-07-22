@@ -73,7 +73,7 @@ if(isNil "Z_AdvancedTradingInit")then{
 	Z_canAfford =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_canAfford.sqf");
 	Z_returnChange =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_returnChange.sqf");
 	Z_payDefault =  							compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_payDefault.sqf");
-	Z_toggleCurrency = 					compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_toggleCurrency.sqf");
+  Z_calcDefaultCurrency =			compile preprocessFileLineNumbers (Z_AT_FolderLocation + "\functions\z_at_calcDefaultCurrency.sqf");
 
 	Z_AdvancedTradingInit = true;
 };
@@ -85,4 +85,4 @@ createDialog "AdvancedTrading";
 (findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_REMOVEBUYITEMBUTTON) ctrlSetText " < ";
 (findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_REMOVEALLBUYITEMBUTTON) ctrlSetText " << ";
 {ctrlShow [_x,false];} forEach [Z_AT_BUYINGAMOUNT,Z_AT_BUYBUTTON,Z_AT_SLOTSDISPLAY,Z_AT_BUYINGLIST,Z_AT_BUYABLELIST,Z_AT_BUYBUTTON,Z_AT_ADDBUYITEMBUTTON,Z_AT_REMOVEBUYITEMBUTTON,Z_AT_REMOVEALLBUYITEMBUTTON,Z_AT_SLOTSDISPLAY]; // hide	- double hide ( first one didn't work it seems.
-call Z_getGearItems;
+[2] call Z_getContainer;

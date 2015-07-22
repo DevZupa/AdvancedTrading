@@ -1,4 +1,4 @@
-private ['_worth', '_total_currency','_return','_part','_worth','_totalToPay'];
+private ['_worth', '_total_currency','_return','_part','_totalToPay'];
 
 _totalToPay = _this;
 _return = [false, [], [], [], 0];
@@ -19,7 +19,7 @@ _return set [1, _inventoryMoney];
 if( Z_AllowTakingMoneyFromBackpack ) then {
   _backpackPlayer = unitBackpack player;
 
-  if (!isNull '_backpackPlayer') then {
+  if (!isNil '_backpackPlayer') then {
     _mags = getMagazineCargo Z_vehicle;
     _backpackMoney = [];
     _kinds = _mags select 0;
@@ -44,7 +44,7 @@ if( Z_AllowTakingMoneyFromBackpack ) then {
 };
 
 if( Z_AllowTakingMoneyFromVehicle ) then {
-    if (!isNull '_backpackPlayer') then {
+    if (!isNull Z_vehicle) then {
 
       _mags = getMagazineCargo Z_vehicle;
       _vehicleMoney = [];

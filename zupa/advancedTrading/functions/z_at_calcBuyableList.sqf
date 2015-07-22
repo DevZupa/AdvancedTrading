@@ -22,45 +22,30 @@ _counter = 0;
 					_buyCurrency = "";
 					_sellCurrency = "";
 					_worth = 0;
+
 					if(_type == "trade_items")then{
 						_pic = getText (configFile >> 'CfgMagazines' >> _y >> 'picture');
 						_text = getText (configFile >> 'CfgMagazines' >> _y >> 'displayName');
-						_buyCurrency = CurrencyName;
-						_sellCurrency = CurrencyName;
-
-						if(!Z_SingleCurrency) then {
-							_buyCurrency = 	_buy select 1;
-							_sellCurrency = _sell select 1;
-							_part =  (configFile >> "CfgMagazines" >> _buyCurrency);
-							_worth =  (_part >> "worth");
-						};
 					};
 					if(_type == "trade_weapons")then{
 						_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
 						_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
-						_buyCurrency = CurrencyName;
-						_sellCurrency = CurrencyName;
-
-						if(!Z_SingleCurrency) then {
-							_buyCurrency = 	_buy select 1;
-							_sellCurrency = _sell select 1,
-							_part =  (configFile >> "CfgMagazines" >> _buyCurrency);
-							_worth =  (_part >> "worth");
-						};
 					};
 					if(_type == "trade_vehicles")then{
 						_pic = getText (configFile >> 'CfgVehicles' >> _y >> 'picture');
 						_text = getText (configFile >> 'CfgVehicles' >> _y >> 'displayName');
+					};
+
+					if(!Z_SingleCurrency) then {
+						_buyCurrency = 	_buy select 1;
+						_sellCurrency = _sell select 1,
+						_part =  (configFile >> "CfgMagazines" >> _buyCurrency);
+						_worth =  getNumber(_part >> "worth");
+					}else{
 						_buyCurrency = CurrencyName;
 						_sellCurrency = CurrencyName;
+					} ;
 
-						if(!Z_SingleCurrency) then {
-							_buyCurrency = 	_buy select 1;
-							_sellCurrency = _sell select 1,
-							_part =  (configFile >> "CfgMagazines" >> _buyCurrency);
-							_worth =  (_part >> "worth");
-						};
-					};
 					Z_BuyableArray set [count(Z_BuyableArray) , [_y,_type,_buy select 0,_text,_pic,_forEachIndex,_sell select 0, _buyCurrency, _sellCurrency, 0,_cat, _worth]];
 				};
 			};

@@ -54,7 +54,7 @@ if (Z_SingleCurrency) then {
 		};
 		if( _x select 1 == "trade_items")then{
 			_magazinesToBuy = _magazinesToBuy + (_x select 9) ;
-			_priceToBuy	= _priceToBuy + ((_x select 11)*(_x select 2)*(_x select 9));
+			_priceToBuy	= _priceToBuy + ((_x select 11) *(_x select 2)*(_x select 9));
 		};
 		if( _x select 1 == "trade_backpacks")then{
 			_backpacksToBuy = _backpacksToBuy + (_x select 9) ;
@@ -64,8 +64,6 @@ if (Z_SingleCurrency) then {
 };
 
 _canBuy = [_weaponsToBuy,_magazinesToBuy,_backpacksToBuy,_toolsToBuy, _sidearmToBuy, _primaryToBuy] call Z_allowBuying;
-
-systemChat format  ["%1",_canBuy];
 
 _myMoney = player getVariable[Z_MoneyVariable,0];
 
@@ -127,15 +125,15 @@ if(_enoughMoney) then {
 			{
 				if( _x select 1 == "trade_weapons") then {
 					_count = 0;
-					while( _count < _x select 9)do{
+					while{ _count < (_x select 9)}do{
 						player addWeapon (_x select 0);
 						diag_log format ["%1 added", _x select 0];
 						_count = _count + 1;
 					};
 				};
-				if( _x select 1 == "trade_items") then {
+				if( _x select 1 == "trade_items" ) then {
 					_count = 0;
-					 while {_count < _x select 9} do {
+					 while{ _count < (_x select 9)} do {
 						player addMagazine (_x select 0);
 						diag_log format ["%1 added", _x select 0];
 						_count = _count + 1;
@@ -149,7 +147,7 @@ if(_enoughMoney) then {
 		if (!Z_SingleCurrency) then {
 				_success = [player,_priceToBuy, _moneyInfo] call Z_payDefault;
 				if (_success) then {
-					systemChat format["Trade successfull, payed %1 coins.", _priceToBuy];
+					systemChat format["Trade successfull, payed %1 worth of items.", _priceToBuy];
 				} else {
 					systemchat "DEBUG: Something went wrong in the pay process. Please report this issue.";
 				};

@@ -49,17 +49,20 @@ if(_total > 0)then{
 					};
 				};
 
-				if( isNil '_text')then{_text = _y;};
+				if( isNil '_text')then{
+					_text = _y;
+				};
 
-				_buyCurrency = CurrencyName;
-				_sellCurrency = CurrencyName;
 				_worth = 0;
 
 				if(!Z_SingleCurrency) then {
 					_buyCurrency = 	_buy select 1;
 					_sellCurrency = _sell select 1;
 					_part =  (configFile >> "CfgMagazines" >> _sellCurrency);
-					_worth =  (_part >> "worth");
+					_worth =  getNumber(_part >> "worth");
+				}else{
+					_buyCurrency = CurrencyName;
+					_sellCurrency = CurrencyName;
 				};
 
 				Z_SellableArray set [count(Z_SellableArray) , [_y, _type, _sell select 0, _text, _pic, _forEachIndex, _buy select 0, _sellCurrency, _buyCurrency, 0 ,_cat, _worth]];

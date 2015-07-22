@@ -16,6 +16,7 @@ if(_index > -1)then{
 		_type = _x select 1;
 		_name = _x select 0;
 
+		systemChat format["%1 %2 %3",(_x select 9) ,( _x select 11),(_x select 2)];
 		switch (true) do {
 			case (_type == "trade_items") :
 			{
@@ -102,6 +103,7 @@ if(_index > -1)then{
 				systemChat format["Received %1 %2", _money , CurrencyName];
 		} else {
 				_success = [_money, 0] call Z_returnChange;
+				systemChat format["Received money."];
 		};
 	}else{
 		systemChat format["Money is not a number. Something went wrong."];

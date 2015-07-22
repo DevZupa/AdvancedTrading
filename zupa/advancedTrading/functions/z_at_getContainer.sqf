@@ -5,9 +5,9 @@
 **/
 private ["_lbIndex","_formattedText","_canBuyInVehicle"];
 #include "defines.sqf";
-(findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_SLOTSDISPLAY) ctrlSetText format["Free Slots: 0 / 0 / 0"];
-Z_clearBuyingList;
-Z_clearLists;
+(findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_SLOTSDISPLAY) ctrlSetText format["0 / 0 / 0"];
+call Z_clearBuyingList;
+call Z_clearLists;
 Z_SellableArray = [];
 Z_SellArray = [];
 Z_BuyingArray = [];

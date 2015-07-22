@@ -13,17 +13,15 @@ Z_SellableArray = [];
 
 _skin = typeOf player;
 
-systemChat _skin;
-
 _pic = getText (configFile >> 'CfgVehicles' >> _skin >> 'picture');
 _icon = getText (configFile >> 'CfgVehicles' >> _skin >> 'icon');
 
-if (!isNil '_pic' || _pic == "") then {
+if (!isNil '_pic' && _pic == "") then {
   _pic = _icon;
-}
+};
 
 _formattedText = format [
-	"<img image='%1'  size='3' align='center'/>"
+	"<t size='1' align='center' color='#ffffff'> Gear </t>"
 	, _pic
 ];
 

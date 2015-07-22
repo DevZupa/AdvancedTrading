@@ -7,14 +7,37 @@
 #include "defines.sqf";
 
 _sellPrice = 0;
-if(Z_Selling)then{	
-	{  		
-		_sellPrice = _sellPrice +  (_x select 2);
-	}count Z_SellArray;
-}else{
+
+_ctrltext = "";
+
+if(Z_Selling)then{
 	{
-		_sellPrice = _sellPrice +  ((_x select 2) * (_x select 9));
+		if(Z_SingleCurrency)then{
+			_sellPrice = _sellPrice +  (_x select 2);
+		} else {
+			_sellPrice = _sellPrice +  ((_x select 2) * (_x select 11));
+		};
+	}count Z_SellArray;
+
+	if(Z_SingleCurrency)then {
+		_ctrltext = format["%1 %2", _sellPrice , CurrencyName];
+	} else {
+		_ctrltext = _sellPrice call Z_calcDefaultCurrency;
+	};
+} else{
+	{
+		if(Z_SingleCurrency)then{
+			_sellPrice = _sellPrice +  ((_x select 2) * (_x select 9));
+		} else {
+			_sellPrice = _sellPrice +  ((_x select 2) * (_x select 11) * (_x select 9));
+		};
 	}count Z_BuyingArray;
+
+	if(Z_SingleCurrency)then {
+		_ctrltext = format["%1 %2", _sellPrice , CurrencyName];
+	} else {
+		_ctrltext = _sellPrice call Z_calcDefaultCurrency;
+	};
 };
-_ctrltext = format["%1 %2", _sellPrice , CurrencyName];
-ctrlSetText [Z_AT_PRICEDISPLAY, _ctrltext];	
+
+ctrlSetText [Z_AT_PRICEDISPLAY, _ctrltext];
