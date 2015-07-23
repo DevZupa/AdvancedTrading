@@ -18,6 +18,8 @@ _formattedText = format [''];
 
 (findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_ITEMINFO) ctrlSetStructuredText parseText _formattedText;
 
+call Z_calcPrice;
+
 if(Z_Selling)then{
 	switch (_lbIndex) do {
 		case 0: {
