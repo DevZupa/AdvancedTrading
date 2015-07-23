@@ -35,12 +35,14 @@ Can only sell from your vehicle were u was the last driver from (in x meter radi
 
 ## Update 1.0 - 2.0 instructions
 
-1. Delete your old folder
-2. Paste the new folder
+1. Delete your old 'zupa' folder
+2. Paste the new 'zupa' folder
 3. Edit the config.sqf to match your server
 4. Done
 
 ## Install instructions
+
+0. Drop the zupa folder in your mission file
 
 1. In your fn_selfactions.sqf
 
