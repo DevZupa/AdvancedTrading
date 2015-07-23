@@ -15,6 +15,13 @@ Alternative selling/buying system. (You can run the default and this next to eac
 * No database traders (database traders make your server slow)
 * No ability to buy or sell vehicles.
 
+#### What was added to 2.0
+
+* Default Currency Supported
+* Item Filter
+* Info display of selected Item
+* Buying to gear and backpack
+
 ## Description
 
 Sell and buy directly from and to backpack, gear or the your current vehicle in the vicinity where you were driver from. Decide which items you sell. Traders will only make it possible to trade the items they accept ( goes fully automatic, so only items they accept will be listed on the left).
@@ -25,6 +32,13 @@ You push items to the right to sell or buy.
 
 Double checks what was deleted from backpacks/vehicles so that people can not cheat.
 Can only sell from your vehicle were u was the last driver from (in x meter radius)
+
+## Update 1.0 - 2.0 instructions
+
+1. Delete your old folder
+2. Paste the new folder
+3. Edit the config.sqf to match your server
+4. Done
 
 ## Install instructions
 
@@ -37,7 +51,7 @@ _buyV = player addAction ["<t color='#0059FF'>Advanced Trading</t>", "zupa\advan
 s_player_parts set [count s_player_parts,_buyV];
 ```
 
-above
+above (look at the comment)
 
 ```sqf
 // Database menu
