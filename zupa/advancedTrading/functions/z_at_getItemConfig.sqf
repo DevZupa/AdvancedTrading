@@ -4,8 +4,6 @@ private ['_item', '_type'];
 _item = _this select 0;
 _type = _item select 1;
 
-systemChat _type;
-
 switch (true) do {
 	case (_type == "trade_items") :
 	{
