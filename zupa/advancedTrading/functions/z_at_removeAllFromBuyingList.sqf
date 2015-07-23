@@ -1,2 +1,2 @@
-Z_clearBuyingList;
+call Z_clearBuyingList;
 Z_BuyingArray = [];

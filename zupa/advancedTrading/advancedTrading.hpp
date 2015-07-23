@@ -88,7 +88,7 @@ class AdvancedTrading
 		class ZSC_RscButtonMenu_Z4: AT_Zupa_BlueButton
 		{
 			idc = 7416;
-			text =  "Buy";
+			text =  "Sell";
 			x = 0.51 * safezoneW + safezoneX;
 			y = 0.26 * safezoneH + safezoneY;
 			w = 0.08 * safezoneW;
@@ -447,7 +447,7 @@ class AdvancedTrading
 			color[] = {0,0,0,1};
       text = "Close";
 		};
-		class RscStrText_AT_ContainerInfo: ZSC_RscStructuredText // todo
+		class RscStrText_AT_PriceInfo: ZSC_RscStructuredText // todo
 		{
 			idc = 7451;
 			text = "";

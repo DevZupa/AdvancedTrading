@@ -4,6 +4,8 @@ private ['_item', '_type'];
 _item = _this select 0;
 _type = _item select 1;
 
+systemChat _type;
+
 switch (true) do {
 	case (_type == "trade_items") :
 	{
@@ -14,14 +16,14 @@ switch (true) do {
 		[_item] call Z_displayWeaponInfo;
 	};
 	case (_type == "trade_backpacks") :
-	{	
+	{
 		[_item] call Z_displayBackpackInfo;
 	};
-	case (_type == "trade_vehicles") :
+	case (_type == "trade_any_vehicle") :
 	{
 		[_item] call Z_displayVehicleInfo;
 	};
 	default {
-		(findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_ITEMINFO) ctrlSetStructuredText "<t color='#ffffff'>No info found</t>";
+		(findDisplay Z_AT_DIALOGWINDOW displayCtrl Z_AT_ITEMINFO) ctrlSetStructuredText parseText "<t color='#ffffff'>No info found</t>";
 	}
 };

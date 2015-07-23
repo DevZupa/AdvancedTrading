@@ -1,4 +1,4 @@
-private ["_selection","_return","_toBuyWeaps","_toBuyMags","_toBuyBags","_toolsToBuy","_sidearmToBuy","_primaryToBuy";"_currentPrimarys"
+private ["_selection","_return","_toBuyWeaps","_toBuyMags","_toBuyBags","_toolsToBuy","_sidearmToBuy","_primaryToBuy","_currentPrimarys"
 ,"_currentSecondarys","_currentSec","_currentPrim","_currentTool","_p","_s","_b","_check0","_check1","_check2","_check3","_check4","_mags","_weaps","_bags"
 ,"_normalBags","_normalMags","_normalWeaps","_allowedMags","_allowedPrimary","_allowedTools","_allowedSidearm","_allowedWeapons","_allowedBackpacks"
 ,"_totalSpace","_totalNewSpace","_counter","_parentClasses","_alreadyInBackpack","_kinds","_kinds2","_kinds3","_ammmounts","_ammmounts2","_ammmounts3"
@@ -11,6 +11,8 @@ _toBuyBags = _this select 2;
 _toolsToBuy = _this select 3;
 _sidearmToBuy = _this select 4;
 _primaryToBuy = _this select 5;
+_vehiclesToBuy = _this select 6;
+
 
 if(_selection == 2) then{ //gear
 	_allowedMags = 20 - count(magazines player);
@@ -36,7 +38,7 @@ if(_selection == 2) then{ //gear
 	_currentBackpacks = 0;
 
 	_b = unitBackpack player;
-	if ( !isNil '_b' ) then {
+	if ( !isNull _b ) then {
 		_currentBackpacks = 1;
 	};
 
@@ -123,7 +125,7 @@ if(_selection == 1) then{ //vehicle
 
 		_allowedWeapons = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxWeapons') - count(_normalWeaps);
 		_allowedMags = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxMagazines') - count(_normalMags);
-		_allowedBackpacks = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportmaxbackpacks ') - count(_normalBags);
+		_allowedBackpacks = getNumber (configFile >> 'CfgVehicles' >> (typeOf Z_vehicle) >> 'transportMaxBackpacks ') - count(_normalBags);
 	};
 
 	_check1 = false;
@@ -160,7 +162,7 @@ if(_selection == 0) then{ //backpack
 
 	_backpack = unitBackpack player;
 	_check0 = false;
-	if (!isNil "_backpack") then {
+	if (!isNull _backpack) then {
 		_check0 = true;
 
 		_mags = getMagazineCargo _backpack;
@@ -252,6 +254,11 @@ if(_selection == 0) then{ //backpack
 	if(_check0 && _check1 && _check2 && _check3 && _check4)then{
 		_return = true;
 	};
+};
+
+if(_vehiclesToBuy != 0)then{
+	_return = false;
+	systemChat "You can NOT buy vehicles in this version";
 };
 
 _return

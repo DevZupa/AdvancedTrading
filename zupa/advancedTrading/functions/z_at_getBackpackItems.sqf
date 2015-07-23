@@ -9,7 +9,7 @@ call Z_clearLists;
 Z_SellableArray = [];
 Z_SellArray = [];
 _backpack = unitBackpack player;
-if (!isNil "_backpack") then {
+if (!isNull _backpack) then {
 	_pic = getText (configFile >> 'CfgVehicles' >> (typeOf _backpack) >> 'picture');
 
 	_formattedText = format [

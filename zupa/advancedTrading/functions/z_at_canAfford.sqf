@@ -20,7 +20,7 @@ _return set [1, _inventoryMoney];
 if( Z_AllowTakingMoneyFromBackpack ) then {
   _backpackPlayer = unitBackpack player;
 
-  if (!isNil '_backpackPlayer') then {
+  if (!isNull _backpackPlayer) then {
     _mags = getMagazineCargo Z_vehicle;
     _backpackMoney = [];
     _kinds = _mags select 0;

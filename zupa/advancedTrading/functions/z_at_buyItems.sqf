@@ -1,5 +1,5 @@
 private ["_magazinesToBuy", "_weaponsToBuy", "_backpacksToBuy", "_toolsToBuy", "_sidearmToBuy", "_primaryToBuy", "_priceToBuy"
-,"_enoughMoney", "_myMoney", "_canBuy", "_moneyInfo","_count","_success"
+,"_enoughMoney", "_myMoney", "_canBuy", "_moneyInfo","_count","_success","_backpack"
 ];
 
 _magazinesToBuy = 0;
@@ -8,6 +8,7 @@ _backpacksToBuy = 0;
 _toolsToBuy = 0;
 _sidearmToBuy = 0;
 _primaryToBuy = 0;
+_vehiclesToBuy = 0;
 
 _priceToBuy = 0;
 
@@ -35,6 +36,10 @@ if (Z_SingleCurrency) then {
 			_backpacksToBuy = _backpacksToBuy + (_x select 9) ;
 			_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2)); // _price * _amount
 		};
+		if( _x select 1 == "trade_any_vehicle")then{
+			_vehiclesToBuy = _vehiclesToBuy + (_x select 9) ;
+			_priceToBuy	= _priceToBuy + ((_x select 9)*(_x select 2)); // _price * _amount
+		};
 	} count Z_BuyingArray;
 } else {
 	{
@@ -60,10 +65,14 @@ if (Z_SingleCurrency) then {
 			_backpacksToBuy = _backpacksToBuy + (_x select 9) ;
 			_priceToBuy	= _priceToBuy + ((_x select 11)*(_x select 2)*(_x select 9));
 		};
+		if( _x select 1 == "trade_any_vehicle")then{
+			_vehiclesToBuy = _vehiclesToBuy + (_x select 9) ;
+			_priceToBuy	= _priceToBuy + ((_x select 11)*(_x select 2)*(_x select 9));
+		};
 	} count Z_BuyingArray;
 };
 
-_canBuy = [_weaponsToBuy,_magazinesToBuy,_backpacksToBuy,_toolsToBuy, _sidearmToBuy, _primaryToBuy] call Z_allowBuying;
+_canBuy = [_weaponsToBuy,_magazinesToBuy,_backpacksToBuy,_toolsToBuy, _sidearmToBuy, _primaryToBuy,_vehiclesToBuy] call Z_allowBuying;
 
 _myMoney = player getVariable[Z_MoneyVariable,0];
 
@@ -89,14 +98,15 @@ if(_enoughMoney) then {
 	closeDialog 2;
 
 		if(Z_SellingFrom == 0) then { //backpack
+		_backpack = unitBackpack player;
 		systemChat format["Adding %1 items in backpack",count (Z_BuyingArray)];
 			{
 				if( _x select 1 == "trade_weapons")then{
-					(unitBackpack player) addWeaponCargoGlobal [_x select 0, _x select 9];
+					_backpack addWeaponCargoGlobal [_x select 0, _x select 9];
 					diag_log format ["%1 x %2 added", _x select 0, _x select 9];
 				};
 				if( _x select 1 == "trade_items")then{
-					(unitBackpack player) addMagazineCargoGlobal  [_x select 0, _x select 9];
+					_backpack addMagazineCargoGlobal  [_x select 0, _x select 9];
 					diag_log format ["%1 x %2 added", _x select 0, _x select 9];
 				};
 			} count Z_BuyingArray;

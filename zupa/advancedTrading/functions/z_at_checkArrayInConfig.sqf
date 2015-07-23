@@ -42,7 +42,7 @@ if(_total > 0)then{
 						_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
 						_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
 					};
-					case (_type in ["trade_backpacks", "trade_vehicles"]) :
+					case (_type in ["trade_backpacks", "trade_any_vehicle"]) :
 					{
 						_pic = getText (configFile >> 'CfgVehicles' >> _y >> 'displayName');
 						_text = getText (configFile >> 'CfgVehicles' >> _y >> 'displayName');
