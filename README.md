@@ -77,6 +77,6 @@ AdvancedTrading
 
 ##Images
 
-![alt text](http://i.imgur.com/7xKeniR.jpg "Screenshot 1")
+![alt text](http://i.imgur.com/dH1V6hH.jpg "Screenshot 1")
 
-![alt text](http://i.imgur.com/PUoRqYz.jpg "Screenshot 2")
+![alt text](http://i.imgur.com/5xa90aA.jpg "Screenshot 2")
