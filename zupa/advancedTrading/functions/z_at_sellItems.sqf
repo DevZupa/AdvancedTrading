@@ -100,14 +100,14 @@ if(_index > -1)then{
 	if(typeName _money  == "SCALAR") then {
 		if (Z_SingleCurrency) then {
 				_success = [player,_money] call SC_fnc_addCoins;
-				systemChat format["Received %1 %2", _money , CurrencyName];
+				systemChat format["Trade successfull, received %1 %2", _money , CurrencyName];
 		} else {
 				_success = [_money, 0] call Z_returnChange;
-				systemChat format["Received money."];
+				systemChat format["Trade successfull."];
 		};
 	}else{
 		systemChat format["Money is not a number. Something went wrong."];
 	};
 }else{
-	systemChat format["No Items to Sell"];
+	systemChat format["No Items to sell"];
 };

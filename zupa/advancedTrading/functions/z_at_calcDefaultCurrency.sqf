@@ -1,4 +1,6 @@
-private["_worth","_string"];
+private["_worth","_string","_briefcase_100oz","_gold_10oz_a","_gold_10oz_b","_gold_10oz","_gold_1oz","_gold_1oz_b","_gold_1oz_a","_silver_10oz","_silver_10oz_a","_silver_10oz_b"
+,"_silver_1oz","_silver_1oz_a","_silver_10oz_b","_pic","_string"
+];
 _total = _this;
 _string = "";
 

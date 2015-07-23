@@ -1,3 +1,5 @@
+private["_selection","_returnArray","_allowedMags","_allowedWeapons","_allowedBackpacks","_allowedTools","_allowedPrimary","_allowedSidearm","_formattedText","_pic"
+,"_backpack","_backpackAmount","_vehicleWeapons","_vehicleMagazines","_vehicleBackpacks","_tempWeaponsArray","_tempBackpackArray","_tempMagazinesArray"];
 #include "defines.sqf";
 
 _selection = _this select 0;

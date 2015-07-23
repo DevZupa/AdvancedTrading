@@ -1,4 +1,8 @@
-
+private ["_selection","_return","_toBuyWeaps","_toBuyMags","_toBuyBags","_toolsToBuy","_sidearmToBuy","_primaryToBuy";"_currentPrimarys"
+,"_currentSecondarys","_currentSec","_currentPrim","_currentTool","_p","_s","_b","_check0","_check1","_check2","_check3","_check4","_mags","_weaps","_bags"
+,"_normalBags","_normalMags","_normalWeaps","_allowedMags","_allowedPrimary","_allowedTools","_allowedSidearm","_allowedWeapons","_allowedBackpacks"
+,"_totalSpace","_totalNewSpace","_counter","_parentClasses","_alreadyInBackpack","_kinds","_kinds2","_kinds3","_ammmounts","_ammmounts2","_ammmounts3"
+];
 _selection = Z_SellingFrom;
 _return = false;
 _toBuyWeaps = _this select 0;

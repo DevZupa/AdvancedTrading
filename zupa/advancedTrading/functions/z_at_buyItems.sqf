@@ -1,5 +1,5 @@
 private ["_magazinesToBuy", "_weaponsToBuy", "_backpacksToBuy", "_toolsToBuy", "_sidearmToBuy", "_primaryToBuy", "_priceToBuy"
-,"_enoughMoney", "_myMoney", "_canBuy", "_moneyInfo"
+,"_enoughMoney", "_myMoney", "_canBuy", "_moneyInfo","_count","_success"
 ];
 
 _magazinesToBuy = 0;
@@ -84,12 +84,12 @@ if (Z_SingleCurrency) then {
 
 if(_enoughMoney) then {
 	if(_canBuy) then {
-	systemChat format["Start Buying for %1 %2", _priceToBuy, CurrencyName];
+	systemChat format["Starting trade."];
 
 	closeDialog 2;
 
 		if(Z_SellingFrom == 0) then { //backpack
-		systemChat format["Adding %1 Items in backpack",count (Z_BuyingArray)];
+		systemChat format["Adding %1 items in backpack",count (Z_BuyingArray)];
 			{
 				if( _x select 1 == "trade_weapons")then{
 					(unitBackpack player) addWeaponCargoGlobal [_x select 0, _x select 9];
@@ -104,7 +104,7 @@ if(_enoughMoney) then {
 
 		if(Z_SellingFrom == 1)then{ //vehicle
 			{
-				systemChat format["Adding %1 Items in %2",count (Z_BuyingArray), typeOf Z_vehicle];
+				systemChat format["Adding %1 items in %2",count (Z_BuyingArray), typeOf Z_vehicle];
 				if( _x select 1 == "trade_weapons")then{
 					Z_vehicle addWeaponCargoGlobal [_x select 0, _x select 9];
 					diag_log format ["%1 x %2 added", _x select 0, _x select 9];
@@ -121,7 +121,7 @@ if(_enoughMoney) then {
 		};
 
 		if(Z_SellingFrom == 2)then{ //gear
-			systemChat format["Adding %1 Items in gear",count (Z_BuyingArray)];
+			systemChat format["Adding %1 items in gear",count (Z_BuyingArray)];
 			{
 				if( _x select 1 == "trade_weapons") then {
 					_count = 0;
@@ -154,7 +154,7 @@ if(_enoughMoney) then {
 		} else {
 				_success = [player,_priceToBuy] call SC_fnc_removeCoins;
 				if (_success) then {
-					systemChat format["Trade successfull, payed %1 coins.", _priceToBuy];
+					systemChat format["Trade successfull, payed %1 %2.", _priceToBuy, CurrencyName];
 				} else {
 					systemchat "DEBUG: Something went wrong in the pay process. Please report this issue.";
 				};
@@ -163,5 +163,9 @@ if(_enoughMoney) then {
 		systemChat "You could not buy these items because the container lacks space to hold them.";
 	};
 }else{
-	systemChat format["You need %1 %2 to buy all these items.",_priceToBuy,CurrencyName];
+	if( Z_SingleCurrency) then {
+		systemChat format["You need %1 %2 to buy all these items.",_priceToBuy,CurrencyName];
+	} else {
+		systemChat format["You need more money to buy all these items."];
+	};
 };

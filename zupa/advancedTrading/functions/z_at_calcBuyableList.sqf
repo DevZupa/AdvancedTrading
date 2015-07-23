@@ -31,7 +31,7 @@ _counter = 0;
 						_pic = getText (configFile >> 'CfgWeapons' >> _y >> 'picture');
 						_text = getText (configFile >> 'CfgWeapons' >> _y >> 'displayName');
 					};
-					if(_type == "trade_vehicles")then{
+					if(_type == "trade_vehicles" || _type == "trade_backpacks")then{
 						_pic = getText (configFile >> 'CfgVehicles' >> _y >> 'picture');
 						_text = getText (configFile >> 'CfgVehicles' >> _y >> 'displayName');
 					};
@@ -44,7 +44,7 @@ _counter = 0;
 					}else{
 						_buyCurrency = CurrencyName;
 						_sellCurrency = CurrencyName;
-					} ;
+					};
 
 					Z_BuyableArray set [count(Z_BuyableArray) , [_y,_type,_buy select 0,_text,_pic,_forEachIndex,_sell select 0, _buyCurrency, _sellCurrency, 0,_cat, _worth]];
 				};
