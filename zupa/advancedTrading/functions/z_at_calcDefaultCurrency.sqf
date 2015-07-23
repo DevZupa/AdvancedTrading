@@ -22,19 +22,24 @@ _silver_1oz = (_silver_1oz_a - _silver_1oz_b);
 
 
 if (_briefcase_100oz > 0) then {
-  _string = format["%1 %2",_briefcase_100oz,"BC"];
+  _pic = getText (configFile >> 'CfgMagazines' >> 'ItemBriefcase100oz' >> 'picture');
+  _string = format["<t size='1'>%1x</t><img image='%2'/>",_briefcase_100oz,_pic];
 };
 if (_gold_10oz > 0) then {
-    _string = format["%3 %1 %2",_gold_10oz,"10ozG", _string];
+    _pic = getText (configFile >> 'CfgMagazines' >> 'ItemGoldBar10oz' >> 'picture');
+    _string = format["%3<t size='1'>%1x</t><img image='%2'/>",_gold_10oz,_pic, _string];
 };
 if (_gold_1oz > 0) then {
-    _string = format["%3 %1 %2",_gold_1oz,"ozG", _string];
+    _pic = getText (configFile >> 'CfgMagazines' >> 'ItemGoldBar' >> 'picture');
+    _string = format["%3<t size='1'>%1x</t><img image='%2'/>",_gold_1oz,_pic, _string];
 };
 if (_silver_10oz > 0) then {
-    _string = format["%3 %1 %2",_silver_10oz,"10ozS", _string];
+    _pic = getText (configFile >> 'CfgMagazines' >> 'ItemSilverBar10oz' >> 'picture');
+    _string = format["%3<t size='1'>%1x</t><img image='%2'/>",_silver_10oz,_pic, _string];
 };
 if (_silver_1oz > 0) then {
-    _string = format["%3 %1 %2",_silver_1oz,"ozS", _string];
+    _pic = getText (configFile >> 'CfgMagazines' >> 'ItemSilverBar' >> 'picture');
+    _string = format["%3<t size='1'>%1x</t><img image='%2'/>",_silver_1oz,_pic, _string];
 };
 
 _string
