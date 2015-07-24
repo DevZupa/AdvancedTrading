@@ -35,16 +35,16 @@ if (Z_Selling) then {
 	_sellCurrency = _item select 8;
 };
 
-if ( isText (configFile >> 'CfgVehicles' >> _class >> 'transportMaxWeapons')) then {
-	_transportMaxWeapons = getText (configFile >> 'CfgVehicles' >> _class >> 'transportMaxWeapons');
+if ( isNumber (configFile >> 'CfgVehicles' >> _class >> 'transportMaxWeapons')) then {
+	_transportMaxWeapons = getNumber (configFile >> 'CfgVehicles' >> _class >> 'transportMaxWeapons');
 };
 
-if ( isText (configFile >> 'CfgVehicles' >> _class >> 'transportMaxMagazines')) then {
-	_transportMaxMagazines  = getText (configFile >> 'CfgVehicles' >> _class >> 'transportMaxMagazines');
+if ( isNumber (configFile >> 'CfgVehicles' >> _class >> 'transportMaxMagazines')) then {
+	_transportMaxMagazines  = getNumber (configFile >> 'CfgVehicles' >> _class >> 'transportMaxMagazines');
 };
 
-if ( isText (configFile >> 'CfgVehicles' >> _class >> 'transportMaxBackpacks')) then {
-	_transportmaxBackpacks  = getText (configFile >> 'CfgVehicles' >> _class >> 'transportMaxBackpacks');
+if ( isNumber (configFile >> 'CfgVehicles' >> _class >> 'transportMaxBackpacks')) then {
+	_transportmaxBackpacks  = getNumber (configFile >> 'CfgVehicles' >> _class >> 'transportMaxBackpacks');
 };
 
 if (Z_SingleCurrency) then {
