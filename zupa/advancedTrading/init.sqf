@@ -6,6 +6,8 @@ if( isNil "Z_traderData" || count (Z_traderData) == 0)exitWith{
 	cutText [format["There went something wrong selecting the trader."], "PLAIN DOWN"];
 };
 
+if(DZE_ActionInProgress) exitWith { cutText ['There is already an action in progress.' , "PLAIN DOWN"] };
+
 if(isNil "Z_AdvancedTradingInit")then{
 
 	#include "config.sqf";
